@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="3dp"
+    app:cardCornerRadius="3dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <View
+            android:id="@+id/frag2line"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/curved_line_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/frag2name"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:ellipsize="end"
+            android:foregroundGravity="center"
+            android:singleLine="true"
+            android:text="Foodoooooooooooo"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/frag2line"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/frag2amount_txt"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="100"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/frag2name"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

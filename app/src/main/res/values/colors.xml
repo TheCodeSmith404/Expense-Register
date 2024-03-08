@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#00FF00</color>
+    <color name="launcherBackground">#57597A</color>
+    <color name="colorPrimary">#24247A</color>
+    <color name="colorPrimaryNeutral">#4752B1</color>
+    <color name="colorPrimaryVariant">#24247A</color>
+    <color name="lightBlack">#AAAAAA</color>
+    <color name="newColor">#24247A</color>
+    <color name="newColorVariant">#A2A9D8</color>
+
+    <!-- Secondary colors -->
+    <color name="colorSecondary">#03DAC6</color>
+    <color name="colorSecondaryVariant">#018786</color>
+
+    <!-- Dark color for status bar -->
+    <color name="colorPrimaryDark">#24247A</color>
+
+    <!-- Default text colors -->
+    <color name="colorTextPrimary">#000000</color>
+    <color name="colorTextSecondary">#6E6E6E</color>
+
+    <!-- Default tint colors for widgets -->
+    <color name="colorControlNormal">#24247A</color>
+    <color name="colorControlActivated">#03DAC6</color>
+    <color name="colorControlHighlight">#FFA2A9D8</color>
+</resources>

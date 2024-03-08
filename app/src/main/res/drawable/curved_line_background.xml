@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Curved start -->
+    <item android:right="2dp">
+        <shape android:shape="rectangle">
+            <corners android:topRightRadius="0dp"
+                android:bottomRightRadius="0dp"
+                android:topLeftRadius="10dp"
+                android:bottomLeftRadius="10dp"/>
+            <solid android:color="@android:color/black"/>
+        </shape>
+    </item>
+    <!-- Middle line -->
+    <item android:left="2dp" android:right="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/black"/>
+        </shape>
+    </item>
+    <!-- Curved end -->
+    <item android:left="2dp">
+        <shape android:shape="rectangle">
+            <corners android:topRightRadius="10dp"
+                android:bottomRightRadius="10dp"
+                android:topLeftRadius="0dp"
+                android:bottomLeftRadius="0dp"/>
+            <solid android:color="@android:color/black"/>
+        </shape>
+    </item>
+</layer-list>
