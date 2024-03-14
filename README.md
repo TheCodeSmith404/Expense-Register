@@ -1,6 +1,6 @@
 # Expense Register
 
-An android Application for tracking and managing peronal finance
+An android Application for tracking and managing personal finance
 ## App Screenshots
 <p align="center">
   <img src="Images/photo1709904070%20(1).jpeg" width="30%" />
