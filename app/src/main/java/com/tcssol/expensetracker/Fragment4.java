@@ -139,4 +139,9 @@ public class Fragment4 extends Fragment implements Fragment4ClickListner {
         snackbar.show();
 
     }
+//
+//    @Override
+//    public void imageButtonClickListner() {
+//
+//    }
 }

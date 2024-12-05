@@ -1,12 +1,9 @@
 package com.tcssol.expensetracker.Data;
 
-import android.view.Display;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
-import androidx.room.Ignore;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -14,8 +11,6 @@ import androidx.room.Update;
 import com.tcssol.expensetracker.Model.Expenses;
 import com.tcssol.expensetracker.Utils.ModeWrapper;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
