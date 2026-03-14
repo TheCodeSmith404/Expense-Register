@@ -17,101 +17,126 @@ public class ExpensesRepository {
     private final ExpenseDao expenseDao;
     private final LiveData<List<Expenses>> allExpenses;
     private final LiveData<List<Expenses>> groupedExpenses;
-    private final List<Expenses> allExpensesList;
     private final LiveData<List<ModeWrapper>> modeDist;
-    private Application application;
-
 
     public ExpensesRepository(Application application) {
-        ExpensesDatabase database=ExpensesDatabase.getDatabase(application);
+        ExpensesDatabase database = ExpensesDatabase.getDatabase(application);
         this.expenseDao = database.expenseDao();
-        this.allExpenses= expenseDao.getExpenses();
-        this.groupedExpenses=expenseDao.getGroupedItems();
-        this.allExpensesList=expenseDao.getExpensesAllList();
-        this.modeDist=expenseDao.getModeDist();
-        this.application=application;
-
+        this.allExpenses = expenseDao.getExpenses();
+        this.groupedExpenses = expenseDao.getGroupedItems();
+        this.modeDist = expenseDao.getModeDist();
     }
 
+    /** Returns all expenses synchronously for export – call from a background Executor only. */
     public List<Expenses> getAllExpensesList() {
-        return allExpensesList;
+        return expenseDao.getExpensesAllList();
     }
 
     public LiveData<List<Expenses>> getGroupedExpenses() {
         return groupedExpenses;
     }
 
-    public LiveData<List<Expenses>> getAllExpenses(){return allExpenses;}
+    public LiveData<List<Expenses>> getAllExpenses() {
+        return allExpenses;
+    }
 
-    public void insert(Expenses expenses){
-        ExpensesDatabase.databaseWriterExecutor.execute(()->expenseDao.insertExpense(expenses));
+    public void insert(Expenses expenses) {
+        ExpensesDatabase.databaseWriterExecutor.execute(() -> expenseDao.insertExpense(expenses));
     }
-    public LiveData<Expenses> get(long id){return expenseDao.get(id);}
 
-    public void update(Expenses expenses){
-        ExpensesDatabase.databaseWriterExecutor.execute(()->expenseDao.update(expenses));
+    public LiveData<Expenses> get(long id) {
+        return expenseDao.get(id);
     }
-    public void delete(Expenses expenses){
-        ExpensesDatabase.databaseWriterExecutor.execute(()->expenseDao.delete(expenses));
+
+    public void update(Expenses expenses) {
+        ExpensesDatabase.databaseWriterExecutor.execute(() -> expenseDao.update(expenses));
     }
-    public ExpenseDao getExpenseDao(){return expenseDao;}
+
+    public void delete(Expenses expenses) {
+        ExpensesDatabase.databaseWriterExecutor.execute(() -> expenseDao.delete(expenses));
+    }
+
+    public ExpenseDao getExpenseDao() {
+        return expenseDao;
+    }
+
     public LiveData<List<Expenses>> getMonthlyExpenses(LocalDate date) {
-        String year=String.valueOf(date.getYear());
-        String month=String.valueOf(date.getMonthValue());
-        if(month.length()==1){
-            month="0"+month;
-        }
-        Log.d("expd",year+""+month);
-        return expenseDao.getMonth(month,year);
+        String year = String.valueOf(date.getYear());
+        String month = String.valueOf(date.getMonthValue());
+        if (month.length() == 1) month = "0" + month;
+        Log.d("expd", year + "" + month);
+        return expenseDao.getMonth(month, year);
     }
 
     public LiveData<List<Expenses>> getGroupedMonthlyExpenses(LocalDate date) {
-        String year=String.valueOf(date.getYear());
-        String month=String.valueOf(date.getMonthValue());
-        if(month.length()==1){
-            month="0"+month;
-        }
-        Log.d("expd",year+""+month);
-        return expenseDao.getGroupedMonth(month,year);
-    }
-    public MutableLiveData<List<Integer>> getFrag3DataFiltered(int montht, int yearl){
-        Log.d("expdao",montht+" data received in repo "+yearl);
-        String month=String.valueOf(montht);
-        if(month.length()==1){
-            month="0"+montht;
-        }
-        String year=String.valueOf(yearl);
-        Log.d("expdao",month+" dat converted in repo "+year);
-        List<Integer> list=new ArrayList<>();
-        list.add(expenseDao.getSumEarnedF(month,year));
-        list.add(expenseDao.getSumSpendF(month,year));
-        list.add(expenseDao.getSumReceivedF(month,year));
-        list.add(expenseDao.getSumGivenF(month,year));
-        return new MutableLiveData<>(list);
-
-    }
-    public MutableLiveData<List<Integer>> getFrag3Data(){
-        List<Integer> list=new ArrayList<>();
-        list.add(expenseDao.getSumEarned());
-        list.add(expenseDao.getSumSpend());
-        list.add(expenseDao.getSumReceived());
-        list.add(expenseDao.getSumGiven());
-        return new MutableLiveData<>(list);
+        String year = String.valueOf(date.getYear());
+        String month = String.valueOf(date.getMonthValue());
+        if (month.length() == 1) month = "0" + month;
+        Log.d("expd", year + "" + month);
+        return expenseDao.getGroupedMonth(month, year);
     }
 
-    public List<Expenses> getSubCats(String category,boolean type) {
-        return expenseDao.getSubCats(category,type);
+    /**
+     * Returns MutableLiveData with [earned, spend, received, given] summaries.
+     * The DAO aggregate queries must also be called on a background thread,
+     * so we post the result via MutableLiveData after an Executor call.
+     */
+    public MutableLiveData<List<Integer>> getFrag3DataFiltered(int montht, int yearl) {
+        Log.d("expdao", montht + " data received in repo " + yearl);
+        String month = montht < 10 ? "0" + montht : String.valueOf(montht);
+        String year = String.valueOf(yearl);
+        MutableLiveData<List<Integer>> result = new MutableLiveData<>();
+        ExpensesDatabase.databaseWriterExecutor.execute(() -> {
+            List<Integer> list = new ArrayList<>();
+            list.add(expenseDao.getSumEarnedF(month, year));
+            list.add(expenseDao.getSumSpendF(month, year));
+            list.add(expenseDao.getSumReceivedF(month, year));
+            list.add(expenseDao.getSumGivenF(month, year));
+            result.postValue(list);
+        });
+        return result;
     }
 
-    public List<Expenses> getSubCatsF(int montht, String year,String category,boolean type) {
-        String month=String.valueOf(montht);
-        if(month.length()==1){
-            month="0"+montht;
-        }
-        return expenseDao.getSubsCatsF(month,year,category,type);
-
+    public MutableLiveData<List<Integer>> getFrag3Data() {
+        MutableLiveData<List<Integer>> result = new MutableLiveData<>();
+        ExpensesDatabase.databaseWriterExecutor.execute(() -> {
+            List<Integer> list = new ArrayList<>();
+            list.add(expenseDao.getSumEarned());
+            list.add(expenseDao.getSumSpend());
+            list.add(expenseDao.getSumReceived());
+            list.add(expenseDao.getSumGiven());
+            result.postValue(list);
+        });
+        return result;
     }
-    public LiveData<List<ModeWrapper>> getModeDist(){
+
+    public List<Expenses> getSubCats(String category, boolean type) {
+        // Called from Executor thread in ViewModel – safe.
+        return expenseDao.getSubCats(category, type);
+    }
+
+    public List<Expenses> getSubCatsF(int montht, String year, String category, boolean type) {
+        String month = montht < 10 ? "0" + montht : String.valueOf(montht);
+        // Called from Executor thread in ViewModel – safe.
+        return expenseDao.getSubsCatsF(month, year, category, type);
+    }
+
+    public LiveData<List<ModeWrapper>> getModeDist() {
         return modeDist;
+    }
+
+    // --- v2.0 additions ---
+
+    public LiveData<List<Expenses>> searchExpenses(String query) {
+        return expenseDao.searchExpenses(query);
+    }
+
+    public LiveData<Double> getNetBalance(String month, String year) {
+        return expenseDao.getNetBalance(month, year);
+    }
+
+    /** Returns monthly spend total – call from a background Executor only. */
+    public double getMonthSpend(String month, String year) {
+        return expenseDao.getMonthSpend(month, year);
     }
 }

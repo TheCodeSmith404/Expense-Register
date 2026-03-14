@@ -97,7 +97,7 @@ public class CreateExpenses extends AppCompatActivity {
     private TextView number;
 
     private LocalDate targetDate;
-
+    private EditText editTextNote; // v2.0 note field
 
     private String storedMedium;
     private String mediumText="Cash";
@@ -357,6 +357,7 @@ public class CreateExpenses extends AppCompatActivity {
         Initializing more views
          */
         name=findViewById(R.id.editTextGetName);
+        editTextNote = findViewById(R.id.editTextNote);
         number=findViewById(R.id.editTextMobileNumber);
         editAmount=findViewById(R.id.edit_text_number);
         saveExpenses=findViewById(R.id.button);
@@ -383,7 +384,10 @@ public class CreateExpenses extends AppCompatActivity {
                 if(!(editAmount.getText().toString().trim().isEmpty())&&(type==0||type==1)){
                     Log.d("1234","Inside if");
                     Double amount= Double.valueOf(String.valueOf(editAmount.getText()));
-                    Expenses expense=new Expenses(LocalDate.now(),categoryString,subCategoryString,mediumText,amount,exptype);
+                    String noteText = editTextNote != null && editTextNote.getText() != null
+                            ? editTextNote.getText().toString().trim() : null;
+                    Expenses expense=new Expenses(LocalDate.now(),categoryString,subCategoryString,mediumText,amount,exptype,
+                            noteText.isEmpty() ? null : noteText);
                     ExpenseViewModel.insert(expense,getApplicationContext());
                     finish();
                 } else if(type==2&&!(editAmount.getText().toString().trim().isEmpty())&&!(name.getText().toString().trim().isEmpty())){

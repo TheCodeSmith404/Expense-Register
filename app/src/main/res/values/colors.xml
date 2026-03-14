@@ -1,30 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Neutral base -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="red">#FF0000</color>
-    <color name="green">#00FF00</color>
-    <color name="launcherBackground">#57597A</color>
-    <color name="colorPrimary">#24247A</color>
-    <color name="colorPrimaryNeutral">#4752B1</color>
-    <color name="colorPrimaryVariant">#24247A</color>
-    <color name="lightBlack">#AAAAAA</color>
-    <color name="newColor">#24247A</color>
-    <color name="newColorVariant">#A2A9D8</color>
 
-    <!-- Secondary colors -->
-    <color name="colorSecondary">#03DAC6</color>
-    <color name="colorSecondaryVariant">#018786</color>
+    <!-- Primary palette – deep navy -->
+    <color name="colorPrimary">#1A1A2E</color>
+    <color name="colorPrimaryVariant">#16213E</color>
+    <color name="colorPrimaryNeutral">#0F3460</color>
+    <color name="colorOnPrimary">#FFFFFFFF</color>
+    <color name="launcherBackground">#1A1A2E</color>
+    <color name="newColor">#1A1A2E</color>
+    <color name="newColorVariant">#0F3460</color>
 
-    <!-- Dark color for status bar -->
-    <color name="colorPrimaryDark">#24247A</color>
+    <!-- Secondary / accent -->
+    <color name="colorSecondary">#E94560</color>
+    <color name="colorSecondaryVariant">#C73652</color>
+    <color name="colorOnSecondary">#FFFFFFFF</color>
 
-    <!-- Default text colors -->
-    <color name="colorTextPrimary">#000000</color>
-    <color name="colorTextSecondary">#6E6E6E</color>
+    <!-- Semantic amounts -->
+    <color name="red">#E94560</color>       <!-- expense / debit -->
+    <color name="green">#4CAF50</color>     <!-- income / credit -->
+    <color name="amber">#FFC107</color>     <!-- pending / warning -->
 
-    <!-- Default tint colors for widgets -->
-    <color name="colorControlNormal">#24247A</color>
-    <color name="colorControlActivated">#03DAC6</color>
-    <color name="colorControlHighlight">#FFA2A9D8</color>
+    <!-- Surfaces -->
+    <color name="colorSurface">#F5F5F7</color>
+    <color name="colorSurfaceVariant">#EAEAEF</color>
+    <color name="colorBackground">#F5F5F7</color>
+
+    <!-- Text -->
+    <color name="colorTextPrimary">#1A1A2E</color>
+    <color name="colorTextSecondary">#6B7280</color>
+    <color name="colorTextHint">#9CA3AF</color>
+    <color name="lightBlack">#9CA3AF</color>
+
+    <!-- Control tints -->
+    <color name="colorControlNormal">#1A1A2E</color>
+    <color name="colorControlActivated">#E94560</color>
+    <color name="colorControlHighlight">#1A1A2E26</color>
+
+    <!-- Night mode surfaces (values-night overrides these) -->
+    <color name="colorPrimaryDark">#1A1A2E</color>
+    <color name="colorCardBackground">#FFFFFF</color>
+    <color name="colorDivider">#E5E7EB</color>
 </resources>

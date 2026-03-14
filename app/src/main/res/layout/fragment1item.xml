@@ -1,64 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frag1item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="4dp"
-    android:layout_marginTop="3dp"
-    android:layout_marginRight="4dp"
-    android:layout_marginBottom="3dp"
-    app:cardCornerRadius="10dp">
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/colorDivider"
+    app:cardBackgroundColor="@color/colorCardBackground">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:paddingStart="5dp"
-        android:paddingLeft="5dp"
-        android:paddingTop="5dp"
-        android:paddingEnd="5dp">
+        android:orientation="horizontal"
+        android:padding="14dp"
+        android:gravity="center_vertical">
 
+        <!-- Color dot indicator -->
+        <View
+            android:id="@+id/categoryDot"
+            android:layout_width="4dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/circle"
+            tools:backgroundTint="@color/colorSecondary" />
 
-        <TextView
-            android:id="@+id/category_text"
-            android:layout_width="250dp"
+        <!-- Category name + subcategories -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="Foodoooooooooooo"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/category_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="Food" />
+
+            <TextView
+                android:id="@+id/sub_category_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="12sp"
+                tools:text="Mess · Restaurant · Groceries" />
+        </LinearLayout>
+
+        <!-- Amount chip -->
         <TextView
             android:id="@+id/amount_txt"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoSizeTextType="uniform"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="100"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/category_text"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginStart="8dp"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            tools:text="−₹1,200"
+            tools:textColor="@color/red" />
 
-        <TextView
-            android:id="@+id/sub_category_txt"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:singleLine="true"
-            android:text="Mess | Party | Others"
-            android:textColor="@color/lightBlack"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/category_text" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

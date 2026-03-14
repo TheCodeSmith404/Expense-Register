@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,14 +74,12 @@ public class Frag4RcvAdapter extends RecyclerView.Adapter<Frag4RcvAdapter.ViewHo
             holder.amount.setTextColor(color);
 
         }else {
-
-            if (expenses.isType() == true) {
+            if (expenses.isType()) {
                 holder.amount.setText(symbol + expenses.getAmount());
-                color = Color.GREEN;
-
+                color = ContextCompat.getColor(mContext, R.color.green);
             } else {
                 holder.amount.setText("-" + symbol + expenses.getAmount());
-                color = Color.RED;
+                color = ContextCompat.getColor(mContext, R.color.red);
             }
             holder.mode.setText(expenses.getMode());
             holder.amount.setTextColor(color);
@@ -177,8 +176,8 @@ public class Frag4RcvAdapter extends RecyclerView.Adapter<Frag4RcvAdapter.ViewHo
                 amount = itemView.findViewById(R.id.frag4amount_txt);
                 mode = itemView.findViewById(R.id.frag4Mode);
                 clickListner = fragment4ClickListner;
-                itemView.getRootView().setOnLongClickListener(this);
-                itemView.getRootView().setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
+                itemView.setOnClickListener(this);
             }else{
                 amount=itemView.findViewById(R.id.amount_txt);
                 date=itemView.findViewById(R.id.textViewDate);

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Night mode surfaces -->
+    <color name="colorSurface">#1E1E2E</color>
+    <color name="colorSurfaceVariant">#2A2A3E</color>
+    <color name="colorBackground">#121212</color>
+
+    <!-- Card / divider -->
+    <color name="colorCardBackground">#1E1E2E</color>
+    <color name="colorDivider">#2A2A3E</color>
+
+    <!-- Text -->
+    <color name="colorTextPrimary">#EFEFEF</color>
+    <color name="colorTextSecondary">#9CA3AF</color>
+    <color name="colorTextHint">#6B7280</color>
+    <color name="lightBlack">#9CA3AF</color>
+
+    <!-- Keep primary/accent the same in dark mode -->
+    <color name="colorPrimary">#1A1A2E</color>
+    <color name="colorPrimaryNeutral">#0F3460</color>
+    <color name="colorSecondary">#E94560</color>
+</resources>
