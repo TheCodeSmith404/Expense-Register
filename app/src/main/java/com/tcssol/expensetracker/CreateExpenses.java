@@ -264,21 +264,24 @@ public class CreateExpenses extends AppCompatActivity {
         received.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(given.isChecked()==true)
-                    given.setChecked(false);
-                receivedGiven=false;
-                if(aSwitch.isChecked()==true)
-                    sendMsgGrp.setVisibility(View.VISIBLE);
+                if (isChecked) {
+                    if (given.isChecked())
+                        given.setChecked(false);
+                    receivedGiven = true;
+                    if (aSwitch.isChecked())
+                        sendMsgGrp.setVisibility(View.VISIBLE);
+                }
             }
         });
         given.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(received.isChecked()==true)
-                    received.setChecked(false);
-                receivedGiven=true;
-                sendMsgGrp.setVisibility(View.GONE);
-
+                if (isChecked) {
+                    if (received.isChecked())
+                        received.setChecked(false);
+                    receivedGiven = false;
+                    sendMsgGrp.setVisibility(View.GONE);
+                }
             }
         });
         /*
@@ -375,7 +378,7 @@ public class CreateExpenses extends AppCompatActivity {
                     exptype=true;
                 }
                 else if(type==2){
-                    exptype=!receivedGiven; // Fix: Lend (receivedGiven=true) should be Spend (false)
+                    exptype=receivedGiven;
                 }
                 categoryString=showCategory.getText().toString();
                 subCategoryString=showSubCategory.getText().toString();
@@ -477,21 +480,21 @@ public class CreateExpenses extends AppCompatActivity {
                 subcategories=jsonStrings.getList(intent2.getStringExtra("Category"));
                 showSubCategory.setText(subcategories.get(0));
                 categoryString=intent2.getStringExtra("Category");
-            }else{
-                radioGroup.check(R.id.radioButtonLendRecieve);
-                if(typeExp==false)
-                    received.setChecked(true);
-                else
-                    given.setChecked(true);
+             }else{
+                 radioGroup.check(R.id.radioButtonLendRecieve);
+                 if(typeExp==true)
+                     received.setChecked(true);
+                 else
+                     given.setChecked(true);
 
-            }
+             }
         }else if(typeOf==2){
             boolean typeExp=intent2.getBooleanExtra("TypeExpense",false);
             radioGroup.check(R.id.radioButtonLendRecieve);
-            if(typeExp==false)
-                received.setChecked(true);
-            else
-                given.setChecked(true);
+             if(typeExp==true)
+                 received.setChecked(true);
+             else
+                 given.setChecked(true);
             name.setText(intent2.getStringExtra("Name"));
             number.setText(intent2.getStringExtra("ContactNumber"));
             showMedium.setText(intent2.getStringExtra("Medium"));
@@ -515,15 +518,15 @@ public class CreateExpenses extends AppCompatActivity {
                 donotChange=true;
                 Log.d("SubCategory issue", "Sub Category set");
 
-            }else{
-                radioGroup.check(R.id.radioButtonLendRecieve);
-                if(typeExp==false)
-                    received.setChecked(true);
-                else
-                    given.setChecked(true);
-                name.setText(intent2.getStringExtra("Name"));
-                showMedium.setText(intent2.getStringExtra("Medium"));
-            }
+             }else{
+                 radioGroup.check(R.id.radioButtonLendRecieve);
+                 if(typeExp==true)
+                     received.setChecked(true);
+                 else
+                     given.setChecked(true);
+                 name.setText(intent2.getStringExtra("Name"));
+                 showMedium.setText(intent2.getStringExtra("Medium"));
+             }
         }
     }
 

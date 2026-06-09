@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,13 +32,15 @@ import android.graphics.Color
 import android.util.Log
 import android.util.TypedValue
 import androidx.core.content.ContextCompat
+import com.tcssol.expensetracker.Model.Expenses
+import java.time.LocalDate
 
 /**
  * TODO Add charts and other views to show trends and options to set budgets
  */
 class Fragment3 : Fragment() {
     private val expenseViewModel: ExpenseViewModel by viewModels()
-    private val sharedExpenseViewModel: SharedExpenseViewModel by viewModels()
+    private val sharedExpenseViewModel: SharedExpenseViewModel by activityViewModels()
     private val personExpViewModel: PersonExpViewModel by  viewModels()
 
     private var view: View? = null
@@ -113,6 +116,7 @@ class Fragment3 : Fragment() {
         }
 
         setupPieChart()
+        setupCategoryPieChart()
         setupBarChart()
 
         // Handle Bar Chart Data
@@ -122,6 +126,20 @@ class Fragment3 : Fragment() {
             
             expenseViewModel.getDailySums(month, year).observe(viewLifecycleOwner) { dailySums ->
                 updateBarChart(dailySums)
+            }
+        }
+
+        // Handle Category Pie Chart Data
+        sharedExpenseViewModel.getObject().observe(viewLifecycleOwner) { data ->
+            if (data.year > 0 || data.month > 0) {
+                val date = LocalDate.of(data.year, data.month, 1)
+                expenseViewModel.getAllExpensesGroupedMonthly(date).observe(viewLifecycleOwner) { list ->
+                    updateCategoryPieChart(list)
+                }
+            } else {
+                expenseViewModel.allExpensesGrouped.observe(viewLifecycleOwner) { list ->
+                    updateCategoryPieChart(list)
+                }
             }
         }
         
@@ -259,5 +277,87 @@ class Fragment3 : Fragment() {
         val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true)
         return typedValue.data
+    }
+
+    private fun setupCategoryPieChart() {
+        val pieChart = binding.pieChartCategory
+        pieChart.setUsePercentValues(true)
+        pieChart.description.isEnabled = false
+        pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
+        
+        pieChart.dragDecelerationFrictionCoef = 0.95f
+        
+        pieChart.isDrawHoleEnabled = true
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
+        pieChart.setHoleColor(typedValue.data)
+        pieChart.setTransparentCircleColor(Color.WHITE)
+        pieChart.setTransparentCircleAlpha(110)
+        
+        pieChart.holeRadius = 58f
+        pieChart.transparentCircleRadius = 61f
+        
+        pieChart.setDrawCenterText(true)
+        pieChart.centerText = "Category\nSpend"
+        val textColorTypedValue = TypedValue()
+        requireContext().theme.resolveAttribute(android.R.attr.textColorPrimary, textColorTypedValue, true)
+        pieChart.setCenterTextColor(textColorTypedValue.data)
+        
+        pieChart.rotationAngle = 0f
+        pieChart.isRotationEnabled = true
+        pieChart.isHighlightPerTapEnabled = true
+        
+        pieChart.animateY(1400, com.github.mikephil.charting.animation.Easing.EaseInOutQuad)
+        
+        val l = pieChart.legend
+        l.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+        l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        l.orientation = Legend.LegendOrientation.VERTICAL
+        l.setDrawInside(false)
+        l.xEntrySpace = 7f
+        l.yEntrySpace = 0f
+        l.yOffset = 0f
+        l.textColor = textColorTypedValue.data
+    }
+
+    private fun updateCategoryPieChart(list: List<Expenses>?) {
+        if (list == null || list.isEmpty()) {
+            binding.pieChartCategory.clear()
+            return
+        }
+
+        val entries = ArrayList<PieEntry>()
+        for (expense in list) {
+            if (!expense.isType) {
+                if (expense.amount > 0 && !expense.category.isNullOrEmpty()) {
+                    entries.add(PieEntry(expense.amount.toFloat(), expense.category))
+                }
+            }
+        }
+
+        if (entries.isEmpty()) {
+            binding.pieChartCategory.clear()
+            return
+        }
+
+        val dataSet = PieDataSet(entries, "")
+        
+        val colors = ArrayList<Int>()
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSecondary))
+        colors.add(ContextCompat.getColor(requireContext(), R.color.red))
+        colors.add(Color.parseColor("#9C27B0")) // Purple
+        colors.add(Color.parseColor("#FF9800")) // Orange
+        colors.add(Color.parseColor("#00BCD4")) // Cyan
+        colors.add(Color.parseColor("#E91E63")) // Pink
+        dataSet.colors = colors
+
+        dataSet.valueTextColor = ContextCompat.getColor(requireContext(), R.color.colorOnPrimary)
+        dataSet.valueTextSize = 12f
+        dataSet.valueFormatter = PercentFormatter(binding.pieChartCategory)
+
+        val pieData = PieData(dataSet)
+        binding.pieChartCategory.data = pieData
+        binding.pieChartCategory.invalidate()
     }
 }

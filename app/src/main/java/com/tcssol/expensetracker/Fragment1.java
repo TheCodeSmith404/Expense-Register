@@ -105,14 +105,13 @@ public class Fragment1 extends Fragment implements Fragment1ClickListner {
             recyclerView.setAdapter(adapter);
         });
 
-        sharedExpenseViewModel = new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())
-                .create(SharedExpenseViewModel.class);
+        sharedExpenseViewModel = new ViewModelProvider(requireActivity()).get(SharedExpenseViewModel.class);
 
         sharedExpenseViewModel.getObject().observe(getViewLifecycleOwner(), expensesList -> {
             month = expensesList.getMonth();
             year = expensesList.getYear();
 
-            if ((expensesList.getYear() > 0 || expensesList.getMonth() > 0) && expensesList.getYear() != 2021) {
+            if (expensesList.getYear() > 0 || expensesList.getMonth() > 0) {
                 LocalDate date = LocalDate.of(expensesList.getYear(), expensesList.getMonth(), 1);
 
                 expenseViewModel.getAllExpensesGroupedMonthly(date).observe(getViewLifecycleOwner(), tasks -> {

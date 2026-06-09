@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "July","August","September","October","November","December"
     };
     private static final Integer[] Years = {
-            2023,2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035
+            2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035
     };
 
     private ViewPager2 viewPager;
@@ -128,8 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewPager.setPadding(0, 0, 0, 0);
 
         // --- ViewModels ---
-        sharedExpenseViewModel = new ViewModelProvider.AndroidViewModelFactory(getApplication())
-                .create(SharedExpenseViewModel.class);
+        sharedExpenseViewModel = new ViewModelProvider(this).get(SharedExpenseViewModel.class);
         expenseViewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
         personExpViewModel = new ViewModelProvider(this).get(PersonExpViewModel.class);
 
@@ -140,7 +139,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         selectMonth.setText(MonthList[LocalDate.now().getMonthValue() - 1], false);
         selectMonth.setOnItemClickListener((parent, view, position, id) -> {
             unSelectAllChip(-1);
-            month = position + 1;
+            String selected = parent.getItemAtPosition(position).toString();
+            for (int i = 0; i < MonthList.length; i++) {
+                if (MonthList[i].equalsIgnoreCase(selected)) {
+                    month = i + 1;
+                    break;
+                }
+            }
             sharedExpenseViewModel.setObject(new Wrapped(month, year));
         });
 
@@ -153,7 +158,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         selectYear.setText(String.valueOf(LocalDate.now().getYear()), false);
         selectYear.setOnItemClickListener((parent, view, position, id) -> {
             unSelectAllChip(-1);
-            year = Years[position];
+            String selected = parent.getItemAtPosition(position).toString();
+            try {
+                year = Integer.parseInt(selected.trim());
+            } catch (NumberFormatException e) {
+                year = Years[position];
+            }
             sharedExpenseViewModel.setObject(new Wrapped(month, year));
         });
 
@@ -283,14 +293,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (tableId == 1) {
                     ExpensesDatabase.databaseWriterExecutor.execute(() -> {
                         List<Expenses> list = expenseViewModel.getAllExpensesList();
-                        popupWindow.dismiss();
-                        runOnUiThread(() -> DataBaseExporter.exportCSVExpenses(getApplicationContext(), rootView, list));
+                        runOnUiThread(() -> {
+                            popupWindow.dismiss();
+                            DataBaseExporter.exportCSVExpenses(MainActivity.this, rootView, list);
+                        });
                     });
                 } else if (tableId == 2) {
                     PersonExpDatabase.databaseWriterExecutor.execute(() -> {
                         List<PersonExp> list = personExpViewModel.getAllExpensesListSync();
-                        popupWindow.dismiss();
-                        runOnUiThread(() -> DataBaseExporter.exportCsvPersonExpenses(getApplicationContext(), rootView, list));
+                        runOnUiThread(() -> {
+                            popupWindow.dismiss();
+                            DataBaseExporter.exportCsvPersonExpenses(MainActivity.this, rootView, list);
+                        });
                     });
                 }
             } else {
@@ -303,14 +317,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (tableId == 1) {
                     ExpensesDatabase.databaseWriterExecutor.execute(() -> {
                         List<Expenses> list = expenseViewModel.getAllExpensesList();
-                        popupWindow.dismiss();
-                        runOnUiThread(() -> DataBaseExporter.exportTxtExpenses(getApplicationContext(), rootView, list));
+                        runOnUiThread(() -> {
+                            popupWindow.dismiss();
+                            DataBaseExporter.exportTxtExpenses(MainActivity.this, rootView, list);
+                        });
                     });
                 } else if (tableId == 2) {
                     PersonExpDatabase.databaseWriterExecutor.execute(() -> {
                         List<PersonExp> list = personExpViewModel.getAllExpensesListSync();
-                        popupWindow.dismiss();
-                        runOnUiThread(() -> DataBaseExporter.exportTxtPersonExpenses(getApplicationContext(), rootView, list));
+                        runOnUiThread(() -> {
+                            popupWindow.dismiss();
+                            DataBaseExporter.exportTxtPersonExpenses(MainActivity.this, rootView, list);
+                        });
                     });
                 }
             } else {

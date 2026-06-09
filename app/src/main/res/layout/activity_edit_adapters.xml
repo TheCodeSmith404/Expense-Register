@@ -3,309 +3,188 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:attr/windowBackground">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbarEditAdapter"
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:subtitleTextColor="@color/white"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/white"
+        app:subtitleTextColor="@color/white" />
 
-    <ScrollView
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabTextColor="?android:attr/textColorSecondary"
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbarEditAdapter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categories" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Modes" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbarEditAdapter">
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!-- Tab 1 Container: Categories & Subcategories -->
+            <LinearLayout
+                android:id="@+id/layoutCategoriesContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <TextView
-                    android:id="@+id/textViewEditAdapterMode"
-                    android:layout_width="wrap_content"
+                <!-- Categories Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="2dp"
-                    android:text="Edit Mode"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toStartOf="@+id/imageButtonEditAdaptersMode"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="spread_inside"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/divider6" />
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-                <ImageButton
-                    android:id="@+id/imageButtonEditAdaptersCategories"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@color/white"
-                    android:rotation="180"
-                    android:src="@drawable/baseline_keyboard_arrow_down_24"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/textViewEditAdapterCategories"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                <ImageButton
-                    android:id="@+id/imageButtonEditAdaptersMode"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@color/white"
-                    android:rotation="180"
-                    android:src="@drawable/baseline_keyboard_arrow_down_24"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/textViewEditAdapterMode"
-                    app:layout_constraintTop_toBottomOf="@+id/divider6" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Categories"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_marginBottom="8dp" />
 
-                <TextView
-                    android:id="@+id/textViewEditAdapterCategories"
-                    android:layout_width="wrap_content"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewEditAdaptersCategories"
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            tools:listitem="@layout/edit_adapter_item" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Subcategories Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="2dp"
-                    android:text="Edit Categories"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toStartOf="@+id/imageButtonEditAdaptersCategories"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="spread_inside"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginBottom="24dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-                <View
-                    android:id="@+id/divider5"
-                    android:layout_width="409dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
-                    android:background="?android:attr/listDivider"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewEditAdapterCategories" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewEditAdaptersCategories"
-                    android:layout_width="180dp"
-                    android:layout_height="270dp"
-                    app:layout_constraintEnd_toStartOf="@+id/recyclerViewEditAdaptersSubCategories"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView15" />
+                        <TextView
+                            android:id="@+id/tvSubcategoriesTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sub-Categories"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_marginBottom="8dp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewEditAdaptersSubCategories"
-                    android:layout_width="180dp"
-                    android:layout_height="270dp"
-                    android:layout_marginStart="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/recyclerViewEditAdaptersCategories"
-                    app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-                <TextView
-                    android:id="@+id/textView16"
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Sub-Categories"
-                    android:textSize="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/textView15"
-                    app:layout_constraintTop_toBottomOf="@+id/divider5" />
-
-                <TextView
-                    android:id="@+id/textView15"
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Categories"
-                    android:textSize="16dp"
-                    app:layout_constraintEnd_toStartOf="@+id/textView16"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="spread"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/divider5" />
-
-                <View
-                    android:id="@+id/divider6"
-                    android:layout_width="409dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="?android:attr/listDivider"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonEditAdaptersCategoriesSave" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewEditAdaptersSubCategories"
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            tools:listitem="@layout/edit_adapter_item" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <Button
                     android:id="@+id/buttonEditAdaptersCategoriesSave"
-                    android:layout_width="380dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:backgroundTint="@color/colorPrimaryNeutral"
-                    android:text="Save Changes"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/createCategoryEditText" />
+                    android:text="Save Categories"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/colorPrimary" />
+            </LinearLayout>
 
-                <View
-                    android:id="@+id/divider7"
-                    android:layout_width="409dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
-                    android:background="?android:attr/listDivider"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewEditAdapterMode" />
+            <!-- Tab 2 Container: Payment Modes -->
+            <LinearLayout
+                android:id="@+id/layoutModesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/textView151"
-                    android:layout_width="180dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Transaction Mode"
-                    android:textSize="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/divider7" />
+                    android:layout_marginBottom="24dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewEdiAdaptersMode"
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:maxHeight="180dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView151" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Transaction Modes"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_marginBottom="8dp" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewEdiAdaptersMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="220dp"
+                            tools:listitem="@layout/edit_adapter_item" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <Button
                     android:id="@+id/buttonEditAdaptersModeSave"
-                    android:layout_width="270dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:backgroundTint="@color/colorPrimaryNeutral"
-                    android:text="Save Changes"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/createMediumEditText" />
+                    android:text="Save Modes"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/colorPrimary" />
+            </LinearLayout>
 
-                <View
-                    android:id="@+id/divider8"
-                    android:layout_width="409dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="1dp"
-                    android:background="?android:attr/listDivider"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonEditAdaptersModeSave" />
-
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/groupEditAdaptersCategories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    app:constraint_referenced_ids="recyclerViewEditAdaptersCategories,recyclerViewEditAdaptersSubCategories,textView16,textView15,buttonEditAdaptersCategoriesSave,divider6,imageButtonDone,createCategoryEditText" />
-
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/groupEditAdaptersMode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    app:constraint_referenced_ids="recyclerViewEdiAdaptersMode,textView151,buttonEditAdaptersModeSave,divider8" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonDone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/createCategoryEditText"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerViewEditAdaptersSubCategories"
-                    app:srcCompat="@drawable/baseline_check_24" />
-
-                <EditText
-                    android:id="@+id/createCategoryEditText"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:ems="10"
-                    android:hint="Add Item"
-                    android:inputType="text"
-                    app:layout_constraintEnd_toStartOf="@+id/imageButtonDone"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerViewEditAdaptersCategories" />
-
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/groupAddItem"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:constraint_referenced_ids="createCategoryEditText,imageButtonDone" />
-
-                <EditText
-                    android:id="@+id/createMediumEditText"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:ems="10"
-                    android:hint="Add Item"
-                    android:inputType="text"
-                    app:layout_constraintEnd_toStartOf="@+id/imageButtonMediumDone"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerViewEdiAdaptersMode" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonMediumDone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/createMediumEditText"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerViewEdiAdaptersMode"
-                    app:srcCompat="@drawable/baseline_check_24" />
-
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/groupAddItemMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:constraint_referenced_ids="createMediumEditText,imageButtonMediumDone" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-    </ScrollView>
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

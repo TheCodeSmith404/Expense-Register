@@ -73,8 +73,7 @@ public class Fragment4 extends Fragment implements Fragment4ClickListner {
         expenseViewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
         expenseDao = expenseViewModel.getExpenseDao();
 
-        sharedExpenseViewModel = new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())
-                .create(SharedExpenseViewModel.class);
+        sharedExpenseViewModel = new ViewModelProvider(requireActivity()).get(SharedExpenseViewModel.class);
 
         // Observe filter changes
         sharedExpenseViewModel.getObject().observe(getViewLifecycleOwner(), wrapped -> {

@@ -184,13 +184,41 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewChartTitle" />
 
         <View
-            android:id="@+id/divider10"
+            android:id="@+id/dividerCategory"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="24dp"
             android:layout_marginHorizontal="16dp"
             android:background="?android:attr/listDivider"
             app:layout_constraintTop_toBottomOf="@+id/barChart" />
+
+        <TextView
+            android:id="@+id/textViewCategoryChartTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Category Distribution"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dividerCategory" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChartCategory"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_margin="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/textViewCategoryChartTitle" />
+
+        <View
+            android:id="@+id/divider10"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintTop_toBottomOf="@+id/pieChartCategory" />
 
         <TextView
             android:id="@+id/textView19"
