@@ -83,6 +83,21 @@
                     android:textSize="12sp"
                     tools:text="Online" />
             </LinearLayout>
+
+            <!-- Transaction Note -->
+            <TextView
+                android:id="@+id/frag2note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-light"
+                android:visibility="gone"
+                tools:text="This is a transaction note..."
+                tools:visibility="visible" />
         </LinearLayout>
 
         <!-- Right: amount + type badge -->

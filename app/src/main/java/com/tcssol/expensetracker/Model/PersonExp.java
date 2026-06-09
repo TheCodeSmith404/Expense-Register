@@ -24,8 +24,9 @@ public class PersonExp {
     private Boolean hasDate;
     @ColumnInfo(name="pending_date")
     private LocalDate pendingDate;
+    private String note;
 
-    public PersonExp(LocalDate dateCreated, Boolean type, String name, String contactNumber,String mode, Boolean hasDate, LocalDate pendingDate,Double amount) {
+    public PersonExp(LocalDate dateCreated, Boolean type, String name, String contactNumber,String mode, Boolean hasDate, LocalDate pendingDate,Double amount, String note) {
         this.dateCreated = dateCreated;
         this.type = type;
         this.name = name;
@@ -34,6 +35,7 @@ public class PersonExp {
         this.hasDate = hasDate;
         this.pendingDate = pendingDate;
         this.amount=amount;
+        this.note = note;
     }
 
     public Double getAmount() {
@@ -106,16 +108,31 @@ public class PersonExp {
     public void setPendingDate(LocalDate pendingDate) {
         this.pendingDate = pendingDate;
     }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     public static String toCsvFormat(PersonExp data){
         String typeString=String.valueOf(data.getType());
         String amountString=String.valueOf(data.getAmount());
-        String temp= String.format("%d,%s,%s,%s,%s,%s,%s,%s\n", data.getId(),Converters.toString(data.getDateCreated()),data.getName(),data.getContactNumber(), data.getMode(),Converters.toString(data.getPendingDate()),typeString,amountString);
-        return temp;
+        String noteStr = data.getNote() != null ? data.getNote().replace(",", ";") : "";
+        return String.format("%d,%s,%s,%s,%s,%s,%s,%s,%s\n",
+                data.getId(), Converters.toString(data.getDateCreated()), data.getName(),
+                data.getContactNumber(), data.getMode(), Converters.toString(data.getPendingDate()),
+                typeString, amountString, noteStr);
     }
     public static String toTxtFormat(PersonExp data){
         String typeString=String.valueOf(data.getType());
         String amountString=String.valueOf(data.getAmount());
-        String temp= String.format("%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", data.getId(),Converters.toString(data.getDateCreated()),data.getName(),data.getContactNumber(),data.getMode(),Converters.toString(data.getPendingDate()),typeString,amountString);
-        return temp;
+        String noteStr = data.getNote() != null ? data.getNote() : "";
+        return String.format("%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+                data.getId(), Converters.toString(data.getDateCreated()), data.getName(),
+                data.getContactNumber(), data.getMode(), Converters.toString(data.getPendingDate()),
+                typeString, amountString, noteStr);
     }
 }

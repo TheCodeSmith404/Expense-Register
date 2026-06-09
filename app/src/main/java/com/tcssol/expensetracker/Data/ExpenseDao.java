@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.tcssol.expensetracker.Model.DailySum;
 import com.tcssol.expensetracker.Model.Expenses;
 import com.tcssol.expensetracker.Utils.ModeWrapper;
 
@@ -45,10 +46,10 @@ public interface ExpenseDao {
     LiveData<List<Expenses>> getGroupedMonth(String month, String year);
 
     // Aggregate queries (must be called from a background thread / Executor)
-    @Query("SELECT SUM(amount) FROM (SELECT * FROM EXPENSES_TABLE WHERE type=false) WHERE category NOT IN(\"Money Received\",\"Money Given\")")
+    @Query("SELECT SUM(amount) FROM (SELECT * FROM EXPENSES_TABLE WHERE type=false)")
     Integer getSumSpend();
 
-    @Query("SELECT SUM(amount) FROM (SELECT * FROM EXPENSES_TABLE WHERE type=true) WHERE category NOT IN(\"Money Received\",\"Money Given\")")
+    @Query("SELECT SUM(amount) FROM (SELECT * FROM EXPENSES_TABLE WHERE type=true)")
     Integer getSumEarned();
 
     @Query("SELECT SUM(amount) FROM expenses_table WHERE category =\"Money Given\"")
@@ -57,10 +58,10 @@ public interface ExpenseDao {
     @Query("SELECT SUM(amount) FROM expenses_table WHERE category =\"Money Received\"")
     Integer getSumReceived();
 
-    @Query("SELECT SUM(amount) FROM (SELECT * FROM EXPENSES_TABLE WHERE SUBSTR(date_created, 6, 2)=:month AND SUBSTR(date_created, 1, 4)=:year AND type=false AND category NOT IN(\"Money Received\",\"Money Given\") ) ")
+    @Query("SELECT SUM(amount) FROM (SELECT * FROM EXPENSES_TABLE WHERE SUBSTR(date_created, 6, 2)=:month AND SUBSTR(date_created, 1, 4)=:year AND type=false) ")
     Integer getSumSpendF(String month, String year);
 
-    @Query("SELECT SUM(amount) FROM (SELECT * FROM EXPENSES_TABLE WHERE SUBSTR(date_created, 6, 2)=:month AND SUBSTR(date_created, 1, 4)=:year AND type=true AND category NOT IN(\"Money Received\",\"Money Given\") ) ")
+    @Query("SELECT SUM(amount) FROM (SELECT * FROM EXPENSES_TABLE WHERE SUBSTR(date_created, 6, 2)=:month AND SUBSTR(date_created, 1, 4)=:year AND type=true) ")
     Integer getSumEarnedF(String month, String year);
 
     @Query("SELECT SUM(amount) FROM (SELECT * FROM EXPENSES_TABLE WHERE SUBSTR(date_created,6,2)=:month AND SUBSTR(date_created,1,4)=:year AND category=\"Money Given\")")
@@ -92,11 +93,25 @@ public interface ExpenseDao {
 
     /** Net balance for a given month (earned - spent). Runs on Executor. */
     @Query("SELECT " +
-           "(SELECT COALESCE(SUM(amount),0) FROM expenses_table WHERE SUBSTR(date_created,6,2)=:month AND SUBSTR(date_created,1,4)=:year AND type=1 AND category NOT IN('Money Received','Money Given')) - " +
-           "(SELECT COALESCE(SUM(amount),0) FROM expenses_table WHERE SUBSTR(date_created,6,2)=:month AND SUBSTR(date_created,1,4)=:year AND type=0 AND category NOT IN('Money Received','Money Given'))")
+           "(SELECT COALESCE(SUM(amount),0) FROM expenses_table WHERE SUBSTR(date_created,6,2)=:month AND SUBSTR(date_created,1,4)=:year AND type=1) - " +
+           "(SELECT COALESCE(SUM(amount),0) FROM expenses_table WHERE SUBSTR(date_created,6,2)=:month AND SUBSTR(date_created,1,4)=:year AND type=0)")
     LiveData<Double> getNetBalance(String month, String year);
 
     /** Current month total spend (for budget check). Runs on Executor. */
-    @Query("SELECT COALESCE(SUM(amount),0) FROM expenses_table WHERE SUBSTR(date_created,6,2)=:month AND SUBSTR(date_created,1,4)=:year AND type=0 AND category NOT IN('Money Received','Money Given')")
+    @Query("SELECT COALESCE(SUM(amount),0) FROM expenses_table WHERE SUBSTR(date_created,6,2)=:month AND SUBSTR(date_created,1,4)=:year AND type=0")
     double getMonthSpend(String month, String year);
+
+    /** Total Active Balance (Lifetime) */
+    @Query("SELECT (SELECT COALESCE(SUM(amount),0) FROM expenses_table WHERE type=1) - (SELECT COALESCE(SUM(amount),0) FROM expenses_table WHERE type=0)")
+    LiveData<Double> getTotalNetBalance();
+
+    /** Daily sums for the bar chart. */
+    @SuppressWarnings(androidx.room.RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT date_created as date, " +
+           "SUM(CASE WHEN type=0 THEN amount ELSE 0 END) as totalSpent, " +
+           "SUM(CASE WHEN type=1 THEN amount ELSE 0 END) as totalEarned " +
+           "FROM expenses_table " +
+           "WHERE SUBSTR(date_created,6,2)=:month AND SUBSTR(date_created,1,4)=:year " +
+           "GROUP BY date_created ORDER BY date_created ASC")
+    LiveData<List<DailySum>> getDailySums(String month, String year);
 }

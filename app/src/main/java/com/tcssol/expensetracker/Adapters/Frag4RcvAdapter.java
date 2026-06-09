@@ -85,6 +85,13 @@ public class Frag4RcvAdapter extends RecyclerView.Adapter<Frag4RcvAdapter.ViewHo
             holder.amount.setTextColor(color);
             holder.category.setText(expenses.getCategory());
             holder.subCategory.setText(expenses.getSubCategory());
+
+            if (expenses.getNote() != null && !expenses.getNote().isEmpty()) {
+                holder.note.setText(expenses.getNote());
+                holder.note.setVisibility(View.VISIBLE);
+            } else {
+                holder.note.setVisibility(View.GONE);
+            }
         }
 
     }
@@ -165,6 +172,7 @@ public class Frag4RcvAdapter extends RecyclerView.Adapter<Frag4RcvAdapter.ViewHo
         public TextView subCategory;
         public TextView amount;
         public TextView mode;
+        public TextView note;
         public TextView date;
         public ImageButton showAmount;
         public Fragment4ClickListner clickListner;
@@ -175,6 +183,7 @@ public class Frag4RcvAdapter extends RecyclerView.Adapter<Frag4RcvAdapter.ViewHo
                 subCategory = itemView.findViewById(R.id.frag4sub_category_txt);
                 amount = itemView.findViewById(R.id.frag4amount_txt);
                 mode = itemView.findViewById(R.id.frag4Mode);
+                note = itemView.findViewById(R.id.frag4note_txt);
                 clickListner = fragment4ClickListner;
                 itemView.setOnLongClickListener(this);
                 itemView.setOnClickListener(this);

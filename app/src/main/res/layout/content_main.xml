@@ -10,101 +10,83 @@
     tools:context=".MainActivity">
 
     <!-- Period filter row: chips + ExposedDropdownMenus -->
-    <LinearLayout
-        android:id="@+id/scrollPeriodSelector"
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorPrimary"
-        android:paddingHorizontal="8dp"
-        android:paddingBottom="8dp">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAll"
-            style="@style/Widget.Material3.Chip.Filter"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/scrollPeriodSelector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="All"
-            android:textColor="@color/white"
-            app:chipBackgroundColor="#33FFFFFF"
-            app:chipStrokeColor="@color/white"
-            app:chipStrokeWidth="1dp"
-            app:checkedIconVisible="true"
-            app:checkedIconTint="@color/colorSecondary" />
+            android:orientation="horizontal"
+            android:background="?colorSurface"
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipThisMonth"
-            style="@style/Widget.Material3.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="This Month"
-            android:textColor="@color/white"
-            app:chipBackgroundColor="#33FFFFFF"
-            app:chipStrokeColor="@color/white"
-            app:chipStrokeWidth="1dp"
-            app:checkedIconTint="@color/colorSecondary" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAll"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="All" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipPreviousMonth"
-            style="@style/Widget.Material3.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Prev Month"
-            android:textColor="@color/white"
-            app:chipBackgroundColor="#33FFFFFF"
-            app:chipStrokeColor="@color/white"
-            app:chipStrokeWidth="1dp"
-            app:checkedIconTint="@color/colorSecondary" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipThisMonth"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="This Month" />
 
-        <!-- Month ExposedDropdownMenu -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/monthInputLayout"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="4dp"
-            app:boxStrokeColor="@color/white"
-            app:hintTextColor="@color/white"
-            app:boxBackgroundColor="#33FFFFFF">
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPreviousMonth"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Prev Month" />
 
-            <AutoCompleteTextView
-                android:id="@+id/spinnerSelectMonth"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="none"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:padding="8dp"
-                tools:text="January" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <!-- Month ExposedDropdownMenu -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/monthInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp">
 
-        <!-- Year ExposedDropdownMenu -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/yearInputLayout"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            app:boxStrokeColor="@color/white"
-            app:hintTextColor="@color/white"
-            app:boxBackgroundColor="#33FFFFFF">
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerSelectMonth"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="none"
+                    android:textSize="12sp"
+                    android:padding="8dp"
+                    tools:text="January" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <AutoCompleteTextView
-                android:id="@+id/spinnerSelectYear"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="none"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:padding="8dp"
-                tools:text="2026" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <!-- Year ExposedDropdownMenu -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/yearInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
-    </LinearLayout>
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerSelectYear"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="none"
+                    android:textSize="12sp"
+                    android:padding="8dp"
+                    tools:text="2026" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
 
     <!-- ViewPager2 fills remaining space above BottomNav (padded in activity) -->
     <androidx.viewpager2.widget.ViewPager2

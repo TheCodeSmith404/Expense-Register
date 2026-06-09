@@ -64,6 +64,13 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
             if (holder.dot != null)
                 holder.dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(red));
         }
+
+        if (expenses.getNote() != null && !expenses.getNote().isEmpty()) {
+            holder.note.setText(expenses.getNote());
+            holder.note.setVisibility(View.VISIBLE);
+        } else {
+            holder.note.setVisibility(View.GONE);
+        }
     }
 
 
@@ -77,6 +84,7 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
         public TextView category;
         public TextView subCategory;
         public TextView amount;
+        public TextView note;
         public View dot;
         public Fragment1ClickListner click;
 
@@ -85,6 +93,7 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
             category = itemView.findViewById(R.id.category_text);
             subCategory = itemView.findViewById(R.id.sub_category_txt);
             amount = itemView.findViewById(R.id.amount_txt);
+            note = itemView.findViewById(R.id.note_txt);
             dot = itemView.findViewById(R.id.categoryDot);
             click = fragment1ClickListner;
             itemView.setOnClickListener(this);

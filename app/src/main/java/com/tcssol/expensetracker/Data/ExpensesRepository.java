@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.tcssol.expensetracker.Model.DailySum;
 import com.tcssol.expensetracker.Model.Expenses;
 import com.tcssol.expensetracker.Utils.ModeWrapper;
 
@@ -133,6 +134,16 @@ public class ExpensesRepository {
 
     public LiveData<Double> getNetBalance(String month, String year) {
         return expenseDao.getNetBalance(month, year);
+    }
+
+    public LiveData<Double> getTotalNetBalance() {
+        return expenseDao.getTotalNetBalance();
+    }
+
+    public LiveData<List<DailySum>> getDailySums(int montht, int yearl) {
+        String month = montht < 10 ? "0" + montht : String.valueOf(montht);
+        String year = String.valueOf(yearl);
+        return expenseDao.getDailySums(month, year);
     }
 
     /** Returns monthly spend total – call from a background Executor only. */

@@ -66,7 +66,7 @@ public class DataBaseExporter {
         if (list != null && list.size() > 0) {
             // Convert data to CSV format
             StringBuilder csvData = new StringBuilder();
-            csvData.append("Id,Category,Sub Category,Payment Mode,Date Created,Type,Amount\n");
+            csvData.append("Id,Category,Sub Category,Payment Mode,Date Created,Type,Amount,Note\n");
             Log.d("Create_Database", "Building String");
             for (Expenses data : list) {
                 csvData.append(Expenses.toCsvFormat(data));
@@ -82,7 +82,7 @@ public class DataBaseExporter {
         if (list != null && list.size() > 0) {
             // Convert data to CSV format
             StringBuilder csvData = new StringBuilder();
-            csvData.append("Id\tCategory\tSub Category\tPayment Mode\tDate Created\tType,Amount\n");
+            csvData.append("Id\tCategory\tSub Category\tPayment Mode\tDate Created\tType\tAmount\tNote\n");
 //            Log.d("Create_Database", "Building String");
             for (Expenses data : list) {
                 csvData.append(Expenses.toTxtFormat(data));
@@ -98,7 +98,7 @@ public class DataBaseExporter {
         if (list != null && list.size() > 0) {
             // Convert data to CSV format
             StringBuilder csvData = new StringBuilder();
-            csvData.append("Id\tDate Created\tName\tContact Number\tPayment Mode\tPending Date\tType\tAmount\n");
+            csvData.append("Id\tDate Created\tName\tContact Number\tPayment Mode\tPending Date\tType\tAmount\tNote\n");
 //            Log.d("Create_Database", "Building String");
             for (PersonExp data : list) {
                 csvData.append(PersonExp.toTxtFormat(data));
@@ -114,7 +114,7 @@ public class DataBaseExporter {
         if (list != null && list.size() > 0) {
             // Convert data to CSV format
             StringBuilder csvData = new StringBuilder();
-            csvData.append("Id,Date Created,Name,Contact Number,Payment Mode,Pending Date,Type,Amount\n");
+            csvData.append("Id,Date Created,Name,Contact Number,Payment Mode,Pending Date,Type,Amount,Note\n");
             Log.d("Create_Database", "Building String");
             for (PersonExp data : list) {
                 csvData.append(PersonExp.toCsvFormat(data));

@@ -7,6 +7,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -88,13 +90,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        View mainContent = findViewById(R.id.mainActivity);
+        ViewCompat.setOnApplyWindowInsetsListener(mainContent, (v, windowInsets) -> {
+            androidx.core.graphics.Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(insets.left,
+                    insets.top,
+                    insets.right,
+                    insets.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                result -> { /* handled via LiveData */ }
+                result -> {
+                    // Logic for other activities if needed
+                }
         );
 
         viewPager = findViewById(R.id.viewpager2);
@@ -181,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             someActivityResultLauncher.launch(intent);
         });
 
-        // --- Budget check on this month's data ---
+        // Budget check removed or kept if needed
         checkBudgetWarning();
 
         // --- Restore tab from intent (e.g. returning from EditAdapter) ---

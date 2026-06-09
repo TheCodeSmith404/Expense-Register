@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.tcssol.expensetracker.Data.ExpenseDao;
 import com.tcssol.expensetracker.Data.ExpensesDatabase;
 import com.tcssol.expensetracker.Data.ExpensesRepository;
+import com.tcssol.expensetracker.Model.DailySum;
 import com.tcssol.expensetracker.Utils.ModeWrapper;
 
 import java.time.LocalDate;
@@ -100,6 +101,16 @@ public class ExpenseViewModel extends AndroidViewModel {
     /** Net balance (earned - spent) for a given month/year as LiveData. */
     public LiveData<Double> getNetBalance(String month, String year) {
         return repository.getNetBalance(month, year);
+    }
+
+    /** Total Active Balance (Lifetime) as LiveData. */
+    public LiveData<Double> getTotalNetBalance() {
+        return repository.getTotalNetBalance();
+    }
+
+    /** Daily sums for the bar chart. */
+    public LiveData<List<DailySum>> getDailySums(int month, int year) {
+        return repository.getDailySums(month, year);
     }
 
     /**

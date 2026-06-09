@@ -1,10 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Dark theme -->
-    <style name="Base.Theme.ExpenseTracker" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.ExpenseTracker" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnSurface">@color/colorTextPrimary</item>
+        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
+        <item name="android:textColorSecondary">@color/colorTextSecondary</item>
+        <item name="android:textColorHint">@color/colorTextHint</item>
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:navigationBarColor">@color/colorSurface</item>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@+id/mainActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -53,12 +54,14 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="56dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="90dp"
+        app:elevation="4dp"
+        android:layout_gravity="bottom|end"
         android:contentDescription="@string/enter_amount"
-        android:src="@drawable/baseline_add_24"
-        app:backgroundTint="@color/colorSecondary"
-        app:tint="@color/white"
-        app:elevation="8dp" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="?colorOnPrimary" />
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
