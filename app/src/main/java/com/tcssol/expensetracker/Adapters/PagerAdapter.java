@@ -7,10 +7,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.tcssol.expensetracker.Fragment1;
-import com.tcssol.expensetracker.Fragment2;
-import com.tcssol.expensetracker.Fragment3;
-import com.tcssol.expensetracker.Fragment4;
+import com.tcssol.expensetracker.CategoriesFragment;
+import com.tcssol.expensetracker.PeerToPeerFragment;
+import com.tcssol.expensetracker.DashboardFragment;
+import com.tcssol.expensetracker.TransactionsFragment;
 
 public class PagerAdapter extends FragmentStateAdapter {
 
@@ -22,14 +22,16 @@ public class PagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch(position){
+            case 0:
+                return new CategoriesFragment();
             case 1:
-                return new Fragment2();
+                return new PeerToPeerFragment();
             case 2:
-                return  new Fragment4();
+                return new DashboardFragment();
             case 3:
-                return new Fragment3();
+                return new TransactionsFragment();
             default:
-                return new Fragment1();
+                return new CategoriesFragment();
         }
     }
 

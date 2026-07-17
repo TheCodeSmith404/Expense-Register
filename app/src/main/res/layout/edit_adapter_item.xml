@@ -11,30 +11,46 @@
         android:id="@+id/textView12"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:ellipsize="end"
-        android:longClickable="true"
         android:singleLine="true"
         android:textAppearance="?attr/textAppearanceBodyLarge"
         android:textColor="?attr/colorOnSurface"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageButtonCross"
+        app:layout_constraintEnd_toStartOf="@+id/tvFixedBadge"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Transportation" />
 
+    <TextView
+        android:id="@+id/tvFixedBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/purple_gradient"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="2dp"
+        android:text="Fixed"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonMore"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
     <ImageButton
-        android:id="@+id/imageButtonCross"
+        android:id="@+id/imageButtonMore"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/remove_item"
-        android:src="@drawable/baseline_close_24"
-        android:visibility="visible"
+        android:contentDescription="Options"
+        android:src="@drawable/baseline_more_vert_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorError" />
+        app:tint="?attr/colorOnSurfaceVariant" />
 
     <Button
         android:id="@+id/buttonAddEditAdapter"

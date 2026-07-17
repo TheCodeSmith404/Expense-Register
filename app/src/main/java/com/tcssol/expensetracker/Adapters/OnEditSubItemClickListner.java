@@ -1,6 +1,6 @@
 package com.tcssol.expensetracker.Adapters;
 
 public interface OnEditSubItemClickListner {
-    void onEditSubCrossViewClick(String item);
+    void onSubCategoryOptionsClick(String subCategory, android.view.View anchorView);
     void addSubItem();
 }

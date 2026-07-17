@@ -24,6 +24,7 @@ public class ExpenseViewModel extends AndroidViewModel {
     public final LiveData<List<Expenses>> allExpenses;
     public final LiveData<List<Expenses>> allExpensesGrouped;
     public final LiveData<List<ModeWrapper>> modeDist;
+    public final LiveData<List<CategoryConfig>> allCategoryConfigs;
 
     // v2.0: Frag3 summary data – lazy via getFrag3Data() to avoid sync access
     private MutableLiveData<List<Integer>> _frag3Data;
@@ -35,10 +36,19 @@ public class ExpenseViewModel extends AndroidViewModel {
         this.allExpenses = repository.getAllExpenses();
         this.allExpensesGrouped = repository.getGroupedExpenses();
         this.modeDist = repository.getModeDist();
+        this.allCategoryConfigs = repository.getAllCategoryConfigs();
 
         // Trigger initial summary fetch asynchronously
         _frag3Data = repository.getFrag3Data();
         frag3Data = _frag3Data;
+    }
+
+    public LiveData<List<CategoryConfig>> getAllCategoryConfigs() {
+        return allCategoryConfigs;
+    }
+
+    public void insertCategoryConfig(CategoryConfig config) {
+        repository.insertCategoryConfig(config);
     }
 
     /**

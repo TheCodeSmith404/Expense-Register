@@ -96,6 +96,40 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
+            <!-- Transaction Date -->
+            <TextView
+                android:id="@+id/labelTransactionDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Date"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/noteInputLayout" />
+
+            <TextView
+                android:id="@+id/selectDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Today"
+                style="@style/Widget.ExpenseRegister.SelectorField"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelTransactionDate" />
+
+            <ImageView
+                android:id="@+id/imgViewCalendar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
+                android:clickable="false"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="@+id/selectDate"
+                app:layout_constraintEnd_toEndOf="@+id/selectDate"
+                app:layout_constraintTop_toTopOf="@+id/selectDate"
+                app:srcCompat="@drawable/baseline_access_time_24" />
+
             <!-- Category (earned/spend group) -->
             <TextView
                 android:id="@+id/select_category"
@@ -105,7 +139,7 @@
                 android:text="@string/category"
                 style="@style/Widget.ExpenseRegister.FieldLabel"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/noteInputLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/selectDate" />
 
             <TextView
                 android:id="@+id/selectCategory"

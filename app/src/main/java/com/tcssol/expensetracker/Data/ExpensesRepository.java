@@ -16,6 +16,7 @@ import java.util.List;
 
 public class ExpensesRepository {
     private final ExpenseDao expenseDao;
+    private final CategoryConfigDao categoryConfigDao;
     private final LiveData<List<Expenses>> allExpenses;
     private final LiveData<List<Expenses>> groupedExpenses;
     private final LiveData<List<ModeWrapper>> modeDist;
@@ -23,9 +24,22 @@ public class ExpensesRepository {
     public ExpensesRepository(Application application) {
         ExpensesDatabase database = ExpensesDatabase.getDatabase(application);
         this.expenseDao = database.expenseDao();
+        this.categoryConfigDao = database.categoryConfigDao();
         this.allExpenses = expenseDao.getExpenses();
         this.groupedExpenses = expenseDao.getGroupedItems();
         this.modeDist = expenseDao.getModeDist();
+    }
+
+    public LiveData<List<com.tcssol.expensetracker.Model.CategoryConfig>> getAllCategoryConfigs() {
+        return categoryConfigDao.getAllCategoryConfigs();
+    }
+
+    public void insertCategoryConfig(com.tcssol.expensetracker.Model.CategoryConfig config) {
+        ExpensesDatabase.databaseWriterExecutor.execute(() -> categoryConfigDao.insertOrUpdateCategoryConfig(config));
+    }
+
+    public com.tcssol.expensetracker.Model.CategoryConfig getCategoryConfigSync(String name) {
+        return categoryConfigDao.getCategoryConfigSync(name);
     }
 
     /** Returns all expenses synchronously for export – call from a background Executor only. */

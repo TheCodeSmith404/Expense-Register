@@ -2,7 +2,6 @@ package com.tcssol.expensetracker.Adapters;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,78 +25,74 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
-public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHolder> {
+public class PeerToPeerAdapter extends RecyclerView.Adapter<PeerToPeerAdapter.ViewHolder> {
     public List<PersonExp> personExpList;
     public List<PersonExp> newPersonExpList;
     public final Context mContext;
-    private PersonExpDao personExpDao;
-    Fragment2ClickListner fragment2ClickListner;
-    private int type;
+    private final PersonExpDao personExpDao;
+    private final PeerToPeerClickListener clickListener;
+    private final int type;
 
-
-
-    public Frag2RcvAdapter(Context mContext, PersonExpDao personExpDao, List<PersonExp> personExpList, Fragment2ClickListner fragment2ClickListner, int type) {
+    public PeerToPeerAdapter(Context mContext, PersonExpDao personExpDao, List<PersonExp> personExpList, PeerToPeerClickListener clickListener, int type) {
         this.mContext = mContext;
         this.personExpDao = personExpDao;
-        this.personExpList=personExpList;
-        this.type=type;
-        Log.d("Sup","Adapter Initialized");
-        if(type!=2&&personExpList.size()!=0) {
+        this.personExpList = personExpList;
+        this.type = type;
+        Log.d("Sup", "Adapter Initialized");
+        if (type != 2 && personExpList.size() != 0) {
             newPersonExpList = getNewList(personExpList);
-            Log.d("Sup","either not type 2 or size ==0");
+            Log.d("Sup", "either not type 2 or size == 0");
         }
-        this.fragment2ClickListner=fragment2ClickListner;
+        this.clickListener = clickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view=LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment2item,parent,false);
-        switch(viewType){
+        View view;
+        switch (viewType) {
             case 1:
-                view= LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.fragment2item,parent,false);
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.fragment2item, parent, false);
                 break;
             case 2:
-                view=LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.fragment2itemtype2,parent,false);
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.fragment2itemtype2, parent, false);
                 break;
             case 3:
-                view=LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.fragment4date,parent,false);
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.fragment4date, parent, false);
                 break;
             default:
-                view= LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.fragment2item,parent,false);
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.fragment2item, parent, false);
         }
-
-        return new ViewHolder(view,viewType);
+        return new ViewHolder(view, viewType);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int color;
         PersonExp personExp;
-        if(type!=2) {
+        if (type != 2) {
             personExp = newPersonExpList.get(position);
-        }else{
-            personExp=personExpList.get(position);
+        } else {
+            personExp = personExpList.get(position);
         }
-        if(personExp.getName().equals("_*_*_")){
-            LocalDate date=personExp.getDateCreated();
+        
+        if (personExp.getName().equals("_*_*_")) {
+            LocalDate date = personExp.getDateCreated();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-
             holder.date2.setText(date.format(formatter));
-        }else {
+        } else {
             String symbol = Currency.getInstance(Locale.getDefault()).getSymbol();
             holder.amount.setText(String.valueOf(personExp.getAmount()));
-            if (personExp.getType() == false) {
+            if (!personExp.getType()) {
                 color = ContextCompat.getColor(mContext, R.color.expense);
-                holder.amount.setText("-" + symbol + String.valueOf(personExp.getAmount()));
+                holder.amount.setText("-" + symbol + String.format(Locale.getDefault(), "%,.2f", personExp.getAmount()));
             } else {
                 color = ContextCompat.getColor(mContext, R.color.income);
-                holder.amount.setText(symbol + String.valueOf(personExp.getAmount()));
+                holder.amount.setText(symbol + String.format(Locale.getDefault(), "%,.2f", personExp.getAmount()));
             }
             if (holder.view != null) {
                 holder.view.setBackgroundTintList(ColorStateList.valueOf(color));
@@ -107,16 +102,15 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
             holder.name.setText(personExp.getName());
             if (type == 1) {
                 holder.mode.setText(personExp.getMode());
-                if (personExp.getContactNumber() == "") {
+                if (personExp.getContactNumber().isEmpty()) {
                     holder.contactNumber.setVisibility(View.GONE);
                 } else {
                     holder.contactNumber.setText(personExp.getContactNumber());
                 }
-                if (personExp.getHasDate() != null && personExp.getHasDate() == false) {
+                if (personExp.getHasDate() != null && !personExp.getHasDate()) {
                     holder.date.setVisibility(View.GONE);
                 } else {
                     holder.date.setVisibility(View.VISIBLE);
-//                holder.date.getDrawable().setTint(color);
                 }
 
                 if (personExp.getNote() != null && !personExp.getNote().isEmpty()) {
@@ -127,11 +121,11 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
                 }
             }
         }
-
     }
+
     @Override
     public int getItemViewType(int position) {
-        if(type!=2&&newPersonExpList.get(position).getName().equals("_*_*_"))
+        if (type != 2 && newPersonExpList.get(position).getName().equals("_*_*_"))
             return 3;
         else
             return type;
@@ -139,30 +133,25 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        if(type==2||personExpList.size()==0){
+        if (type == 2 || personExpList.isEmpty()) {
             return personExpList.size();
-        }else {
+        } else {
             return newPersonExpList.size();
         }
     }
 
     public List<PersonExp> getNewList(List<PersonExp> list) {
         List<PersonExp> ret = new ArrayList<>();
-        PersonExp test = new PersonExp(list.get(0).getDateCreated(), (Boolean) false, "_*_*_", "_*_*_","_*_*_", false, (LocalDate) null,0D,"");
+        PersonExp test = new PersonExp(list.get(0).getDateCreated(), false, "_*_*_", "_*_*_", "_*_*_", false, null, 0D, "");
         ret.add(0, test);
         ret.add(1, list.get(0));
-        Log.d("Recycle Date 2",PersonExp.toTxtFormat(test));
-        Log.d("Recycle Date 2",PersonExp.toTxtFormat(list.get(0)));
         for (int i = 1; i < list.size(); i++) {
             PersonExp temp = list.get(i);
             PersonExp temp2 = list.get(i - 1);
             if (temp.getDateCreated().isEqual(temp2.getDateCreated())) {
                 ret.add(temp);
-                Log.d("Recycle Date 2",PersonExp.toTxtFormat(temp));
             } else {
-                test = new PersonExp(temp.getDateCreated(), (Boolean)false, "_*_*_", "_*_*_","_*_*_", false, (LocalDate)null,0D,"");
-                Log.d("Recycle Date 2",PersonExp.toTxtFormat(test));
-                Log.d("Recycle Date 2",PersonExp.toTxtFormat(temp));
+                test = new PersonExp(temp.getDateCreated(), false, "_*_*_", "_*_*_", "_*_*_", false, null, 0D, "");
                 ret.add(test);
                 ret.add(temp);
             }
@@ -179,10 +168,10 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
         public View view;
         public TextView mode;
         public TextView note;
-        public Fragment2ClickListner clickListner;
-        public ViewHolder(@NonNull View itemView,int type) {
+
+        public ViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
-            if(type==1) {
+            if (viewType == 1) {
                 name = itemView.findViewById(R.id.frag2name);
                 contactNumber = itemView.findViewById(R.id.frag2contact);
                 amount = itemView.findViewById(R.id.frag2amount_txt);
@@ -190,13 +179,12 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
                 view = itemView.findViewById(R.id.frag2line);
                 mode = itemView.findViewById(R.id.frag2Mode);
                 note = itemView.findViewById(R.id.frag2note);
-                clickListner = fragment2ClickListner;
                 date.setOnClickListener(this);
                 itemView.getRootView().setOnLongClickListener(this);
                 itemView.getRootView().setOnClickListener(this);
-            }else if(type==3){
-                date2=itemView.findViewById(R.id.textViewDate);
-            }else{
+            } else if (viewType == 3) {
+                date2 = itemView.findViewById(R.id.textViewDate);
+            } else {
                 name = itemView.findViewById(R.id.frag2name);
                 amount = itemView.findViewById(R.id.frag2amount_txt);
                 view = itemView.findViewById(R.id.frag2line);
@@ -205,28 +193,30 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
 
         @Override
         public boolean onLongClick(View v) {
-            PersonExp data=newPersonExpList.get(getAdapterPosition());
-            clickListner.fragment2LongClickListner(data,getAdapterPosition());
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                PersonExp data = (type != 2) ? newPersonExpList.get(getAdapterPosition()) : personExpList.get(getAdapterPosition());
+                clickListener.onPeerLongClick(data, getAdapterPosition());
+                return true;
+            }
             return false;
         }
 
         @Override
         public void onClick(View v) {
-            PersonExp data=newPersonExpList.get(getAdapterPosition());
-            if(v.getId()==R.id.frag2date){
-                /*
-                TODO create a popup window and inflte it
-                 */
-                View popUp=LayoutInflater.from(mContext).inflate(R.layout.pending_date_recycle_view,null);
-                TextView view=popUp.findViewById(R.id.frag2ShowPendingDate);
-                view.setText(data.getPendingDate().toString());
-                PopupWindow window=new PopupWindow(popUp, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
-                clickListner.fragment2PopupClick(window,v);
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                PersonExp data = (type != 2) ? newPersonExpList.get(getAdapterPosition()) : personExpList.get(getAdapterPosition());
+                if (v.getId() == R.id.frag2date) {
+                    View popUp = LayoutInflater.from(mContext).inflate(R.layout.pending_date_recycle_view, null);
+                    TextView tv = popUp.findViewById(R.id.frag2ShowPendingDate);
+                    if (data.getPendingDate() != null) {
+                        tv.setText(data.getPendingDate().toString());
+                    }
+                    PopupWindow window = new PopupWindow(popUp, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    clickListener.onPeerPopupClick(window, v);
+                } else {
+                    clickListener.onPeerClick(data);
+                }
             }
-            else {
-                clickListner.fragment2ClickListner(data);
-            }
-
         }
     }
 }

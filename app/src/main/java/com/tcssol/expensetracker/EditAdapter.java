@@ -17,6 +17,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import com.tcssol.expensetracker.Model.ExpenseViewModel;
+import com.tcssol.expensetracker.Model.CategoryConfig;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,6 +59,7 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
     private Button saveButtonCategories;
     private Button saveButtonMedium;
     private TextView tvSubcategoriesTitle;
+    private ExpenseViewModel expenseViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,6 +131,22 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
         adapter = new EditAdapterCategory(context, categories, this);
         adapter2 = new EditAdapterMedium(context, medium, this);
 
+        expenseViewModel = new androidx.lifecycle.ViewModelProvider(this).get(ExpenseViewModel.class);
+        expenseViewModel.getAllCategoryConfigs().observe(this, configs -> {
+            latestConfigsMap.clear();
+            java.util.HashSet<String> fixedCats = new java.util.HashSet<>();
+            if (configs != null) {
+                for (CategoryConfig c : configs) {
+                    latestConfigsMap.put(c.getCategoryName(), c.isFixed());
+                    if (!c.getCategoryName().contains("::") && c.isFixed()) {
+                        fixedCats.add(c.getCategoryName());
+                    }
+                }
+            }
+            adapter.setFixedCategories(fixedCats);
+            updateSubCategoryAdapterFixedState();
+        });
+
         recyclerViewCategories.setAdapter(adapter);
         recyclerViewMode.setAdapter(adapter2);
 
@@ -186,6 +205,35 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
         void onTextAdded(String text);
     }
 
+    private java.util.Map<String, Boolean> latestConfigsMap = new java.util.HashMap<>();
+
+    private void updateSubCategoryAdapterFixedState() {
+        java.util.HashSet<String> currentFixedSubs = new java.util.HashSet<>();
+        if (currentCategoryHelper != null) {
+            boolean isParentFixed = false;
+            if (latestConfigsMap.containsKey(currentCategoryHelper)) {
+                isParentFixed = latestConfigsMap.get(currentCategoryHelper) == true;
+            }
+            if (subcategory != null) {
+                for (String sub : subcategory) {
+                    String subKey = currentCategoryHelper + "::" + sub;
+                    if (latestConfigsMap.containsKey(subKey)) {
+                        if (latestConfigsMap.get(subKey) == true) {
+                            currentFixedSubs.add(sub);
+                        }
+                    } else {
+                        if (isParentFixed) {
+                            currentFixedSubs.add(sub);
+                        }
+                    }
+                }
+            }
+        }
+        if (adapter3 != null) {
+            adapter3.setFixedSubCategories(currentFixedSubs);
+        }
+    }
+
     @Override
     public void onEditTextViewClick(String category) {
         currentCategoryHelper = category;
@@ -195,32 +243,7 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
         subcategory = jsonStrings.getList(category);
         adapter3 = new EditAdapterSubCategory(context, subcategory, this);
         recyclerViewSubCategories.setAdapter(adapter3);
-    }
-
-    @Override
-    public void onEditCrossViewClick(String item) {
-        categories.remove(item);
-        jsonStrings.removeKey(item);
-        jsonStrings.updateElementList("_elementlist", categories);
-        adapter.notifyDataSetChanged();
-        
-        // If the currently displayed subcategories belonged to the deleted category, clear or re-select
-        if (item.equals(currentCategoryHelper)) {
-            if (!categories.isEmpty()) {
-                onEditTextViewClick(categories.get(0));
-            } else {
-                currentCategoryHelper = "";
-                if (tvSubcategoriesTitle != null) {
-                    tvSubcategoriesTitle.setText("Sub-Categories");
-                }
-                if (subcategory != null) {
-                    subcategory.clear();
-                    if (adapter3 != null) {
-                        adapter3.notifyDataSetChanged();
-                    }
-                }
-            }
-        }
+        updateSubCategoryAdapterFixedState();
     }
 
     @Override
@@ -238,14 +261,7 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
         });
     }
 
-    @Override
-    public void onEditSubCrossViewClick(String item) {
-        subcategory.remove(item);
-        jsonStrings.updateElementList(currentCategoryHelper, subcategory);
-        if (adapter3 != null) {
-            adapter3.notifyDataSetChanged();
-        }
-    }
+
 
     @Override
     public void addSubItem() {
@@ -263,6 +279,104 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
     }
 
     @Override
+    public void onCategoryOptionsClick(String category, android.view.View anchorView) {
+        androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(this, anchorView);
+        
+        boolean isCurrentlyFixed = false;
+        if (adapter.fixedCategories != null) {
+            isCurrentlyFixed = adapter.fixedCategories.contains(category);
+        }
+        
+        String toggleText = isCurrentlyFixed ? "Mark as Variable" : "Mark as Fixed";
+        popupMenu.getMenu().add(0, 1, 0, toggleText);
+        popupMenu.getMenu().add(0, 2, 1, "Delete Category");
+        
+        final boolean isFixedFinal = !isCurrentlyFixed;
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == 1) {
+                expenseViewModel.insertCategoryConfig(new CategoryConfig(category, isFixedFinal));
+                
+                // Cascade category fixed state to all subcategories
+                List<String> subs = jsonStrings.getList(category);
+                if (subs != null) {
+                    for (String s : subs) {
+                        expenseViewModel.insertCategoryConfig(new CategoryConfig(category + "::" + s, isFixedFinal));
+                    }
+                }
+            } else if (id == 2) {
+                expenseViewModel.insertCategoryConfig(new CategoryConfig(category, false));
+                List<String> subs = jsonStrings.getList(category);
+                if (subs != null) {
+                    for (String s : subs) {
+                        expenseViewModel.insertCategoryConfig(new CategoryConfig(category + "::" + s, false));
+                    }
+                }
+                
+                categories.remove(category);
+                jsonStrings.removeKey(category);
+                jsonStrings.updateElementList("_elementlist", categories);
+                adapter.notifyDataSetChanged();
+                
+                if (category.equals(currentCategoryHelper)) {
+                    if (!categories.isEmpty()) {
+                        onEditTextViewClick(categories.get(0));
+                    } else {
+                        currentCategoryHelper = "";
+                        if (tvSubcategoriesTitle != null) {
+                            tvSubcategoriesTitle.setText("Sub-Categories");
+                        }
+                        if (subcategory != null) {
+                            subcategory.clear();
+                            if (adapter3 != null) {
+                                adapter3.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        });
+        popupMenu.show();
+    }
+
+    @Override
+    public void onSubCategoryOptionsClick(String subCategory, android.view.View anchorView) {
+        androidx.appcompat.widget.PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(this, anchorView);
+        
+        boolean isCurrentlyFixed = false;
+        String subKey = currentCategoryHelper + "::" + subCategory;
+        if (latestConfigsMap.containsKey(subKey)) {
+            isCurrentlyFixed = latestConfigsMap.get(subKey) == true;
+        } else {
+            if (latestConfigsMap.containsKey(currentCategoryHelper)) {
+                isCurrentlyFixed = latestConfigsMap.get(currentCategoryHelper) == true;
+            }
+        }
+        
+        String toggleText = isCurrentlyFixed ? "Mark as Variable" : "Mark as Fixed";
+        popupMenu.getMenu().add(0, 1, 0, toggleText);
+        popupMenu.getMenu().add(0, 2, 1, "Delete Sub-Category");
+        
+        final boolean isFixedFinal = !isCurrentlyFixed;
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == 1) {
+                expenseViewModel.insertCategoryConfig(new CategoryConfig(subKey, isFixedFinal));
+            } else if (id == 2) {
+                expenseViewModel.insertCategoryConfig(new CategoryConfig(subKey, false));
+                subcategory.remove(subCategory);
+                jsonStrings.updateElementList(currentCategoryHelper, subcategory);
+                if (adapter3 != null) {
+                    adapter3.notifyDataSetChanged();
+                }
+            }
+            return true;
+        });
+        popupMenu.show();
+    }
+
+    @Override
     public void onEditMediumCrossViewClick(String item) {
         medium.remove(item);
         jsonStrings1.updateElementList("_list_medium", medium);
@@ -277,4 +391,6 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
             jsonStrings1.updateElementList("_list_medium", medium);
         });
     }
+
+
 }

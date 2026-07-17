@@ -1,7 +1,7 @@
 package com.tcssol.expensetracker.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,58 +11,66 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.tcssol.expensetracker.Data.ExpenseDao;
 import com.tcssol.expensetracker.Model.Expenses;
 import com.tcssol.expensetracker.R;
 
 import java.util.Currency;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
-public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHolder>{
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
     public List<Expenses> expensesList;
     public final Context mContext;
-    private ExpenseDao expenseDao;
-    private Fragment1ClickListner fragment1ClickListner;
+    private final ExpenseDao expenseDao;
+    private final CategoriesClickListener clickListener;
+    private Set<String> fixedCategories = new HashSet<>();
 
-    public Frag1RcvAdapter(List<Expenses> expensesList, Context mContext, ExpenseDao expenseDao,Fragment1ClickListner fragment1ClickListner) {
+    public CategoriesAdapter(List<Expenses> expensesList, Context mContext, ExpenseDao expenseDao, CategoriesClickListener clickListener) {
         this.mContext = mContext;
-        this.expenseDao=expenseDao;
-        this.expensesList=expensesList;
-        this.fragment1ClickListner=fragment1ClickListner;
+        this.expenseDao = expenseDao;
+        this.expensesList = expensesList;
+        this.clickListener = clickListener;
+    }
+
+    public void setFixedCategories(Set<String> fixedCategories) {
+        this.fixedCategories = fixedCategories != null ? fixedCategories : new HashSet<>();
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment1item,parent,false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.fragment1item, parent, false);
         return new ViewHolder(view);
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Expenses expenses = expensesList.get(position);
-        holder.category.setText(expenses.getCategory());
+        
+        String categoryName = expenses.getCategory();
+        boolean isFixed = fixedCategories.contains(categoryName);
+        holder.category.setText(categoryName + (isFixed ? " (Fixed)" : ""));
+        
         holder.subCategory.setText(expenses.getSubCategory());
         String symbol = Currency.getInstance(Locale.getDefault()).getSymbol();
 
         if (expenses.isType()) {
-            // Income / earned → green (income)
             int incomeColor = ContextCompat.getColor(mContext, R.color.income);
             holder.amount.setTextColor(incomeColor);
-            holder.amount.setText(symbol + String.valueOf(expenses.getAmount()));
+            holder.amount.setText(symbol + String.format(Locale.getDefault(), "%,.2f", expenses.getAmount()));
             if (holder.dot != null)
-                holder.dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(incomeColor));
+                holder.dot.setBackgroundTintList(ColorStateList.valueOf(incomeColor));
         } else {
-            // Expense / spent → red (expense)
             int expenseColor = ContextCompat.getColor(mContext, R.color.expense);
             holder.amount.setTextColor(expenseColor);
-            holder.amount.setText("-" + symbol + String.valueOf(expenses.getAmount()));
+            holder.amount.setText("-" + symbol + String.format(Locale.getDefault(), "%,.2f", expenses.getAmount()));
             if (holder.dot != null)
-                holder.dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(expenseColor));
+                holder.dot.setBackgroundTintList(ColorStateList.valueOf(expenseColor));
         }
 
         if (expenses.getNote() != null && !expenses.getNote().isEmpty()) {
@@ -72,8 +80,6 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
             holder.note.setVisibility(View.GONE);
         }
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -86,7 +92,6 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
         public TextView amount;
         public TextView note;
         public View dot;
-        public Fragment1ClickListner click;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -95,20 +100,24 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
             amount = itemView.findViewById(R.id.amount_txt);
             note = itemView.findViewById(R.id.note_txt);
             dot = itemView.findViewById(R.id.categoryDot);
-            click = fragment1ClickListner;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            click.fragment1ClickListner(expensesList.get(getAdapterPosition()));
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                clickListener.onCategoryClick(expensesList.get(getAdapterPosition()));
+            }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            click.fragment1LongClickListner(expensesList.get(getAdapterPosition()));
-            return true;
+            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                clickListener.onCategoryLongClick(expensesList.get(getAdapterPosition()));
+                return true;
+            }
+            return false;
         }
     }
 }

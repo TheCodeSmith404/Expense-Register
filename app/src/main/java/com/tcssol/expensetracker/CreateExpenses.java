@@ -78,6 +78,8 @@ public class CreateExpenses extends AppCompatActivity {
     private EditText editAmount;
     private Button saveExpenses;
     private String categoryString="General";
+    private TextView showDate;
+    private LocalDate selectedExpenseDate = LocalDate.now();
     private String subCategoryString="General";
     private int type;
     private Boolean exptype;
@@ -156,6 +158,21 @@ public class CreateExpenses extends AppCompatActivity {
         showCategory=findViewById(R.id.selectCategory);
         showSubCategory=findViewById(R.id.selectSubCategory);
         showMedium=findViewById(R.id.selectMedium);
+        showDate=findViewById(R.id.selectDate);
+        showDate.setText("Today");
+        showDate.setOnClickListener(v -> {
+            com.google.android.material.datepicker.MaterialDatePicker<Long> datePicker =
+                    com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker()
+                            .setTitleText("Select Transaction Date")
+                            .setSelection(com.google.android.material.datepicker.MaterialDatePicker.todayInUtcMilliseconds())
+                            .build();
+            datePicker.addOnPositiveButtonClickListener(selection -> {
+                java.time.Instant instant = java.time.Instant.ofEpochMilli(selection);
+                selectedExpenseDate = java.time.LocalDateTime.ofInstant(instant, java.time.ZoneId.of("UTC")).toLocalDate();
+                showDate.setText(selectedExpenseDate.toString());
+            });
+            datePicker.show(getSupportFragmentManager(), "TRANSACTION_DATE_PICKER");
+        });
 
         /*
         Initilizing View
@@ -388,14 +405,14 @@ public class CreateExpenses extends AppCompatActivity {
                     Double amount= Double.valueOf(String.valueOf(editAmount.getText()));
                     String noteText = editTextNote != null && editTextNote.getText() != null
                             ? editTextNote.getText().toString().trim() : null;
-                    Expenses expense=new Expenses(LocalDate.now(),categoryString,subCategoryString,mediumText,amount,exptype,
+                    Expenses expense=new Expenses(selectedExpenseDate,categoryString,subCategoryString,mediumText,amount,exptype,
                             noteText.isEmpty() ? null : noteText);
                     ExpenseViewModel.insert(expense,getApplicationContext());
                     finish();
                 } else if(type==2&&!(editAmount.getText().toString().trim().isEmpty())&&!(name.getText().toString().trim().isEmpty())){
                     Log.d("1234","Inside else if");
                     Double amount= Double.valueOf(String.valueOf(editAmount.getText()));
-                    LocalDate localDate=LocalDate.now();
+                    LocalDate localDate = selectedExpenseDate;
                     String getName= String.valueOf(name.getText());
                     String contactNumber=String.valueOf(number.getText());
                     String category=receivedGiven?"Money Received":"Money Given";
@@ -414,7 +431,7 @@ public class CreateExpenses extends AppCompatActivity {
                          */
                         if(targetDate!=null){
                             noteText = editTextNote != null && editTextNote.getText() != null
-                                    ? editTextNote.getText().toString().trim() : null;
+                                    ? noteText.trim() : null;
                             PersonExp personExp=new PersonExp(localDate,receivedGiven,getName,contactNumber,mediumText,true,targetDate,amount,
                                     noteText.isEmpty() ? null : noteText);
                             Expenses expense=new Expenses(localDate,category,getName,mediumText,amount,exptype,

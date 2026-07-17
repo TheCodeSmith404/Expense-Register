@@ -20,37 +20,53 @@ public class EditAdapterCategory extends RecyclerView.Adapter<EditAdapterCategor
     public List<String> list;
     public final Context context;
     private final OnEditItemClickListner EditItemClickListner;
+    public java.util.Set<String> fixedCategories = new java.util.HashSet<>();
+
     public EditAdapterCategory(Context context, List<String> list, OnEditItemClickListner editItemClickListner){
         this.list=list;
         this.context=context;
         this.EditItemClickListner=editItemClickListner;
-        Log.d("EditAdapter","Created EditAdapterAdapter");
     }
+
+    public void setFixedCategories(java.util.Set<String> fixedCategories) {
+        this.fixedCategories = fixedCategories != null ? fixedCategories : new java.util.HashSet<>();
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.edit_adapter_item,parent,false);
-        Log.d("EditAdapter","CreatingView");
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d("EditAdapter","Binding View"+position);
         if(position==list.size()){
             holder.text.setText("Add Item");
             holder.text.setVisibility(View.GONE);
-            holder.delete.setVisibility(View.GONE);
+            holder.more.setVisibility(View.GONE);
+            holder.fixedBadge.setVisibility(View.GONE);
             holder.insert.setVisibility(View.VISIBLE);
         }else if(list.get(position).equals("General")){
-            holder.delete.setVisibility(View.GONE);
-            holder.text.setText(list.get(position));
-        }
-        else{
+            holder.more.setVisibility(View.GONE); // Cannot edit or delete General
             holder.text.setText(list.get(position));
             holder.text.setVisibility(View.VISIBLE);
-            holder.delete.setVisibility(View.VISIBLE);
+            
+            // Check if General category itself is fixed
+            boolean isFixed = fixedCategories.contains(list.get(position));
+            holder.fixedBadge.setVisibility(isFixed ? View.VISIBLE : View.GONE);
+            holder.insert.setVisibility(View.GONE);
+        }
+        else{
+            String category = list.get(position);
+            holder.text.setText(category);
+            holder.text.setVisibility(View.VISIBLE);
+            holder.more.setVisibility(View.VISIBLE);
+            
+            boolean isFixed = fixedCategories.contains(category);
+            holder.fixedBadge.setVisibility(isFixed ? View.VISIBLE : View.GONE);
             holder.insert.setVisibility(View.GONE);
         }
     }
@@ -62,39 +78,34 @@ public class EditAdapterCategory extends RecyclerView.Adapter<EditAdapterCategor
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
         public TextView text;
-        public ImageButton delete;
+        public TextView fixedBadge;
+        public ImageButton more;
         public Button insert;
         OnEditItemClickListner onEditItemClickListner;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             onEditItemClickListner=EditItemClickListner;
             text=itemView.findViewById(R.id.textView12);
-            delete=itemView.findViewById(R.id.imageButtonCross);
+            fixedBadge=itemView.findViewById(R.id.tvFixedBadge);
+            more=itemView.findViewById(R.id.imageButtonMore);
             insert=itemView.findViewById(R.id.buttonAddEditAdapter);
             text.setOnClickListener(this);
             insert.setOnClickListener(this);
-            delete.setOnClickListener(this);
+            more.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int id=v.getId();
-            if(id==R.id.imageButtonCross){
+            if(id==R.id.imageButtonMore){
                 String str=list.get(getAdapterPosition());
-                onEditItemClickListner.onEditCrossViewClick(str);
+                onEditItemClickListner.onCategoryOptionsClick(str, more);
             }else if(id==R.id.textView12){
                 String str=list.get(getAdapterPosition());
                 onEditItemClickListner.onEditTextViewClick(str);
             }else if(id==R.id.buttonAddEditAdapter){
                 onEditItemClickListner.addItem();
             }
-
         }
-
-//        @Override
-//        public void onClick(View v) {
-//
-//
-//        }
     }
 }

@@ -10,13 +10,14 @@ import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.tcssol.expensetracker.Model.CategoryConfig;
 import com.tcssol.expensetracker.Model.Expenses;
 import com.tcssol.expensetracker.Utils.Converters;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Expenses.class}, version = 2, exportSchema = false)
+@Database(entities = {Expenses.class, CategoryConfig.class}, version = 3, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class ExpensesDatabase extends RoomDatabase {
     public static final int NUMBER_OF_THREADS = 4;
@@ -32,6 +33,16 @@ public abstract class ExpensesDatabase extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE expenses_table ADD COLUMN note TEXT");
+        }
+    };
+
+    /**
+     * Migration from v2 to v3: adds the category_config_table.
+     */
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `category_config_table` (`category_name` TEXT NOT NULL, `is_fixed` INTEGER NOT NULL, PRIMARY KEY(`category_name`))");
         }
     };
 
@@ -56,7 +67,7 @@ public abstract class ExpensesDatabase extends RoomDatabase {
                                     ExpensesDatabase.class,
                                     DATABASE_NAME)
                             .addCallback(sRoomDatabaseCallback)
-                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                             .build(); // allowMainThreadQueries() removed – use Executor/LiveData
                 }
             }
@@ -65,4 +76,5 @@ public abstract class ExpensesDatabase extends RoomDatabase {
     }
 
     public abstract ExpenseDao expenseDao();
+    public abstract CategoryConfigDao categoryConfigDao();
 }

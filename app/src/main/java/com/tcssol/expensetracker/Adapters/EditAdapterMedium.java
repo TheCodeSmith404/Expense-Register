@@ -69,7 +69,7 @@ public class EditAdapterMedium extends RecyclerView.Adapter<EditAdapterMedium.Vi
             super(itemView);
             onEditMediumItemClickListner=EditMediumItemClickListner;
             text=itemView.findViewById(R.id.textView12);
-            delete=itemView.findViewById(R.id.imageButtonCross);
+            delete=itemView.findViewById(R.id.imageButtonMore);
             insert=itemView.findViewById(R.id.buttonAddEditAdapter);
             insert.setOnClickListener(this);
             delete.setOnClickListener(this);
@@ -78,7 +78,7 @@ public class EditAdapterMedium extends RecyclerView.Adapter<EditAdapterMedium.Vi
         @Override
         public void onClick(View v) {
             int id=v.getId();
-            if(id==R.id.imageButtonCross){
+            if(id==R.id.imageButtonMore){
                 String str=list.get(getAdapterPosition());
                 onEditMediumItemClickListner.onEditMediumCrossViewClick(str);
             } else if(id==R.id.buttonAddEditAdapter){
