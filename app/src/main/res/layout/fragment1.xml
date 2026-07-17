@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorBackground">
+    android:background="?android:attr/colorBackground">
 
     <!-- Net balance summary card -->
     <com.google.android.material.card.MaterialCardView
@@ -14,25 +14,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        app:cardBackgroundColor="@color/colorPrimary">
+        style="@style/Widget.ExpenseRegister.Card">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <TextView
                 android:id="@+id/tvNetBalanceLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="NET BALANCE"
-                android:textColor="#B0BEC5"
-                android:textSize="10sp"
-                android:letterSpacing="0.15"
-                android:fontFamily="sans-serif-medium" />
+                android:text="Net Balance"
+                android:textAppearance="?attr/textAppearanceLabelMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1" />
 
             <TextView
                 android:id="@+id/tvNetBalance"
@@ -40,9 +38,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="₹0"
-                android:textColor="@color/white"
-                android:textSize="28sp"
-                android:fontFamily="sans-serif-light"
+                android:textAppearance="?attr/textAppearanceHeadlineLarge"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
                 tools:text="₹4,200" />
 
             <!-- Earned / Spent split -->
@@ -61,9 +59,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="EARNED"
-                        android:textColor="#B0BEC5"
-                        android:textSize="10sp"
+                        android:text="Earned"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textAllCaps="true"
                         android:letterSpacing="0.1" />
 
                     <TextView
@@ -71,9 +70,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="₹0"
-                        android:textColor="@color/green"
-                        android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/income"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textStyle="bold"
                         tools:text="₹6,000" />
                 </LinearLayout>
 
@@ -86,9 +85,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SPENT"
-                        android:textColor="#B0BEC5"
-                        android:textSize="10sp"
+                        android:text="Spent"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textAllCaps="true"
                         android:letterSpacing="0.1" />
 
                     <TextView
@@ -96,19 +96,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="₹0"
-                        android:textColor="@color/red"
-                        android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/expense"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textStyle="bold"
                         tools:text="₹1,800" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Budget progress bar (hidden by default, shown when budget is set) -->
+            <!-- Budget progress bar -->
             <LinearLayout
                 android:id="@+id/budgetProgressContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -116,19 +116,20 @@
                     android:id="@+id/tvBudgetLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="BUDGET"
-                    android:textColor="#B0BEC5"
-                    android:textSize="10sp"
+                    android:text="Budget Usage"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textAllCaps="true"
                     android:letterSpacing="0.1" />
 
                 <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/budgetProgressBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="6dp"
                     app:trackCornerRadius="4dp"
-                    app:trackColor="#33FFFFFF"
-                    app:indicatorColor="@color/colorSecondary"
+                    app:trackColor="?attr/colorSurfaceVariant"
+                    app:indicatorColor="?attr/colorPrimary"
                     android:max="100"
                     android:progress="0" />
 
@@ -136,9 +137,9 @@
                     android:id="@+id/tvBudgetInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="#B0BEC5"
-                    android:textSize="11sp"
+                    android:layout_marginTop="6dp"
+                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     tools:text="₹1,800 of ₹5,000 used" />
             </LinearLayout>
         </LinearLayout>
@@ -150,22 +151,22 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
         android:paddingBottom="8dp"
-        android:text="By Category"
-        android:textColor="@color/colorTextSecondary"
-        android:textSize="12sp"
-        android:fontFamily="sans-serif-medium"
-        android:letterSpacing="0.1" />
+        android:text="Recent Transactions"
+        android:textAppearance="?attr/textAppearanceLabelLarge"
+        android:textColor="?attr/colorOnSurfaceVariant" />
 
     <!-- Category list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/frag1Recycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="80dp"
         android:clipToPadding="false"
+        android:paddingTop="4dp"
+        android:paddingBottom="96dp"
+        android:scrollbars="none"
         tools:listitem="@layout/fragment1item" />
 
-    <!-- Hidden debug text(kept from old code for compatibility) -->
+    <!-- Hidden debug text -->
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"

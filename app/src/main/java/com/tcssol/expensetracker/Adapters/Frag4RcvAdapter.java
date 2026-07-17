@@ -70,16 +70,16 @@ public class Frag4RcvAdapter extends RecyclerView.Adapter<Frag4RcvAdapter.ViewHo
             holder.date.setText(date.format(formatter));
             holder.showAmount.setVisibility(View.VISIBLE);
             holder.amount.setText("-"+symbol+expenses.getAmount());
-            color=Color.RED;
+            color=ContextCompat.getColor(mContext, R.color.expense);
             holder.amount.setTextColor(color);
 
         }else {
             if (expenses.isType()) {
                 holder.amount.setText(symbol + expenses.getAmount());
-                color = ContextCompat.getColor(mContext, R.color.green);
+                color = ContextCompat.getColor(mContext, R.color.income);
             } else {
                 holder.amount.setText("-" + symbol + expenses.getAmount());
-                color = ContextCompat.getColor(mContext, R.color.red);
+                color = ContextCompat.getColor(mContext, R.color.expense);
             }
             holder.mode.setText(expenses.getMode());
             holder.amount.setTextColor(color);

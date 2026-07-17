@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorBackground">
+    android:background="?android:attr/colorBackground">
 
     <!-- Search bar -->
     <com.google.android.material.textfield.TextInputLayout
@@ -17,10 +17,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="4dp"
-        app:startIconDrawable="@drawable/baseline_analytics_24"
-        app:startIconTint="@color/colorTextSecondary"
-        app:boxStrokeColor="@color/colorPrimary"
-        app:hintTextColor="@color/colorTextSecondary"
+        app:startIconDrawable="@android:drawable/ic_menu_search"
         android:hint="Search entries…">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -28,8 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:imeOptions="actionSearch"
-            android:textColor="@color/colorTextPrimary" />
+            android:imeOptions="actionSearch" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -38,8 +34,10 @@
         android:id="@+id/frag4Recycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="80dp"
         android:clipToPadding="false"
+        android:paddingTop="4dp"
+        android:paddingBottom="96dp"
+        android:scrollbars="none"
         tools:listitem="@layout/fragment4item" />
 
 </LinearLayout>

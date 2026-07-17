@@ -6,27 +6,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="?android:attr/colorBackground"
     tools:context=".MainActivity">
 
     <!-- AppBar with toolbar -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/app_bar_background"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:titleTextColor="@color/white"
-            app:subtitleTextColor="#B0BEC5"
-            app:titleTextAppearance="@style/ToolbarTitleStyle"
-            android:paddingEnd="8dp" />
-
+            app:titleCentered="false" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Filter row + ViewPager2 -->
@@ -37,31 +31,26 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation (styled via M3 dynamic theme attributes) -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/colorPrimary"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="labeled" />
 
-    <!-- FAB -->
+    <!-- FAB (raised 90dp to float above bottom navigation) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="90dp"
-        app:elevation="4dp"
         android:layout_gravity="bottom|end"
-        android:contentDescription="@string/enter_amount"
-        app:srcCompat="@android:drawable/ic_input_add"
-        app:tint="?colorOnPrimary" />
-
-
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="90dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="@string/add_expense"
+        android:src="@drawable/baseline_add_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -9,7 +9,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,138 +17,154 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="32dp">
+
+            <!-- Transaction type -->
+            <TextView
+                android:id="@+id/labelTransactionType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transaction_type"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelTransactionType">
+
+                <RadioButton
+                    android:id="@+id/radioButtonEarned"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/earned"
+                    style="@style/Widget.ExpenseRegister.Segment" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonSpend"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/spend"
+                    style="@style/Widget.ExpenseRegister.Segment" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonLendRecieve"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/lend"
+                    style="@style/Widget.ExpenseRegister.Segment" />
+            </RadioGroup>
+
+            <!-- Amount -->
+            <TextView
+                android:id="@+id/textView41"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/enter_amount"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+            <EditText
+                android:id="@+id/edit_text_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/amount_hint"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                style="@style/Widget.ExpenseRegister.Input"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView41" />
+
+            <!-- Category (earned/spend group) -->
+            <TextView
+                android:id="@+id/select_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/category"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/noteInputLayout" />
+
+            <TextView
+                android:id="@+id/selectCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="General"
+                style="@style/Widget.ExpenseRegister.SelectorField"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/select_category" />
 
             <ImageView
                 android:id="@+id/imgView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
                 android:clickable="false"
+                android:importantForAccessibility="no"
                 app:layout_constraintBottom_toBottomOf="@+id/selectCategory"
                 app:layout_constraintEnd_toEndOf="@+id/selectCategory"
                 app:layout_constraintTop_toTopOf="@+id/selectCategory"
                 app:srcCompat="@drawable/baseline_arrow_drop_down_24" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:clickable="false"
-                app:layout_constraintBottom_toBottomOf="@+id/selectMedium"
-                app:layout_constraintEnd_toEndOf="@+id/selectMedium"
-                app:layout_constraintTop_toTopOf="@+id/selectMedium"
-                app:srcCompat="@drawable/baseline_arrow_drop_down_24" />
-
-            <TextView
-                android:id="@+id/selectMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:width="180dp"
-                android:gravity="center|start"
-                android:text="Cash"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textView7"
-                app:layout_constraintTop_toBottomOf="@+id/editTextMobileNumber" />
-
-            <TextView
-                android:id="@+id/selectSubCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:width="180dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:gravity="center|start"
-                android:text="General"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/select_sub_category"
-                app:layout_constraintTop_toBottomOf="@+id/selectCategory" />
-
-            <TextView
-                android:id="@+id/textView41"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="@string/enter_amount"
-                app:layout_constraintEnd_toStartOf="@+id/edit_text_number"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
-            <TextView
-                android:id="@+id/select_category"
-                style="@style/text_view_style"
-                android:text="Select Category"
-                app:layout_constraintEnd_toStartOf="@+id/selectCategory"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
+            <!-- Sub-category -->
             <TextView
                 android:id="@+id/select_sub_category"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="2dp"
-                android:gravity="center"
-                android:text="Select Sub-Category"
-                app:layout_constraintEnd_toStartOf="@+id/selectSubCategory"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/select_category" />
-
-            <RadioGroup
-                android:id="@+id/radioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:orientation="horizontal"
+                android:text="@string/sub_category"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectCategory" />
+
+            <TextView
+                android:id="@+id/selectSubCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="General"
+                style="@style/Widget.ExpenseRegister.SelectorField"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/select_sub_category" />
 
-                <RadioButton
-                    android:id="@+id/radioButtonEarned"
-                    android:layout_width="120dp"
-                    android:layout_height="match_parent"
-                    android:text="@string/earned" />
-
-                <RadioButton
-                    android:id="@+id/radioButtonSpend"
-                    android:layout_width="120dp"
-                    android:layout_height="match_parent"
-                    android:text="@string/spend" />
-
-                <RadioButton
-                    android:id="@+id/radioButtonLendRecieve"
-                    android:layout_width="120dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/lend" />
-            </RadioGroup>
-
-            <EditText
-                android:id="@+id/edit_text_number"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="@string/enter_amount"
-                android:inputType="number"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textView41"
-                app:layout_constraintTop_toBottomOf="@+id/selectMedium" />
+            <ImageView
+                android:id="@+id/imgView2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
+                android:clickable="false"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="@+id/selectSubCategory"
+                app:layout_constraintEnd_toEndOf="@+id/selectSubCategory"
+                app:layout_constraintTop_toTopOf="@+id/selectSubCategory"
+                app:srcCompat="@drawable/baseline_arrow_drop_down_24" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/earned_spend"
@@ -157,15 +173,13 @@
                 android:visibility="visible"
                 app:constraint_referenced_ids="select_category,select_sub_category,selectSubCategory,selectCategory,imgView1,imgView2" />
 
-            <!-- Note / optional memo field (v2.0) -->
+            <!-- Note / optional memo field -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/noteInputLayout"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="5dp"
                 android:hint="Note (optional)"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -178,150 +192,109 @@
                     android:inputType="textMultiLine"
                     android:maxLines="3" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="360dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/colorPrimaryNeutral"
-                android:text="Save Expenses"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/noteInputLayout" />
-
-
-            <TextView
-                android:id="@+id/textViewEnterMobileNumber"
-                style="@style/text_view_style"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:text="Enter Mobile Number"
-                app:layout_constraintEnd_toStartOf="@+id/editTextMobileNumber"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/enterName" />
-
             <CheckBox
                 android:id="@+id/checkBoxRecieved"
-                android:layout_width="180dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="MoneyLend"
+                android:minHeight="48dp"
+                android:text="@string/money_lend"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
                 app:layout_constraintEnd_toStartOf="@+id/checkBoxLend"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/select_sub_category" />
+                app:layout_constraintTop_toBottomOf="@+id/selectSubCategory" />
 
             <CheckBox
                 android:id="@+id/checkBoxLend"
-                android:layout_width="180dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="MoneyRecieved"
+                android:minHeight="48dp"
+                android:text="@string/money_received"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/checkBoxRecieved"
                 app:layout_constraintTop_toBottomOf="@+id/selectSubCategory" />
 
-            <EditText
-                android:id="@+id/editTextGetName"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="Enter Name"
-                android:inputType="text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/enterName"
-                app:layout_constraintTop_toBottomOf="@+id/checkBoxLend" />
-
             <TextView
                 android:id="@+id/enterName"
-                style="@style/text_view_style"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:text="Enter Name"
-                app:layout_constraintEnd_toStartOf="@+id/editTextGetName"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/name"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/checkBoxRecieved" />
 
             <EditText
-                android:id="@+id/editTextMobileNumber"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
+                android:id="@+id/editTextGetName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="Optional"
-                android:inputType="number"
+                android:hint="@string/enter_name"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                style="@style/Widget.ExpenseRegister.Input"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textViewEnterMobileNumber"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/enterName" />
+
+            <TextView
+                android:id="@+id/textViewEnterMobileNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/mobile_number"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextGetName" />
 
-            <Switch
-                android:id="@+id/switchOnMessage"
-                android:layout_width="60dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="16dp"
+            <EditText
+                android:id="@+id/editTextMobileNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/optional"
+                android:importantForAutofill="no"
+                android:inputType="phone"
+                style="@style/Widget.ExpenseRegister.Input"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/textViewSendMessage"
-                app:layout_constraintTop_toBottomOf="@+id/addPendingDate"
-                tools:ignore="TouchTargetSizeCheck"
-                tools:layout_constraintHorizontal_bias="0.5" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewEnterMobileNumber" />
 
-            <Switch
-                android:id="@+id/switchOnDate"
-                android:layout_width="60dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textViewAddDate"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_number"
-                tools:ignore="TouchTargetSizeCheck"
-                tools:layout_constraintHorizontal_bias="0.5" />
-
+            <!-- Return / receive date toggle -->
             <TextView
                 android:id="@+id/textViewAddDate"
-                android:layout_width="300dp"
-                android:layout_height="24dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Add Return/Recieve Date"
+                android:text="@string/add_return_date"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@+id/switchOnDate"
                 app:layout_constraintEnd_toStartOf="@+id/switchOnDate"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView41" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextMobileNumber" />
 
-            <TextView
-                android:id="@+id/textViewSendMessage"
-                android:layout_width="300dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="16dp"
-                android:text="Send A Msg Reminder"
-                app:layout_constraintEnd_toStartOf="@+id/switchOnMessage"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addPendingDate" />
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switchOnDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:minHeight="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextMobileNumber" />
 
             <CalendarView
                 android:id="@+id/addPendingDate"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewAddDate" />
+                app:layout_constraintTop_toBottomOf="@+id/switchOnDate" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/lendRecievedGrp"
@@ -330,36 +303,28 @@
                 android:visibility="gone"
                 app:constraint_referenced_ids="checkBoxRecieved,checkBoxLend,enterName,editTextGetName,textViewEnterMobileNumber,editTextMobileNumber,textViewAddDate,switchOnDate" />
 
-
+            <!-- Message reminder -->
             <TextView
-                android:id="@+id/textView7"
-                style="@style/text_view_style"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:text="Select Medium"
-                app:layout_constraintEnd_toStartOf="@+id/selectMedium"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewEnterMobileNumber" />
-
-            <EditText
-                android:id="@+id/editTextMsg"
+                android:id="@+id/textViewSendMessage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="5dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:maxLines="3"
-                android:scrollbars="vertical"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"
+                android:text="@string/send_msg_reminder"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintBottom_toBottomOf="@+id/switchOnMessage"
+                app:layout_constraintEnd_toStartOf="@+id/switchOnMessage"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewSendMessage" />
+                app:layout_constraintTop_toBottomOf="@+id/addPendingDate" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switchOnMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:minHeight="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addPendingDate" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/groupSendMsg"
@@ -368,33 +333,67 @@
                 android:visibility="gone"
                 app:constraint_referenced_ids="switchOnMessage,textViewSendMessage" />
 
-            <TextView
-                android:id="@+id/selectCategory"
-                android:layout_width="180dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:width="180dp"
-                android:gravity="center|start"
-                android:text="General"
-                android:textSize="18sp"
+            <EditText
+                android:id="@+id/editTextMsg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="start|top"
+                android:hint="@string/reminder_message"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:minLines="2"
+                android:scrollbars="vertical"
+                android:visibility="gone"
+                style="@style/Widget.ExpenseRegister.Input"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/select_category"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/switchOnMessage" />
 
-            <ImageView
-                android:id="@+id/imgView2"
+            <!-- Payment medium -->
+            <TextView
+                android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/payment_medium"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextMsg" />
+
+            <TextView
+                android:id="@+id/selectMedium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Cash"
+                style="@style/Widget.ExpenseRegister.SelectorField"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
                 android:clickable="false"
-                app:layout_constraintBottom_toBottomOf="@+id/selectSubCategory"
-                app:layout_constraintEnd_toEndOf="@+id/selectSubCategory"
-                app:layout_constraintTop_toTopOf="@+id/selectSubCategory"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="@+id/selectMedium"
+                app:layout_constraintEnd_toEndOf="@+id/selectMedium"
+                app:layout_constraintTop_toTopOf="@+id/selectMedium"
                 app:srcCompat="@drawable/baseline_arrow_drop_down_24" />
 
-
-            <!-- Your existing layout goes here -->
+            <!-- Save -->
+            <Button
+                android:id="@+id/button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="@string/save_expense"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectMedium" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

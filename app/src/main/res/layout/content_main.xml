@@ -1,98 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorBackground"
     tools:context=".MainActivity">
 
-    <!-- Period filter row: chips + ExposedDropdownMenus -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:id="@+id/scrollPeriodSelector"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/app_bar_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabGravity="fill"
+        app:tabIndicator="@drawable/tab_indicator"
+        app:tabIndicatorColor="@color/app_bar_content"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="auto"
+        app:tabRippleColor="@color/app_bar_content_muted"
+        app:tabSelectedTextColor="@color/app_bar_content"
+        app:tabTextAppearance="?attr/textAppearanceTitleSmall"
+        app:tabTextColor="@color/app_bar_content_muted">
+
+        <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Categories" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Peer 2 Peer" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expenses" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dashboard" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/scrollPeriodSelector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="?colorSurface"
-            android:paddingHorizontal="8dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp">
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="6dp">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipAll"
-                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="8dp"
                 android:text="All" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipThisMonth"
-                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="8dp"
                 android:text="This Month" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipPreviousMonth"
-                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text="Previous Month" />
+
+            <Spinner
+                android:id="@+id/spinnerSelectMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
-                android:text="Prev Month" />
+                android:background="@drawable/bg_spinner"
+                android:minWidth="120dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="36dp"
+                android:popupElevation="4dp"
+                android:popupBackground="@drawable/rectangle_shape" />
 
-            <!-- Month ExposedDropdownMenu -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/monthInputLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <Spinner
+                android:id="@+id/spinnerSelectYear"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp">
-
-                <AutoCompleteTextView
-                    android:id="@+id/spinnerSelectMonth"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="none"
-                    android:textSize="12sp"
-                    android:padding="8dp"
-                    tools:text="January" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Year ExposedDropdownMenu -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/yearInputLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <AutoCompleteTextView
-                    android:id="@+id/spinnerSelectYear"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="none"
-                    android:textSize="12sp"
-                    android:padding="8dp"
-                    tools:text="2026" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="40dp"
+                android:background="@drawable/bg_spinner"
+                android:minWidth="100dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="36dp"
+                android:popupElevation="4dp"
+                android:popupBackground="@drawable/rectangle_shape" />
 
         </LinearLayout>
     </HorizontalScrollView>
 
-
-    <!-- ViewPager2 fills remaining space above BottomNav (padded in activity) -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorBackground" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollPeriodSelector" />
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.ConstraintLayout>

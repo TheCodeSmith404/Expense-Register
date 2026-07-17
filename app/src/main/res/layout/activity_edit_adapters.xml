@@ -4,29 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground">
+    android:background="?android:attr/colorBackground">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbarEditAdapter"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/white"
-        app:subtitleTextColor="@color/white" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorSurface"
-        app:tabIndicatorColor="@color/colorPrimary"
-        app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabTextColor="?android:attr/textColorSecondary"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbarEditAdapter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -69,8 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    style="@style/Widget.ExpenseRegister.Card">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -82,9 +73,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Categories"
-                            android:textSize="18sp"
-                            android:fontFamily="sans-serif-medium"
-                            android:textColor="@color/colorPrimary"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorPrimary"
+                            android:textStyle="bold"
                             android:layout_marginBottom="8dp" />
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -100,8 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    style="@style/Widget.ExpenseRegister.Card">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -114,9 +104,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Sub-Categories"
-                            android:textSize="18sp"
-                            android:fontFamily="sans-serif-medium"
-                            android:textColor="@color/colorPrimary"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorPrimary"
+                            android:textStyle="bold"
                             android:layout_marginBottom="8dp" />
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -131,9 +121,7 @@
                     android:id="@+id/buttonEditAdaptersCategoriesSave"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Save Categories"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/colorPrimary" />
+                    android:text="Save Categories" />
             </LinearLayout>
 
             <!-- Tab 2 Container: Payment Modes -->
@@ -148,8 +136,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    style="@style/Widget.ExpenseRegister.Card">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -161,16 +148,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Transaction Modes"
-                            android:textSize="18sp"
-                            android:fontFamily="sans-serif-medium"
-                            android:textColor="@color/colorPrimary"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorPrimary"
+                            android:textStyle="bold"
                             android:layout_marginBottom="8dp" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerViewEdiAdaptersMode"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="220dp"
+                            android:layout_height="220dp"
                             tools:listitem="@layout/edit_adapter_item" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -179,11 +165,8 @@
                     android:id="@+id/buttonEditAdaptersModeSave"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Save Modes"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/colorPrimary" />
+                    android:text="Save Modes" />
             </LinearLayout>
-
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>
 

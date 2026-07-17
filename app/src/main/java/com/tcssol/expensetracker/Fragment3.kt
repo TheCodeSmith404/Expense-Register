@@ -1,177 +1,123 @@
 package com.tcssol.expensetracker
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.PieChart
+import androidx.lifecycle.LiveData
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.tcssol.expensetracker.Adapters.ModeDistributionAdapter
 import com.tcssol.expensetracker.Model.DailySum
 import com.tcssol.expensetracker.Model.ExpenseViewModel
-import com.tcssol.expensetracker.Model.PersonExpViewModel
+import com.tcssol.expensetracker.Model.Expenses
 import com.tcssol.expensetracker.Model.SharedExpenseViewModel
 import com.tcssol.expensetracker.Utils.ModeWrapper
 import com.tcssol.expensetracker.Utils.Wrapped
+import com.tcssol.expensetracker.Views.CategoryBarChartView
 import com.tcssol.expensetracker.databinding.Fragment3Binding
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
-import android.graphics.Color
-import android.util.Log
-import android.util.TypedValue
-import androidx.core.content.ContextCompat
-import com.tcssol.expensetracker.Model.Expenses
-import java.time.LocalDate
 
-/**
- * TODO Add charts and other views to show trends and options to set budgets
- */
 class Fragment3 : Fragment() {
     private val expenseViewModel: ExpenseViewModel by viewModels()
     private val sharedExpenseViewModel: SharedExpenseViewModel by activityViewModels()
-    private val personExpViewModel: PersonExpViewModel by  viewModels()
 
-    private var view: View? = null
-    private var _binding:Fragment3Binding?=null
-    private val binding get()= _binding!!
+    private var _binding: Fragment3Binding? = null
+    private val binding get() = _binding!!
+    private var chartSource: LiveData<List<Expenses>>? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding=Fragment3Binding.inflate(layoutInflater,container, false)
+        _binding = Fragment3Binding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
-    /*
-    TODO Kotlin coroutines for background updates??
-     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
         val symbol = Currency.getInstance(Locale.getDefault()).symbol
 
-        // Observe Total Active Balance (Lifetime)
+        // Active Lifetime Balance
         expenseViewModel.totalNetBalance.observe(viewLifecycleOwner) { balance ->
-            binding.tvTotalBalance.text = symbol + String.format("%.2f", balance ?: 0.0)
-            if ((balance ?: 0.0) < 0) {
-                binding.tvTotalBalance.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-            } else {
-                binding.tvTotalBalance.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-            }
-        }
-        expenseViewModel!!.frag3Data.observe(
-            viewLifecycleOwner
-        ) { list: List<Int?> ->
-            binding.frag3SetAmtEarned.text = symbol + (if (list[0] == null) 0 else list[0]).toString()
-            binding.frag3SetAmtSpend.text =
-                "-" + symbol + (if (list[1] == null) 0 else list[1]).toString()
-            binding.frag3SetAmtReceived.text = symbol + (if (list[2] == null) 0 else list[2]).toString()
-            binding.frag3SetAmtGiven.text =
-                "-" + symbol + (if (list[3] == null) 0 else list[3]).toString()
+            binding.tvTotalBalance.text = symbol + String.format(Locale.getDefault(), "%,.2f", balance ?: 0.0)
+            val balanceColor = if ((balance ?: 0.0) < 0) R.color.expense else R.color.income
+            binding.tvTotalBalance.setTextColor(ContextCompat.getColor(requireContext(), balanceColor))
         }
 
-//        sharedExpenseViewModel =
-//            ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create<SharedExpenseViewModel>(
-//                SharedExpenseViewModel::class.java
-//            )
-        sharedExpenseViewModel!!.getObject().observe(
-            viewLifecycleOwner
-        ) { data: Wrapped ->
-            if (data.year > 0 || data.month > 0) {
-                Log.d("expdao", data.month.toString() + " Data in frag3 " + data.year)
-                expenseViewModel!!.getFrag3DataFiltered(data.month, data.year).observe(
-                    viewLifecycleOwner
-                ) { list: List<Int?> ->
-                    binding.frag3SetAmtEarned.text =
-                        symbol + (if (list[0] == null) 0 else list[0]).toString()
-                    binding.frag3SetAmtSpend.text =
-                        "-" + symbol + (if (list[1] == null) 0 else list[1]).toString()
-                    binding.frag3SetAmtReceived.text =
-                        symbol + (if (list[2] == null) 0 else list[2]).toString()
-                    binding.frag3SetAmtGiven.text =
-                        "-" + symbol + (if (list[3] == null) 0 else list[3]).toString()
-                }
+        // Standard Summary Stats binding (Filtered / Lifetime)
+        sharedExpenseViewModel.getObject().observe(viewLifecycleOwner) { data: Wrapped ->
+            val dataLive = if (data.year > 0 || data.month > 0) {
+                expenseViewModel.getFrag3DataFiltered(data.month, data.year)
             } else {
-                expenseViewModel!!.frag3Data.observe(
-                    viewLifecycleOwner
-                ) { list: List<Int?> ->
-                    binding.frag3SetAmtEarned.text = symbol + (if (list[0] == null) 0 else list[0]).toString()
-                    binding.frag3SetAmtSpend.text = "-" + symbol + (if (list[1] == null) 0 else list[1]).toString()
-                    binding.frag3SetAmtReceived.text = symbol + (if (list[2] == null) 0 else list[2]).toString()
-                    binding.frag3SetAmtGiven.text = "-" + symbol + (if (list[3] == null) 0 else list[3]).toString()
-                }
+                expenseViewModel.frag3Data
+            }
+            dataLive.observe(viewLifecycleOwner) { list ->
+                binding.frag3SetAmtEarned.text = symbol + (list?.getOrNull(0) ?: 0)
+                binding.frag3SetAmtSpend.text = "-" + symbol + (list?.getOrNull(1) ?: 0)
+                binding.frag3SetAmtReceived.text = symbol + (list?.getOrNull(2) ?: 0)
+                binding.frag3SetAmtGiven.text = "-" + symbol + (list?.getOrNull(3) ?: 0)
+            }
+
+            // Bind Category Custom Chart Data Source
+            if (data.year > 0 && data.month > 0) {
+                setChartSource(expenseViewModel.getAllExpensesGroupedMonthly(LocalDate.of(data.year, data.month, 1)))
+            } else {
+                setChartSource(expenseViewModel.allExpensesGrouped)
             }
         }
 
         setupPieChart()
-        setupCategoryPieChart()
         setupBarChart()
 
-        // Handle Bar Chart Data
+        // Handle Bar Chart Data (Daily Sums)
         sharedExpenseViewModel.getObject().observe(viewLifecycleOwner) { data ->
             val month = if (data.month > 0) data.month else Calendar.getInstance().get(Calendar.MONTH) + 1
             val year = if (data.year > 0) data.year else Calendar.getInstance().get(Calendar.YEAR)
-            
             expenseViewModel.getDailySums(month, year).observe(viewLifecycleOwner) { dailySums ->
                 updateBarChart(dailySums)
             }
         }
 
-        // Handle Category Pie Chart Data
-        sharedExpenseViewModel.getObject().observe(viewLifecycleOwner) { data ->
-            if (data.year > 0 || data.month > 0) {
-                val date = LocalDate.of(data.year, data.month, 1)
-                expenseViewModel.getAllExpensesGroupedMonthly(date).observe(viewLifecycleOwner) { list ->
-                    updateCategoryPieChart(list)
-                }
-            } else {
-                expenseViewModel.allExpensesGrouped.observe(viewLifecycleOwner) { list ->
-                    updateCategoryPieChart(list)
-                }
-            }
+        // Handle Payment Medium Distribution
+        expenseViewModel.getModeDist().observe(viewLifecycleOwner) { data ->
+            updatePaymentMediumChart(data)
         }
-        
-        expenseViewModel!!.getModeDist().observe(viewLifecycleOwner) { data: List<ModeWrapper?>? ->
-            if (data != null && data.isNotEmpty()) {
-                val entries = ArrayList<PieEntry>()
-                for (wrapper in data) {
-                    if (wrapper != null) {
-                        entries.add(PieEntry(wrapper.perentage.toFloat(), wrapper.name))
-                    }
-                }
-                
-                val dataSet = PieDataSet(entries, "")
-                
-                // Use material theme colors for the pie slices
-                val colors = ArrayList<Int>()
-                colors.add(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
-                colors.add(ContextCompat.getColor(requireContext(), R.color.colorSecondary))
-                colors.add(ContextCompat.getColor(requireContext(), R.color.green))
-                colors.add(Color.parseColor("#FFA726")) // Orange
-                colors.add(Color.parseColor("#29B6F6")) // Light blue
-                dataSet.colors = colors
-                
-                dataSet.valueTextColor = ContextCompat.getColor(requireContext(), R.color.colorOnPrimary)
-                dataSet.valueTextSize = 12f
-                dataSet.valueFormatter = PercentFormatter(binding.pieChart)
-                
-                val pieData = PieData(dataSet)
-                binding.pieChart.data = pieData
-                binding.pieChart.invalidate() // refresh
-            }
+    }
+
+    private fun setChartSource(source: LiveData<List<Expenses>>) {
+        chartSource?.removeObservers(viewLifecycleOwner)
+        chartSource = source
+        source.observe(viewLifecycleOwner) { list -> bindCategoryChart(list) }
+    }
+
+    private fun bindCategoryChart(list: List<Expenses>?) {
+        val symbol = Currency.getInstance(Locale.getDefault()).symbol
+        val spend = (list ?: emptyList())
+            .filter { !it.isType && it.category != "Money Given" && it.category != "Money Received" }
+            .sortedByDescending { it.amount }
+
+        val items = mutableListOf<CategoryBarChartView.Item>()
+        spend.take(MAX_CHART_ROWS).forEach { items.add(CategoryBarChartView.Item(it.category, it.amount)) }
+        if (spend.size > MAX_CHART_ROWS) {
+            val other = spend.drop(MAX_CHART_ROWS).sumOf { it.amount }
+            items.add(CategoryBarChartView.Item("Other", other))
         }
+
+        binding.categoryChart.setData(items, symbol)
+        binding.categoryChart.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
+        binding.chartEmptyText.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun setupPieChart() {
@@ -179,62 +125,62 @@ class Fragment3 : Fragment() {
         pieChart.setUsePercentValues(true)
         pieChart.description.isEnabled = false
         pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
-        
-        pieChart.dragDecelerationFrictionCoef = 0.95f
-        
         pieChart.isDrawHoleEnabled = true
-        // Get surface color for the center hole
+        
         val typedValue = TypedValue()
         requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
         pieChart.setHoleColor(typedValue.data)
-        pieChart.setTransparentCircleColor(Color.WHITE)
-        pieChart.setTransparentCircleAlpha(110)
-        
+
         pieChart.holeRadius = 58f
         pieChart.transparentCircleRadius = 61f
-        
-        pieChart.setDrawCenterText(true)
         pieChart.centerText = "Payment\nMedium"
-        // Get text color for center
+        
         val textColorTypedValue = TypedValue()
         requireContext().theme.resolveAttribute(android.R.attr.textColorPrimary, textColorTypedValue, true)
         pieChart.setCenterTextColor(textColorTypedValue.data)
-        
-        pieChart.rotationAngle = 0f
-        pieChart.isRotationEnabled = true
-        pieChart.isHighlightPerTapEnabled = true
-        
-        pieChart.animateY(1400, com.github.mikephil.charting.animation.Easing.EaseInOutQuad)
         
         val l = pieChart.legend
         l.verticalAlignment = Legend.LegendVerticalAlignment.TOP
         l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
         l.orientation = Legend.LegendOrientation.VERTICAL
-        l.setDrawInside(false)
-        l.xEntrySpace = 7f
-        l.yEntrySpace = 0f
-        l.yOffset = 0f
         l.textColor = textColorTypedValue.data
+    }
+
+    private fun updatePaymentMediumChart(data: List<ModeWrapper?>?) {
+        if (data.isNullOrEmpty()) {
+            binding.pieChart.clear()
+            return
+        }
+        val entries = data.filterNotNull().map { PieEntry(it.perentage.toFloat(), it.name) }
+        val dataSet = PieDataSet(entries, "").apply {
+            colors = arrayListOf(
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary),
+                ContextCompat.getColor(requireContext(), R.color.colorSecondary),
+                ContextCompat.getColor(requireContext(), R.color.green),
+                Color.parseColor("#FFA726"),
+                Color.parseColor("#29B6F6")
+            )
+            valueTextColor = ContextCompat.getColor(requireContext(), R.color.colorOnPrimary)
+            valueTextSize = 12f
+            valueFormatter = PercentFormatter(binding.pieChart)
+        }
+        binding.pieChart.data = PieData(dataSet)
+        binding.pieChart.invalidate()
     }
 
     private fun setupBarChart() {
         val barChart = binding.barChart
         barChart.description.isEnabled = false
         barChart.setPinchZoom(false)
-        barChart.setDrawBarShadow(false)
-        barChart.setDrawGridBackground(false)
-
-        val xAxis = barChart.xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setDrawGridLines(false)
-        xAxis.granularity = 1f
-        xAxis.textColor = getPrimaryTextColor()
-
+        barChart.xAxis.apply {
+            position = XAxis.XAxisPosition.BOTTOM
+            setDrawGridLines(false)
+            granularity = 1f
+            textColor = getPrimaryTextColor()
+        }
         barChart.axisLeft.textColor = getPrimaryTextColor()
         barChart.axisRight.isEnabled = false
-        
         barChart.legend.textColor = getPrimaryTextColor()
-        barChart.animateY(1000)
     }
 
     private fun updateBarChart(dailySums: List<DailySum>) {
@@ -242,34 +188,21 @@ class Fragment3 : Fragment() {
             binding.barChart.clear()
             return
         }
+        val spentEntries = dailySums.mapIndexed { index, dailySum -> BarEntry(index.toFloat(), dailySum.totalSpent.toFloat()) }
+        val dateLabels = dailySums.map { it.date.format(DateTimeFormatter.ofPattern("dd")) }
 
-        val spentEntries = ArrayList<BarEntry>()
-        val dateLabels = ArrayList<String>()
-
-        val formatter = DateTimeFormatter.ofPattern("dd")
-        
-        dailySums.forEachIndexed { index, dailySum ->
-            spentEntries.add(BarEntry(index.toFloat(), dailySum.totalSpent.toFloat()))
-            dateLabels.add(dailySum.date.format(formatter))
+        val spentSet = BarDataSet(spentEntries, "Spent").apply {
+            color = ContextCompat.getColor(requireContext(), R.color.expense)
+            valueTextColor = getPrimaryTextColor()
+            valueTextSize = 10f
         }
-
-        val spentSet = BarDataSet(spentEntries, "Spent")
-        spentSet.color = ContextCompat.getColor(requireContext(), R.color.red)
-        spentSet.valueTextColor = getPrimaryTextColor()
-        spentSet.valueTextSize = 10f
-
-        val data = BarData(spentSet)
-        data.barWidth = 0.6f
-        
-        binding.barChart.data = data
-        
+        binding.barChart.data = BarData(spentSet).apply { barWidth = 0.6f }
         binding.barChart.xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 val idx = value.toInt()
-                return if (idx >= 0 && idx < dateLabels.size) dateLabels[idx] else ""
+                return dateLabels.getOrNull(idx) ?: ""
             }
         }
-        
         binding.barChart.invalidate()
     }
 
@@ -279,85 +212,12 @@ class Fragment3 : Fragment() {
         return typedValue.data
     }
 
-    private fun setupCategoryPieChart() {
-        val pieChart = binding.pieChartCategory
-        pieChart.setUsePercentValues(true)
-        pieChart.description.isEnabled = false
-        pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
-        
-        pieChart.dragDecelerationFrictionCoef = 0.95f
-        
-        pieChart.isDrawHoleEnabled = true
-        val typedValue = TypedValue()
-        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
-        pieChart.setHoleColor(typedValue.data)
-        pieChart.setTransparentCircleColor(Color.WHITE)
-        pieChart.setTransparentCircleAlpha(110)
-        
-        pieChart.holeRadius = 58f
-        pieChart.transparentCircleRadius = 61f
-        
-        pieChart.setDrawCenterText(true)
-        pieChart.centerText = "Category\nSpend"
-        val textColorTypedValue = TypedValue()
-        requireContext().theme.resolveAttribute(android.R.attr.textColorPrimary, textColorTypedValue, true)
-        pieChart.setCenterTextColor(textColorTypedValue.data)
-        
-        pieChart.rotationAngle = 0f
-        pieChart.isRotationEnabled = true
-        pieChart.isHighlightPerTapEnabled = true
-        
-        pieChart.animateY(1400, com.github.mikephil.charting.animation.Easing.EaseInOutQuad)
-        
-        val l = pieChart.legend
-        l.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-        l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        l.orientation = Legend.LegendOrientation.VERTICAL
-        l.setDrawInside(false)
-        l.xEntrySpace = 7f
-        l.yEntrySpace = 0f
-        l.yOffset = 0f
-        l.textColor = textColorTypedValue.data
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
-    private fun updateCategoryPieChart(list: List<Expenses>?) {
-        if (list == null || list.isEmpty()) {
-            binding.pieChartCategory.clear()
-            return
-        }
-
-        val entries = ArrayList<PieEntry>()
-        for (expense in list) {
-            if (!expense.isType) {
-                if (expense.amount > 0 && !expense.category.isNullOrEmpty()) {
-                    entries.add(PieEntry(expense.amount.toFloat(), expense.category))
-                }
-            }
-        }
-
-        if (entries.isEmpty()) {
-            binding.pieChartCategory.clear()
-            return
-        }
-
-        val dataSet = PieDataSet(entries, "")
-        
-        val colors = ArrayList<Int>()
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
-        colors.add(ContextCompat.getColor(requireContext(), R.color.colorSecondary))
-        colors.add(ContextCompat.getColor(requireContext(), R.color.red))
-        colors.add(Color.parseColor("#9C27B0")) // Purple
-        colors.add(Color.parseColor("#FF9800")) // Orange
-        colors.add(Color.parseColor("#00BCD4")) // Cyan
-        colors.add(Color.parseColor("#E91E63")) // Pink
-        dataSet.colors = colors
-
-        dataSet.valueTextColor = ContextCompat.getColor(requireContext(), R.color.colorOnPrimary)
-        dataSet.valueTextSize = 12f
-        dataSet.valueFormatter = PercentFormatter(binding.pieChartCategory)
-
-        val pieData = PieData(dataSet)
-        binding.pieChartCategory.data = pieData
-        binding.pieChartCategory.invalidate()
+    companion object {
+        private const val MAX_CHART_ROWS = 6
     }
 }

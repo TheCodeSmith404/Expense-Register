@@ -6,17 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorBackground"
+    android:background="?android:attr/colorBackground"
     tools:context=".Settings">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        app:subtitleTextColor="@color/white"
-        app:titleTextColor="@color/white"
         app:title="Settings" />
 
     <ScrollView
@@ -27,17 +23,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <!-- Monthly Budget Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="MONTHLY BUDGET"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="11sp"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.1"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -46,47 +39,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Monthly Budget Amount (0 = no limit)"
-                app:prefixText="₹ "
-                app:boxStrokeColor="@color/colorPrimary">
+                app:prefixText="₹ ">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editBudget"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textColor="@color/colorTextPrimary" />
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btnSaveBudget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Save Budget"
-                app:backgroundTint="@color/colorPrimary" />
+                android:layout_marginTop="16dp"
+                android:text="Save Budget" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp" />
+                android:layout_marginVertical="24dp" />
 
             <!-- Currency note -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DISPLAY"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="11sp"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.1"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
                 android:layout_marginBottom="8dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Currency symbol is based on your device locale settings."
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="13sp" />
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
         </LinearLayout>
     </ScrollView>

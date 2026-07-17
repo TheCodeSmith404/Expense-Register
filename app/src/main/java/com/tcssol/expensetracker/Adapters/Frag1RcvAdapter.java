@@ -50,19 +50,19 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
         String symbol = Currency.getInstance(Locale.getDefault()).getSymbol();
 
         if (expenses.isType()) {
-            // Income / earned → green
-            int green = ContextCompat.getColor(mContext, R.color.green);
-            holder.amount.setTextColor(green);
+            // Income / earned → green (income)
+            int incomeColor = ContextCompat.getColor(mContext, R.color.income);
+            holder.amount.setTextColor(incomeColor);
             holder.amount.setText(symbol + String.valueOf(expenses.getAmount()));
             if (holder.dot != null)
-                holder.dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(green));
+                holder.dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(incomeColor));
         } else {
-            // Expense / spent → coral-red
-            int red = ContextCompat.getColor(mContext, R.color.red);
-            holder.amount.setTextColor(red);
+            // Expense / spent → red (expense)
+            int expenseColor = ContextCompat.getColor(mContext, R.color.expense);
+            holder.amount.setTextColor(expenseColor);
             holder.amount.setText("-" + symbol + String.valueOf(expenses.getAmount()));
             if (holder.dot != null)
-                holder.dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(red));
+                holder.dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(expenseColor));
         }
 
         if (expenses.getNote() != null && !expenses.getNote().isEmpty()) {
