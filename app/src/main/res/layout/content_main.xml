@@ -6,46 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/app_bar_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tabGravity="fill"
-        app:tabIndicator="@drawable/tab_indicator"
-        app:tabIndicatorColor="@color/app_bar_content"
-        app:tabIndicatorFullWidth="false"
-        app:tabIndicatorHeight="3dp"
-        app:tabMode="auto"
-        app:tabRippleColor="@color/app_bar_content_muted"
-        app:tabSelectedTextColor="@color/app_bar_content"
-        app:tabTextAppearance="?attr/textAppearanceTitleSmall"
-        app:tabTextColor="@color/app_bar_content_muted">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Categories" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Peer 2 Peer" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Expenses" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dashboard" />
-    </com.google.android.material.tabs.TabLayout>
-
     <HorizontalScrollView
         android:id="@+id/scrollPeriodSelector"
         android:layout_width="0dp"
@@ -54,11 +14,11 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="16dp"
@@ -87,32 +47,40 @@
                 android:layout_marginEnd="12dp"
                 android:text="Previous Month" />
 
-            <AutoCompleteTextView
-                android:id="@+id/spinnerSelectMonth"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_spinner"
-                android:minWidth="120dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="36dp"
-                android:inputType="none"
-                android:textAlignment="center"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?attr/colorOnSurface" />
+                app:hintEnabled="false">
 
-            <AutoCompleteTextView
-                android:id="@+id/spinnerSelectYear"
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerSelectMonth"
+                    android:layout_width="135dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textAlignment="center"
+                    android:textAppearance="?attr/textAppearanceBodyMedium" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_spinner"
-                android:minWidth="100dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="36dp"
-                android:inputType="none"
-                android:textAlignment="center"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?attr/colorOnSurface" />
+                android:layout_height="wrap_content"
+                app:hintEnabled="false">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerSelectYear"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textAlignment="center"
+                    android:textAppearance="?attr/textAppearanceBodyMedium" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
     </HorizontalScrollView>
