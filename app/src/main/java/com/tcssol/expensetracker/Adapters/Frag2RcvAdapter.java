@@ -99,8 +99,8 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
                 color = ContextCompat.getColor(mContext, R.color.income);
                 holder.amount.setText(symbol + String.valueOf(personExp.getAmount()));
             }
-            if(holder.view!=null)
-                holder.view.setBackgroundColor(color);
+            holder.view.setBackgroundTintList(ColorStateList.valueOf(color));
+            holder.view.setVisibility(View.VISIBLE);
             holder.amount.setTextColor(color);
             holder.name.setText(personExp.getName());
             if (type == 1) {
@@ -115,13 +115,6 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
                 } else {
                     holder.date.setVisibility(View.VISIBLE);
 //                holder.date.getDrawable().setTint(color);
-                }
-
-                if (personExp.getNote() != null && !personExp.getNote().isEmpty()) {
-                    holder.note.setText(personExp.getNote());
-                    holder.note.setVisibility(View.VISIBLE);
-                } else {
-                    holder.note.setVisibility(View.GONE);
                 }
             }
         }
@@ -176,7 +169,6 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
         public TextView date2;
         public View view;
         public TextView mode;
-        public TextView note;
         public Fragment2ClickListner clickListner;
         public ViewHolder(@NonNull View itemView,int type) {
             super(itemView);
@@ -187,7 +179,6 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
                 date = itemView.findViewById(R.id.frag2date);
                 view = itemView.findViewById(R.id.frag2line);
                 mode = itemView.findViewById(R.id.frag2Mode);
-                note = itemView.findViewById(R.id.frag2note);
                 clickListner = fragment2ClickListner;
                 date.setOnClickListener(this);
                 itemView.getRootView().setOnLongClickListener(this);

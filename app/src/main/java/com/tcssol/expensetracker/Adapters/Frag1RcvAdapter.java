@@ -44,35 +44,26 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Expenses expenses = expensesList.get(position);
+        int color;
+        Expenses expenses=expensesList.get(position);
         holder.category.setText(expenses.getCategory());
         holder.subCategory.setText(expenses.getSubCategory());
-        String symbol = Currency.getInstance(Locale.getDefault()).getSymbol();
+        String symbol= Currency.getInstance(Locale.getDefault()).getSymbol();
 
-        if (expenses.isType()) {
-            // Income / earned → green
-            int green = ContextCompat.getColor(mContext, R.color.green);
-            holder.amount.setTextColor(green);
-            holder.amount.setText(symbol + String.valueOf(expenses.getAmount()));
-            if (holder.dot != null)
-                holder.dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(green));
-        } else {
-            // Expense / spent → coral-red
-            int red = ContextCompat.getColor(mContext, R.color.red);
-            holder.amount.setTextColor(red);
-            holder.amount.setText("-" + symbol + String.valueOf(expenses.getAmount()));
-            if (holder.dot != null)
-                holder.dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(red));
+        if(expenses.isType()==true) {
+            color = ContextCompat.getColor(mContext, R.color.income);
+            holder.amount.setText(symbol+String.valueOf(expenses.getAmount()));
         }
+        else {
+            color = ContextCompat.getColor(mContext, R.color.expense);
+            holder.amount.setText("-"+symbol+String.valueOf(expenses.getAmount()));
+        }
+//        holder.category.setTextColor(color);
+        holder.amount.setTextColor(color);
 
-        if (expenses.getNote() != null && !expenses.getNote().isEmpty()) {
-            holder.note.setText(expenses.getNote());
-            holder.note.setVisibility(View.VISIBLE);
-        } else {
-            holder.note.setVisibility(View.GONE);
-        }
+
+
     }
-
 
 
     @Override
@@ -84,31 +75,28 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
         public TextView category;
         public TextView subCategory;
         public TextView amount;
-        public TextView note;
-        public View dot;
         public Fragment1ClickListner click;
-
         public ViewHolder(@NonNull View itemView) {
+
             super(itemView);
-            category = itemView.findViewById(R.id.category_text);
-            subCategory = itemView.findViewById(R.id.sub_category_txt);
-            amount = itemView.findViewById(R.id.amount_txt);
-            note = itemView.findViewById(R.id.note_txt);
-            dot = itemView.findViewById(R.id.categoryDot);
-            click = fragment1ClickListner;
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
+            category=itemView.findViewById(R.id.category_text);
+            subCategory=itemView.findViewById(R.id.sub_category_txt);
+            amount=itemView.findViewById(R.id.amount_txt);
+            click=fragment1ClickListner;
+            itemView.getRootView().setOnClickListener(this);
+            itemView.getRootView().setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             click.fragment1ClickListner(expensesList.get(getAdapterPosition()));
+
         }
 
         @Override
         public boolean onLongClick(View v) {
             click.fragment1LongClickListner(expensesList.get(getAdapterPosition()));
-            return true;
+            return false;
         }
     }
 }
