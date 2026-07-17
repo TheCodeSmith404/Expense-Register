@@ -26,6 +26,7 @@ import com.tcssol.expensetracker.Adapters.Frag1RcvAdapter;
 import com.tcssol.expensetracker.Adapters.Frag4RcvAdapter;
 import com.tcssol.expensetracker.Adapters.Fragment4ClickListner;
 import com.tcssol.expensetracker.Data.ExpenseDao;
+import com.tcssol.expensetracker.Data.ExpensesDatabase;
 import com.tcssol.expensetracker.Model.ExpenseViewModel;
 import com.tcssol.expensetracker.Model.Expenses;
 import com.tcssol.expensetracker.Model.SharedExpenseViewModel;
@@ -130,7 +131,7 @@ public class Fragment4 extends Fragment implements Fragment4ClickListner {
         snackbar.setAction("Undo", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                expenseDao.insertExpense(expenses);
+                ExpensesDatabase.databaseWriterExecutor.execute(() -> expenseDao.insertExpense(expenses));
                 adapter.notifyItemInserted(position);
                 handler.postDelayed(run,200);
                 // Undo action

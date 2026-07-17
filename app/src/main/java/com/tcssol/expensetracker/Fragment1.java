@@ -40,6 +40,7 @@ import com.tcssol.expensetracker.Adapters.Frag1RcvAdapter;
 import com.tcssol.expensetracker.Adapters.Fragment1ClickListner;
 import com.tcssol.expensetracker.Adapters.PopUpRecycleViewAdapter;
 import com.tcssol.expensetracker.Data.ExpenseDao;
+import com.tcssol.expensetracker.Data.ExpensesDatabase;
 import com.tcssol.expensetracker.Model.ExpenseViewModel;
 import com.tcssol.expensetracker.Model.Expenses;
 import com.tcssol.expensetracker.Model.SharedExpenseViewModel;
@@ -149,8 +150,12 @@ public class Fragment1 extends Fragment implements Fragment1ClickListner {
         dim.setBounds(0, 0, root.getWidth(), root.getHeight());
         dim.setAlpha((int) (100));
         root.getOverlay().add(dim);
-        PopUpRecycleViewAdapter  recycleViewAdapterPop=new PopUpRecycleViewAdapter(expenseViewModel.getSubCatsF(month,year,expenses.getCategory(),expenses.isType()),context);
-        subcategoryRecyclerView.setAdapter(recycleViewAdapterPop);
+        // Room forbids main-thread queries; fetch on the executor, then bind on the UI thread
+        ExpensesDatabase.databaseWriterExecutor.execute(() -> {
+            List<Expenses> subCats = expenseViewModel.getSubCatsF(month, year, expenses.getCategory(), expenses.isType());
+            subcategoryRecyclerView.post(() ->
+                    subcategoryRecyclerView.setAdapter(new PopUpRecycleViewAdapter(subCats, context)));
+        });
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
