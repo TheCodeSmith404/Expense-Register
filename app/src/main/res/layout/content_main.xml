@@ -87,7 +87,7 @@
                 android:layout_marginEnd="12dp"
                 android:text="Previous Month" />
 
-            <Spinner
+            <AutoCompleteTextView
                 android:id="@+id/spinnerSelectMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -96,10 +96,12 @@
                 android:minWidth="120dp"
                 android:paddingStart="14dp"
                 android:paddingEnd="36dp"
-                android:popupElevation="4dp"
-                android:popupBackground="@drawable/rectangle_shape" />
+                android:inputType="none"
+                android:textAlignment="center"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurface" />
 
-            <Spinner
+            <AutoCompleteTextView
                 android:id="@+id/spinnerSelectYear"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -107,8 +109,10 @@
                 android:minWidth="100dp"
                 android:paddingStart="14dp"
                 android:paddingEnd="36dp"
-                android:popupElevation="4dp"
-                android:popupBackground="@drawable/rectangle_shape" />
+                android:inputType="none"
+                android:textAlignment="center"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurface" />
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -123,4 +127,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollPeriodSelector" />
 
-</androidx.coordinatorlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

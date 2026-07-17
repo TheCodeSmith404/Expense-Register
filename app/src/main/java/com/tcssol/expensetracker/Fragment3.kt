@@ -151,6 +151,10 @@ class Fragment3 : Fragment() {
             binding.pieChart.clear()
             return
         }
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedValue, true)
+        val onPrimaryColor = typedValue.data
+
         val entries = data.filterNotNull().map { PieEntry(it.perentage.toFloat(), it.name) }
         val dataSet = PieDataSet(entries, "").apply {
             colors = arrayListOf(
@@ -160,7 +164,7 @@ class Fragment3 : Fragment() {
                 Color.parseColor("#FFA726"),
                 Color.parseColor("#29B6F6")
             )
-            valueTextColor = ContextCompat.getColor(requireContext(), R.color.colorOnPrimary)
+            valueTextColor = onPrimaryColor
             valueTextSize = 12f
             valueFormatter = PercentFormatter(binding.pieChart)
         }
