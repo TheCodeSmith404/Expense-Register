@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tcssol.expensetracker.Adapters.ModeDistributionAdapter
+import com.tcssol.expensetracker.Model.DailySum
 import com.tcssol.expensetracker.Model.ExpenseViewModel
 import com.tcssol.expensetracker.Model.Expenses
 import com.tcssol.expensetracker.Model.PersonExpViewModel
@@ -22,6 +23,7 @@ import com.tcssol.expensetracker.Utils.Wrapped
 import com.tcssol.expensetracker.Views.CategoryBarChartView
 import com.tcssol.expensetracker.databinding.Fragment3Binding
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Currency
 import java.util.Locale
 
@@ -37,7 +39,14 @@ class Fragment3 : Fragment() {
     private var _binding:Fragment3Binding?=null
     private val binding get()= _binding!!
     private var chartSource: LiveData<List<Expenses>>? = null
+    private var dailySource: LiveData<List<DailySum>>? = null
     private var chartEmpty = true
+
+    // Latest rows per dataset; the toggles only choose which one is rendered.
+    private var categoryItems: List<CategoryBarChartView.Item> = emptyList()
+    private var dailyItems: List<CategoryBarChartView.Item> = emptyList()      // chronological, for bars
+    private var dailyTopItems: List<CategoryBarChartView.Item> = emptyList()   // top days + Other, for pie
+    private var modeItems: List<CategoryBarChartView.Item> = emptyList()       // percentages
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -84,11 +93,34 @@ class Fragment3 : Fragment() {
                     PREF_CHART_TYPE,
                     if (checkedId == R.id.buttonChartPie) "pie" else "bars"
                 ).apply()
-                applyChartVisibility()
+                renderChart()
+            }
+        }
+
+        // Dataset selector: category totals, daily spend, or payment-medium share
+        binding.chartDataToggleGroup.check(
+            when (prefs.getString(PREF_CHART_DATA, "category")) {
+                "daily" -> R.id.buttonDataDaily
+                "medium" -> R.id.buttonDataMedium
+                else -> R.id.buttonDataCategory
+            }
+        )
+        binding.chartDataToggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                prefs.edit().putString(
+                    PREF_CHART_DATA,
+                    when (checkedId) {
+                        R.id.buttonDataDaily -> "daily"
+                        R.id.buttonDataMedium -> "medium"
+                        else -> "category"
+                    }
+                ).apply()
+                renderChart()
             }
         }
 
         setChartSource(expenseViewModel.allExpensesGrouped)
+        setDailySource(LocalDate.now().monthValue, LocalDate.now().year)
 
         sharedExpenseViewModel!!.getObject().observe(
             viewLifecycleOwner
@@ -99,8 +131,10 @@ class Fragment3 : Fragment() {
                         LocalDate.of(data.year, data.month, 1)
                     )
                 )
+                setDailySource(data.month, data.year)
             } else {
                 setChartSource(expenseViewModel.allExpensesGrouped)
+                setDailySource(LocalDate.now().monthValue, LocalDate.now().year)
             }
             if (data.year > 0 || data.month > 0) {
                 Log.d("expdao", data.month.toString() + " Data in frag3 " + data.year)
@@ -137,6 +171,13 @@ class Fragment3 : Fragment() {
                 context, data
             )
             binding.modeRecycleViewfFrag3.adapter = adapter
+
+            // Same data feeds the "Medium" chart dataset (values are 0-100 shares)
+            modeItems = (data ?: emptyList())
+                .filterNotNull()
+                .sortedByDescending { it.perentage ?: 0.0 }
+                .map { CategoryBarChartView.Item(it.name, it.perentage ?: 0.0) }
+            renderChart()
         }
     }
 
@@ -146,12 +187,17 @@ class Fragment3 : Fragment() {
         source.observe(viewLifecycleOwner) { list -> bindCategoryChart(list) }
     }
 
+    private fun setDailySource(month: Int, year: Int) {
+        dailySource?.removeObservers(viewLifecycleOwner)
+        dailySource = expenseViewModel.getDailySums(month, year)
+        dailySource!!.observe(viewLifecycleOwner) { list -> bindDailyChart(list) }
+    }
+
     /**
      * Grouped rows -> spend-only category totals, largest first.
      * Categories beyond the top [MAX_CHART_ROWS] are folded into "Other".
      */
     private fun bindCategoryChart(list: List<Expenses>?) {
-        val symbol = Currency.getInstance(Locale.getDefault()).symbol
         val spend = (list ?: emptyList())
             .filter { !it.isType && it.category != "Money Given" && it.category != "Money Received" }
             .sortedByDescending { it.amount }
@@ -162,15 +208,67 @@ class Fragment3 : Fragment() {
             val other = spend.drop(MAX_CHART_ROWS).sumOf { it.amount }
             items.add(CategoryBarChartView.Item(getString(R.string.chart_other), other))
         }
-
-        binding.categoryChart.setData(items, symbol)
-        binding.categoryPieChart.setData(items, symbol)
-        chartEmpty = items.isEmpty()
-        applyChartVisibility()
+        categoryItems = items
+        renderChart()
     }
 
-    private fun applyChartVisibility() {
+    /**
+     * Daily sums -> chronological rows for the bars; for the pie the biggest
+     * spending days are kept and the rest folded into "Other" so it stays readable.
+     */
+    private fun bindDailyChart(list: List<DailySum>?) {
+        val fmt = DateTimeFormatter.ofPattern("d MMM")
+        val days = (list ?: emptyList()).filter { it.totalSpent > 0 }
+
+        dailyItems = days.sortedBy { it.date }
+            .map { CategoryBarChartView.Item(it.date.format(fmt), it.totalSpent) }
+
+        val bySpend = days.sortedByDescending { it.totalSpent }
+        val top = bySpend.take(MAX_CHART_ROWS)
+            .map { CategoryBarChartView.Item(it.date.format(fmt), it.totalSpent) }
+            .toMutableList()
+        if (bySpend.size > MAX_CHART_ROWS) {
+            top.add(CategoryBarChartView.Item(
+                getString(R.string.chart_other),
+                bySpend.drop(MAX_CHART_ROWS).sumOf { it.totalSpent }))
+        }
+        dailyTopItems = top
+        renderChart()
+    }
+
+    /** Pushes the selected dataset into whichever chart type is active. */
+    private fun renderChart() {
+        if (_binding == null) return
+        val symbol = Currency.getInstance(Locale.getDefault()).symbol
         val pieSelected = binding.chartToggleGroup.checkedButtonId == R.id.buttonChartPie
+
+        val items: List<CategoryBarChartView.Item>
+        val prefix: String
+        val suffix: String
+        val label: String
+        when (binding.chartDataToggleGroup.checkedButtonId) {
+            R.id.buttonDataDaily -> {
+                items = if (pieSelected) dailyTopItems else dailyItems
+                prefix = symbol; suffix = ""
+                label = getString(R.string.chart_daily_spending)
+            }
+            R.id.buttonDataMedium -> {
+                items = modeItems
+                prefix = ""; suffix = "%"
+                label = getString(R.string.chart_medium_share)
+            }
+            else -> {
+                items = categoryItems
+                prefix = symbol; suffix = ""
+                label = getString(R.string.spending_by_category)
+            }
+        }
+
+        binding.labelCategoryChart.text = label
+        binding.categoryChart.setData(items, prefix, suffix)
+        binding.categoryPieChart.setData(items, prefix, suffix)
+        chartEmpty = items.isEmpty()
+
         binding.chartEmptyText.visibility = if (chartEmpty) View.VISIBLE else View.GONE
         binding.categoryChart.visibility =
             if (!chartEmpty && !pieSelected) View.VISIBLE else View.GONE
@@ -179,8 +277,9 @@ class Fragment3 : Fragment() {
     }
 
     companion object {
-        // 5 real categories + "Other" keeps the pie readable (≤6 slices)
+        // 5 real rows + "Other" keeps the pie readable (≤6 slices)
         private const val MAX_CHART_ROWS = 5
         private const val PREF_CHART_TYPE = "dashboard_chart_type"
+        private const val PREF_CHART_DATA = "dashboard_chart_data"
     }
 }

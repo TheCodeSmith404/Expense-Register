@@ -38,6 +38,7 @@ public class CategoryBarChartView extends View {
 
     private final List<Item> items = new ArrayList<>();
     private String valuePrefix = "";
+    private String valueSuffix = "";
 
     private final Paint barPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint trackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -84,11 +85,21 @@ public class CategoryBarChartView extends View {
      * @param valuePrefix currency symbol prepended to each value label
      */
     public void setData(List<Item> data, String valuePrefix) {
+        setData(data, valuePrefix, "");
+    }
+
+    /**
+     * @param data        rows to draw, already sorted (largest first)
+     * @param valuePrefix prepended to each value label (e.g. currency symbol)
+     * @param valueSuffix appended to each value label (e.g. "%")
+     */
+    public void setData(List<Item> data, String valuePrefix, String valueSuffix) {
         items.clear();
         if (data != null) {
             items.addAll(data);
         }
         this.valuePrefix = valuePrefix == null ? "" : valuePrefix;
+        this.valueSuffix = valueSuffix == null ? "" : valueSuffix;
         setContentDescription(buildSummary());
         requestLayout();
         invalidate();
@@ -104,7 +115,7 @@ public class CategoryBarChartView extends View {
     }
 
     private String formatValue(double value) {
-        return String.format(Locale.getDefault(), "%s%,.0f", valuePrefix, value);
+        return String.format(Locale.getDefault(), "%s%,.0f%s", valuePrefix, value, valueSuffix);
     }
 
     private float rowHeight() {

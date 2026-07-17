@@ -30,6 +30,11 @@
     <string name="chart_bars">Bars</string>
     <string name="chart_pie">Pie</string>
     <string name="chart_total">Total</string>
+    <string name="chart_data_category">Category</string>
+    <string name="chart_data_daily">Daily</string>
+    <string name="chart_data_medium">Medium</string>
+    <string name="chart_daily_spending">Daily Spending</string>
+    <string name="chart_medium_share">Payment Medium Share</string>
 
     <!-- SMS observations -->
     <string name="observations">Observations</string>

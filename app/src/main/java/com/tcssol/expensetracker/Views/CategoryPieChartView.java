@@ -33,6 +33,7 @@ public class CategoryPieChartView extends View {
 
     private final List<CategoryBarChartView.Item> items = new ArrayList<>();
     private String valuePrefix = "";
+    private String valueSuffix = "";
     private double total = 0;
 
     private final int[] sliceColors;
@@ -105,9 +106,15 @@ public class CategoryPieChartView extends View {
 
     /** Accepts the same items as the bar chart so both stay consistent. */
     public void setData(List<CategoryBarChartView.Item> data, String valuePrefix) {
+        setData(data, valuePrefix, "");
+    }
+
+    /** Same as {@link #setData(List, String)} with a suffix appended to value labels (e.g. "%"). */
+    public void setData(List<CategoryBarChartView.Item> data, String valuePrefix, String valueSuffix) {
         items.clear();
         if (data != null) items.addAll(data);
         this.valuePrefix = valuePrefix == null ? "" : valuePrefix;
+        this.valueSuffix = valueSuffix == null ? "" : valueSuffix;
         total = 0;
         for (CategoryBarChartView.Item item : items) total += item.value;
         setContentDescription(buildSummary());
@@ -127,7 +134,7 @@ public class CategoryPieChartView extends View {
     }
 
     private String formatValue(double value) {
-        return String.format(Locale.getDefault(), "%s%,.0f", valuePrefix, value);
+        return String.format(Locale.getDefault(), "%s%,.0f%s", valuePrefix, value, valueSuffix);
     }
 
     private float legendRowHeight() {
