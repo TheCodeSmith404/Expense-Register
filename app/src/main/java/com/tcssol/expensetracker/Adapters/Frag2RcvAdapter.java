@@ -1,6 +1,7 @@
 package com.tcssol.expensetracker.Adapters;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tcssol.expensetracker.Data.PersonExpDao;
@@ -91,13 +93,14 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
             String symbol = Currency.getInstance(Locale.getDefault()).getSymbol();
             holder.amount.setText(String.valueOf(personExp.getAmount()));
             if (personExp.getType() == false) {
-                color = Color.RED;
+                color = ContextCompat.getColor(mContext, R.color.expense);
                 holder.amount.setText("-" + symbol + String.valueOf(personExp.getAmount()));
             } else {
-                color = Color.GREEN;
+                color = ContextCompat.getColor(mContext, R.color.income);
                 holder.amount.setText(symbol + String.valueOf(personExp.getAmount()));
             }
-            holder.view.setBackgroundColor(color);
+            holder.view.setBackgroundTintList(ColorStateList.valueOf(color));
+            holder.view.setVisibility(View.VISIBLE);
             holder.amount.setTextColor(color);
             holder.name.setText(personExp.getName());
             if (type == 1) {

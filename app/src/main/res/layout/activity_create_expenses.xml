@@ -4,39 +4,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/addexp_toolbar"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        app:subtitleTextColor="@color/white"
-        app:titleTextColor="@color/white" />
-    <include
-        layout="@layout/content_create_expenses"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-  </LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/addexp_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
 
-  <include
-      layout="@layout/fragment_select_spinner" />
+        <include
+            layout="@layout/content_create_expenses"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
-
-
-
-
+    <include layout="@layout/fragment_select_spinner" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

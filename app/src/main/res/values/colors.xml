@@ -1,30 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ===== Design system: "Trust Blue" fintech palette (light) ===== -->
+
+    <!-- Primary -->
+    <color name="md_primary">#1E40AF</color>
+    <color name="md_on_primary">#FFFFFF</color>
+    <color name="md_primary_container">#DDE3FF</color>
+    <color name="md_on_primary_container">#06184F</color>
+
+    <!-- Secondary -->
+    <color name="md_secondary">#3B82F6</color>
+    <color name="md_on_secondary">#FFFFFF</color>
+    <color name="md_secondary_container">#DBEAFE</color>
+    <color name="md_on_secondary_container">#0C2D6B</color>
+
+    <!-- Tertiary (growth green) -->
+    <color name="md_tertiary">#059669</color>
+    <color name="md_on_tertiary">#FFFFFF</color>
+    <color name="md_tertiary_container">#D1FAE5</color>
+    <color name="md_on_tertiary_container">#064E3B</color>
+
+    <!-- Error -->
+    <color name="md_error">#DC2626</color>
+    <color name="md_on_error">#FFFFFF</color>
+    <color name="md_error_container">#FEE2E2</color>
+    <color name="md_on_error_container">#7F1D1D</color>
+
+    <!-- Neutrals -->
+    <color name="md_background">#F4F6FB</color>
+    <color name="md_on_background">#0F172A</color>
+    <color name="md_surface">#FFFFFF</color>
+    <color name="md_on_surface">#0F172A</color>
+    <color name="md_surface_variant">#E8EBF5</color>
+    <color name="md_on_surface_variant">#4B5569</color>
+    <color name="md_outline">#99A3BC</color>
+    <color name="md_outline_variant">#E1E5F0</color>
+
+    <!-- Semantic money colors -->
+    <color name="income">#059669</color>
+    <color name="income_container">#D7F5E7</color>
+    <color name="on_income_container">#065F46</color>
+    <color name="expense">#DC2626</color>
+    <color name="expense_container">#FDE3E3</color>
+    <color name="on_expense_container">#991B1B</color>
+
+    <!-- App bar (branded in light mode, dark surface at night) -->
+    <color name="app_bar_background">#1E40AF</color>
+    <color name="app_bar_content">#FFFFFF</color>
+    <color name="app_bar_content_muted">#BFCBFA</color>
+
+    <!-- Splash -->
+    <color name="splash_gradient_start">#0F2167</color>
+    <color name="splash_gradient_center">#1E40AF</color>
+    <color name="splash_gradient_end">#3B82F6</color>
+
+    <!-- ===== Legacy names kept for code/back-compat, remapped to the new palette ===== -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="red">#FF0000</color>
-    <color name="green">#00FF00</color>
-    <color name="launcherBackground">#57597A</color>
-    <color name="colorPrimary">#24247A</color>
-    <color name="colorPrimaryNeutral">#4752B1</color>
-    <color name="colorPrimaryVariant">#24247A</color>
-    <color name="lightBlack">#AAAAAA</color>
-    <color name="newColor">#24247A</color>
-    <color name="newColorVariant">#A2A9D8</color>
+    <color name="red">#DC2626</color>
+    <color name="green">#059669</color>
+    <color name="launcherBackground">#1E40AF</color>
+    <color name="colorPrimary">#1E40AF</color>
+    <color name="colorPrimaryNeutral">#1E40AF</color>
+    <color name="colorPrimaryVariant">#3B82F6</color>
+    <color name="lightBlack">#64748B</color>
+    <color name="newColor">#1E40AF</color>
+    <color name="newColorVariant">#DDE3FF</color>
 
-    <!-- Secondary colors -->
-    <color name="colorSecondary">#03DAC6</color>
-    <color name="colorSecondaryVariant">#018786</color>
+    <color name="colorSecondary">#3B82F6</color>
+    <color name="colorSecondaryVariant">#1E40AF</color>
 
-    <!-- Dark color for status bar -->
-    <color name="colorPrimaryDark">#24247A</color>
+    <color name="colorPrimaryDark">#16308A</color>
 
-    <!-- Default text colors -->
-    <color name="colorTextPrimary">#000000</color>
-    <color name="colorTextSecondary">#6E6E6E</color>
+    <color name="colorTextPrimary">#0F172A</color>
+    <color name="colorTextSecondary">#4B5569</color>
 
-    <!-- Default tint colors for widgets -->
-    <color name="colorControlNormal">#24247A</color>
-    <color name="colorControlActivated">#03DAC6</color>
-    <color name="colorControlHighlight">#FFA2A9D8</color>
+    <color name="colorControlNormal">#1E40AF</color>
+    <color name="colorControlActivated">#3B82F6</color>
+    <color name="colorControlHighlight">#331E40AF</color>
 </resources>

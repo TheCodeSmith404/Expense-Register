@@ -37,11 +37,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.snackbar.Snackbar;
 import com.tcssol.expensetracker.Data.ExpensesRepository;
 import com.tcssol.expensetracker.Model.ExpenseViewModel;
@@ -84,8 +84,8 @@ public class CreateExpenses extends AppCompatActivity {
     private EditText msgTxtEditText;
 
     private Group sendMsgGrp;
-    private Switch aSwitch;
-    private Switch sendMsgSwitch;
+    private MaterialSwitch aSwitch;
+    private MaterialSwitch sendMsgSwitch;
     private CalendarView calendarView;
     private CheckBox received;
     private CheckBox given;

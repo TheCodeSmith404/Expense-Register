@@ -23,9 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.PopupWindow;
-import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.snackbar.Snackbar;
 import com.tcssol.expensetracker.Adapters.Frag2RcvAdapter;
 import com.tcssol.expensetracker.Adapters.Fragment2ClickListner;
@@ -39,7 +39,7 @@ public class Fragment2 extends Fragment implements Fragment2ClickListner{
     private PersonExpViewModel personExpViewModel;
     private SharedExpenseViewModel sharedExpenseViewModel;
     private RecyclerView recyclerView;
-    private Switch aSwitch;
+    private MaterialSwitch aSwitch;
     private Frag2RcvAdapter adapter;
     public PersonExpDao expDao;
     private View view;

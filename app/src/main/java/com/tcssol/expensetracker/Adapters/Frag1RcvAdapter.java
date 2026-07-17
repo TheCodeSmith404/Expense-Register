@@ -51,11 +51,11 @@ public class Frag1RcvAdapter extends RecyclerView.Adapter<Frag1RcvAdapter.ViewHo
         String symbol= Currency.getInstance(Locale.getDefault()).getSymbol();
 
         if(expenses.isType()==true) {
-            color = Color.GREEN;
+            color = ContextCompat.getColor(mContext, R.color.income);
             holder.amount.setText(symbol+String.valueOf(expenses.getAmount()));
         }
         else {
-            color = Color.RED;
+            color = ContextCompat.getColor(mContext, R.color.expense);
             holder.amount.setText("-"+symbol+String.valueOf(expenses.getAmount()));
         }
 //        holder.category.setTextColor(color);

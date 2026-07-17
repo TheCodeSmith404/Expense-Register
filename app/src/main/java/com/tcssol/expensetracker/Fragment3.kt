@@ -8,16 +8,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tcssol.expensetracker.Adapters.ModeDistributionAdapter
 import com.tcssol.expensetracker.Model.ExpenseViewModel
+import com.tcssol.expensetracker.Model.Expenses
 import com.tcssol.expensetracker.Model.PersonExpViewModel
 import com.tcssol.expensetracker.Model.SharedExpenseViewModel
 import com.tcssol.expensetracker.Utils.ModeWrapper
 import com.tcssol.expensetracker.Utils.Wrapped
+import com.tcssol.expensetracker.Views.CategoryBarChartView
 import com.tcssol.expensetracker.databinding.Fragment3Binding
+import java.time.LocalDate
 import java.util.Currency
 import java.util.Locale
 
@@ -32,6 +36,7 @@ class Fragment3 : Fragment() {
     private var view: View? = null
     private var _binding:Fragment3Binding?=null
     private val binding get()= _binding!!
+    private var chartSource: LiveData<List<Expenses>>? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,9 +72,20 @@ class Fragment3 : Fragment() {
 //            ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create<SharedExpenseViewModel>(
 //                SharedExpenseViewModel::class.java
 //            )
+        setChartSource(expenseViewModel.allExpensesGrouped)
+
         sharedExpenseViewModel!!.getObject().observe(
             viewLifecycleOwner
         ) { data: Wrapped ->
+            if (data.year > 0 && data.month > 0) {
+                setChartSource(
+                    expenseViewModel.getAllExpensesGroupedMonthly(
+                        LocalDate.of(data.year, data.month, 1)
+                    )
+                )
+            } else {
+                setChartSource(expenseViewModel.allExpensesGrouped)
+            }
             if (data.year > 0 || data.month > 0) {
                 Log.d("expdao", data.month.toString() + " Data in frag3 " + data.year)
                 expenseViewModel!!.getFrag3DataFiltered(data.month, data.year).observe(
@@ -106,5 +122,37 @@ class Fragment3 : Fragment() {
             )
             binding.modeRecycleViewfFrag3.adapter = adapter
         }
+    }
+
+    private fun setChartSource(source: LiveData<List<Expenses>>) {
+        chartSource?.removeObservers(viewLifecycleOwner)
+        chartSource = source
+        source.observe(viewLifecycleOwner) { list -> bindCategoryChart(list) }
+    }
+
+    /**
+     * Grouped rows -> spend-only category totals, largest first.
+     * Categories beyond the top 6 are folded into "Other".
+     */
+    private fun bindCategoryChart(list: List<Expenses>?) {
+        val symbol = Currency.getInstance(Locale.getDefault()).symbol
+        val spend = (list ?: emptyList())
+            .filter { !it.isType && it.category != "Money Given" && it.category != "Money Received" }
+            .sortedByDescending { it.amount }
+
+        val items = mutableListOf<CategoryBarChartView.Item>()
+        spend.take(MAX_CHART_ROWS).forEach { items.add(CategoryBarChartView.Item(it.category, it.amount)) }
+        if (spend.size > MAX_CHART_ROWS) {
+            val other = spend.drop(MAX_CHART_ROWS).sumOf { it.amount }
+            items.add(CategoryBarChartView.Item(getString(R.string.chart_other), other))
+        }
+
+        binding.categoryChart.setData(items, symbol)
+        binding.categoryChart.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
+        binding.chartEmptyText.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    companion object {
+        private const val MAX_CHART_ROWS = 6
     }
 }

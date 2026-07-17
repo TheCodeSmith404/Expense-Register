@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ===== Design system: "Trust Blue" fintech palette (dark / OLED-friendly) ===== -->
+
+    <!-- Primary -->
+    <color name="md_primary">#9DB4FF</color>
+    <color name="md_on_primary">#0B2472</color>
+    <color name="md_primary_container">#24408F</color>
+    <color name="md_on_primary_container">#DDE3FF</color>
+
+    <!-- Secondary -->
+    <color name="md_secondary">#93C5FD</color>
+    <color name="md_on_secondary">#082A56</color>
+    <color name="md_secondary_container">#1E3A6E</color>
+    <color name="md_on_secondary_container">#DBEAFE</color>
+
+    <!-- Tertiary (growth green) -->
+    <color name="md_tertiary">#34D399</color>
+    <color name="md_on_tertiary">#053B2C</color>
+    <color name="md_tertiary_container">#065F46</color>
+    <color name="md_on_tertiary_container">#D1FAE5</color>
+
+    <!-- Error -->
+    <color name="md_error">#F87171</color>
+    <color name="md_on_error">#450A0A</color>
+    <color name="md_error_container">#7F1D1D</color>
+    <color name="md_on_error_container">#FEE2E2</color>
+
+    <!-- Neutrals -->
+    <color name="md_background">#0B1120</color>
+    <color name="md_on_background">#E2E8F0</color>
+    <color name="md_surface">#151E33</color>
+    <color name="md_on_surface">#E7EBF4</color>
+    <color name="md_surface_variant">#212C4B</color>
+    <color name="md_on_surface_variant">#A3AECB</color>
+    <color name="md_outline">#4C5878</color>
+    <color name="md_outline_variant">#2A3554</color>
+
+    <!-- Semantic money colors -->
+    <color name="income">#34D399</color>
+    <color name="income_container">#0E3B2E</color>
+    <color name="on_income_container">#A7F3D0</color>
+    <color name="expense">#F87171</color>
+    <color name="expense_container">#3F1D1D</color>
+    <color name="on_expense_container">#FECACA</color>
+
+    <!-- App bar -->
+    <color name="app_bar_background">#131C31</color>
+    <color name="app_bar_content">#E8EDFB</color>
+    <color name="app_bar_content_muted">#7C89AD</color>
+
+    <!-- Splash -->
+    <color name="splash_gradient_start">#0B1120</color>
+    <color name="splash_gradient_center">#16308A</color>
+    <color name="splash_gradient_end">#1E40AF</color>
+
+    <!-- ===== Legacy names, dark variants ===== -->
+    <color name="red">#F87171</color>
+    <color name="green">#34D399</color>
+    <color name="lightBlack">#94A3B8</color>
+
+    <color name="colorTextPrimary">#E7EBF4</color>
+    <color name="colorTextSecondary">#A3AECB</color>
+</resources>
