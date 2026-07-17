@@ -86,4 +86,15 @@
     <color name="colorControlNormal">#1E40AF</color>
     <color name="colorControlActivated">#3B82F6</color>
     <color name="colorControlHighlight">#331E40AF</color>
+
+    <!-- ===== Names introduced on v3, mapped into the Trust Blue palette ===== -->
+    <color name="colorOnPrimary">#FFFFFFFF</color>
+    <color name="colorOnSecondary">#FFFFFFFF</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorSurfaceVariant">#E8EBF5</color>
+    <color name="colorBackground">#F4F6FB</color>
+    <color name="colorTextHint">#99A3BC</color>
+    <color name="amber">#FFC107</color>
+    <color name="colorCardBackground">#FFFFFF</color>
+    <color name="colorDivider">#E1E5F0</color>
 </resources>

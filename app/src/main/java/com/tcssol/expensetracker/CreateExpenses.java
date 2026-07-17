@@ -9,6 +9,8 @@ import androidx.constraintlayout.widget.Group;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import android.Manifest;
 import android.app.AlarmManager;
@@ -99,7 +101,7 @@ public class CreateExpenses extends AppCompatActivity {
     private TextView number;
 
     private LocalDate targetDate;
-
+    private EditText editTextNote; // v2.0 note field
 
     private String storedMedium;
     private String mediumText="Cash";
@@ -109,7 +111,6 @@ public class CreateExpenses extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     SelectSpinner selectSpinner=new SelectSpinner();
     private final SharedExpenseViewModel viewModel=new SharedExpenseViewModel();
-    BottomSheetBehavior<View> bottomSheetBehavior;
     WorkwithJSONStrings jsonStrings;
     WorkwithJSONStrings jsonStrings1;
 
@@ -123,6 +124,17 @@ public class CreateExpenses extends AppCompatActivity {
          */
         context=getApplicationContext();
         setContentView(R.layout.activity_create_expenses);
+
+        View mainContent = findViewById(R.id.activity_expense);
+        ViewCompat.setOnApplyWindowInsetsListener(mainContent, (v, windowInsets) -> {
+            androidx.core.graphics.Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(insets.left,
+                    insets.top,
+                    insets.right,
+                    insets.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
+
         toolbar = findViewById(R.id.addexp_toolbar);
         toolbar.setSubtitle("Add Expenditure");
         setSupportActionBar(toolbar);
@@ -146,17 +158,6 @@ public class CreateExpenses extends AppCompatActivity {
         showCategory=findViewById(R.id.selectCategory);
         showSubCategory=findViewById(R.id.selectSubCategory);
         showMedium=findViewById(R.id.selectMedium);
-        /*
-        Setting Up bottom sheet fragment, Setting its max height
-         */
-        View constraintLayout=findViewById(R.id.fragmentSelectSpinner);
-        bottomSheetBehavior = BottomSheetBehavior.from(constraintLayout);
-        bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.STATE_HIDDEN);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenHeight = displayMetrics.heightPixels;
-        int maxHeight = (int) (screenHeight * 0.50);
-        bottomSheetBehavior.setMaxHeight(maxHeight);
 
         /*
         Initilizing View
@@ -265,21 +266,24 @@ public class CreateExpenses extends AppCompatActivity {
         received.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(given.isChecked()==true)
-                    given.setChecked(false);
-                receivedGiven=false;
-                if(aSwitch.isChecked()==true)
-                    sendMsgGrp.setVisibility(View.VISIBLE);
+                if (isChecked) {
+                    if (given.isChecked())
+                        given.setChecked(false);
+                    receivedGiven = true;
+                    if (aSwitch.isChecked())
+                        sendMsgGrp.setVisibility(View.VISIBLE);
+                }
             }
         });
         given.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(received.isChecked()==true)
-                    received.setChecked(false);
-                receivedGiven=true;
-                sendMsgGrp.setVisibility(View.GONE);
-
+                if (isChecked) {
+                    if (received.isChecked())
+                        received.setChecked(false);
+                    receivedGiven = false;
+                    sendMsgGrp.setVisibility(View.GONE);
+                }
             }
         });
         /*
@@ -328,7 +332,6 @@ public class CreateExpenses extends AppCompatActivity {
         showMedium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 Bundle item=new Bundle();
                 item.putString("type","Select Payment Mode");
                 item.putStringArrayList("items", (ArrayList<String>) medium);
@@ -359,6 +362,7 @@ public class CreateExpenses extends AppCompatActivity {
         Initializing more views
          */
         name=findViewById(R.id.editTextGetName);
+        editTextNote = findViewById(R.id.editTextNote);
         number=findViewById(R.id.editTextMobileNumber);
         editAmount=findViewById(R.id.edit_text_number);
         saveExpenses=findViewById(R.id.button);
@@ -377,7 +381,6 @@ public class CreateExpenses extends AppCompatActivity {
                 }
                 else if(type==2){
                     exptype=receivedGiven;
-
                 }
                 categoryString=showCategory.getText().toString();
                 subCategoryString=showSubCategory.getText().toString();
@@ -385,7 +388,10 @@ public class CreateExpenses extends AppCompatActivity {
                 if(!(editAmount.getText().toString().trim().isEmpty())&&(type==0||type==1)){
                     Log.d("1234","Inside if");
                     Double amount= Double.valueOf(String.valueOf(editAmount.getText()));
-                    Expenses expense=new Expenses(LocalDate.now(),categoryString,subCategoryString,mediumText,amount,exptype);
+                    String noteText = editTextNote != null && editTextNote.getText() != null
+                            ? editTextNote.getText().toString().trim() : null;
+                    Expenses expense=new Expenses(LocalDate.now(),categoryString,subCategoryString,mediumText,amount,exptype,
+                            noteText.isEmpty() ? null : noteText);
                     ExpenseViewModel.insert(expense,getApplicationContext());
                     consumeObservation();
                     finish();
@@ -396,9 +402,13 @@ public class CreateExpenses extends AppCompatActivity {
                     String getName= String.valueOf(name.getText());
                     String contactNumber=String.valueOf(number.getText());
                     String category=receivedGiven?"Money Received":"Money Given";
+                    String noteText = editTextNote != null && editTextNote.getText() != null
+                            ? editTextNote.getText().toString().trim() : null;
                     if(aSwitch.isChecked()==false){
-                        PersonExp personExp=new PersonExp(localDate,receivedGiven,getName,contactNumber,mediumText,false,null,amount);
-                        Expenses expense=new Expenses(localDate,category,getName,mediumText,amount,exptype);
+                        PersonExp personExp=new PersonExp(localDate,receivedGiven,getName,contactNumber,mediumText,false,null,amount,
+                                noteText.isEmpty() ? null : noteText);
+                        Expenses expense=new Expenses(localDate,category,getName,mediumText,amount,exptype,
+                                noteText.isEmpty() ? null : noteText);
                         PersonExpViewModel.insert(personExp);
                         ExpenseViewModel.insert(expense,getApplicationContext());
                         consumeObservation();
@@ -407,8 +417,12 @@ public class CreateExpenses extends AppCompatActivity {
                         /*Setting One Time reminders for tasks if user wants using Alarm service
                          */
                         if(targetDate!=null){
-                            PersonExp personExp=new PersonExp(localDate,receivedGiven,getName,contactNumber,mediumText,true,targetDate,amount);
-                            Expenses expense=new Expenses(localDate,category,getName,mediumText,amount,exptype);
+                            noteText = editTextNote != null && editTextNote.getText() != null
+                                    ? editTextNote.getText().toString().trim() : null;
+                            PersonExp personExp=new PersonExp(localDate,receivedGiven,getName,contactNumber,mediumText,true,targetDate,amount,
+                                    noteText.isEmpty() ? null : noteText);
+                            Expenses expense=new Expenses(localDate,category,getName,mediumText,amount,exptype,
+                                    noteText.isEmpty() ? null : noteText);
                             PersonExpViewModel.insert(personExp);
                             ExpenseViewModel.insert(expense,getApplicationContext());
                             if(sendMsgSwitch.isChecked()) {
@@ -471,21 +485,21 @@ public class CreateExpenses extends AppCompatActivity {
                 subcategories=jsonStrings.getList(intent2.getStringExtra("Category"));
                 showSubCategory.setText(subcategories.get(0));
                 categoryString=intent2.getStringExtra("Category");
-            }else{
-                radioGroup.check(R.id.radioButtonLendRecieve);
-                if(typeExp==false)
-                    received.setChecked(true);
-                else
-                    given.setChecked(true);
+             }else{
+                 radioGroup.check(R.id.radioButtonLendRecieve);
+                 if(typeExp==true)
+                     received.setChecked(true);
+                 else
+                     given.setChecked(true);
 
-            }
+             }
         }else if(typeOf==2){
             boolean typeExp=intent2.getBooleanExtra("TypeExpense",false);
             radioGroup.check(R.id.radioButtonLendRecieve);
-            if(typeExp==false)
-                received.setChecked(true);
-            else
-                given.setChecked(true);
+             if(typeExp==true)
+                 received.setChecked(true);
+             else
+                 given.setChecked(true);
             name.setText(intent2.getStringExtra("Name"));
             number.setText(intent2.getStringExtra("ContactNumber"));
             showMedium.setText(intent2.getStringExtra("Medium"));
@@ -511,7 +525,7 @@ public class CreateExpenses extends AppCompatActivity {
 
             }else{
                 radioGroup.check(R.id.radioButtonLendRecieve);
-                if(typeExp==false)
+                if(typeExp==true)
                     received.setChecked(true);
                 else
                     given.setChecked(true);

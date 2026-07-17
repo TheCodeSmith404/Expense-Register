@@ -8,50 +8,62 @@ import com.tcssol.expensetracker.Model.Expenses;
 import com.tcssol.expensetracker.Model.PersonExp;
 
 import java.util.List;
+
 public class PersonExpRepository {
     private final PersonExpDao personExpDao;
     private final LiveData<List<PersonExp>> allExpenses;
-    private final List<PersonExp> allExpensesList;
     private final LiveData<List<PersonExp>> allExpensesGrouped;
-    public PersonExpRepository(Application application){
-        PersonExpDatabase database=PersonExpDatabase.getDatabase(application);
-        this.personExpDao=database.personExpDao();
-        this.allExpenses=personExpDao.getExpenses();
-        this.allExpensesList=personExpDao.getExpensesList();
-        this.allExpensesGrouped= personExpDao.getExpensesGrouped();
+
+    public PersonExpRepository(Application application) {
+        PersonExpDatabase database = PersonExpDatabase.getDatabase(application);
+        this.personExpDao = database.personExpDao();
+        this.allExpenses = personExpDao.getExpenses();
+        this.allExpensesGrouped = personExpDao.getExpensesGrouped();
+        // ✅ No synchronous DB call in constructor
     }
 
-    public List<PersonExp> getAllExpensesList() {
-        return allExpensesList;
+    /** Fetch all P2P entries on a background thread and deliver via callback. */
+    public void getAllExpensesList(java.util.function.Consumer<List<PersonExp>> callback) {
+        PersonExpDatabase.databaseWriterExecutor.execute(() -> {
+            List<PersonExp> list = personExpDao.getExpensesList();
+            callback.accept(list);
+        });
     }
-    public LiveData<List<PersonExp>> getAllExpensesGrouped(){
+
+    /** Synchronous getter – MUST be called from a background thread (e.g. Executor). */
+    public List<PersonExp> getAllExpensesListSync() {
+        return personExpDao.getExpensesList();
+    }
+
+    public LiveData<List<PersonExp>> getAllExpensesGrouped() {
         return allExpensesGrouped;
     }
-    public LiveData<List<PersonExp>> getAllExpensesGroupedFiltered(String month,String year){
-        if(month.length()==1){
-            month="0"+month;
-        }
-        return personExpDao.getExpensesFilteredGrouped(month,year);
-    }
-    public LiveData<List<PersonExp>> getAllExpensesFiltered(String month,String year){
-        if(month.length()==1){
-            month="0"+month;
-        }
-        return personExpDao.getExpensesFiltered(month,year);
+
+    public LiveData<List<PersonExp>> getAllExpensesGroupedFiltered(String month, String year) {
+        if (month.length() == 1) month = "0" + month;
+        return personExpDao.getExpensesFilteredGrouped(month, year);
     }
 
-    public LiveData<List<PersonExp>> getAllExpenses(){return allExpenses;}
-    public void insert(PersonExp personExp){
-        PersonExpDatabase.databaseWriterExecutor.execute(()->personExpDao.insertPersonExpense(personExp));
+    public LiveData<List<PersonExp>> getAllExpensesFiltered(String month, String year) {
+        if (month.length() == 1) month = "0" + month;
+        return personExpDao.getExpensesFiltered(month, year);
     }
-    public LiveData<PersonExp> get(long id){return personExpDao.get(id);}
 
-    public void update(PersonExp exp){
-        PersonExpDatabase.databaseWriterExecutor.execute(()->personExpDao.update(exp));
-    }
-    public void delete(PersonExp exp){
-        PersonExpDatabase.databaseWriterExecutor.execute(()->personExpDao.delete(exp));
-    }
-    public PersonExpDao getPersonExpDao(){return personExpDao;}
+    public LiveData<List<PersonExp>> getAllExpenses() { return allExpenses; }
 
+    public void insert(PersonExp personExp) {
+        PersonExpDatabase.databaseWriterExecutor.execute(() -> personExpDao.insertPersonExpense(personExp));
+    }
+
+    public LiveData<PersonExp> get(long id) { return personExpDao.get(id); }
+
+    public void update(PersonExp exp) {
+        PersonExpDatabase.databaseWriterExecutor.execute(() -> personExpDao.update(exp));
+    }
+
+    public void delete(PersonExp exp) {
+        PersonExpDatabase.databaseWriterExecutor.execute(() -> personExpDao.delete(exp));
+    }
+
+    public PersonExpDao getPersonExpDao() { return personExpDao; }
 }

@@ -78,7 +78,7 @@ public class Fragment2 extends Fragment implements Fragment2ClickListner{
         I could use methods to clean the code and make it more readable but do not want to break the code again :/
          */
 
-        sharedExpenseViewModel=new ViewModelProvider.AndroidViewModelFactory(getActivity().getApplication()).create(SharedExpenseViewModel.class);
+        sharedExpenseViewModel = new ViewModelProvider(requireActivity()).get(SharedExpenseViewModel.class);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -114,7 +114,7 @@ public class Fragment2 extends Fragment implements Fragment2ClickListner{
                     sharedExpenseViewModel.getObject().observe(getViewLifecycleOwner(), expensesList -> {
                         Log.d("Sup","Shared View initialized");
 
-                        if ((expensesList.getYear() > 0 || expensesList.getMonth() > 0) && expensesList.getYear() != 2021) {
+                        if (expensesList.getYear() > 0 || expensesList.getMonth() > 0) {
                             if (aSwitch.isChecked()) {
                                 personExpViewModel.getAllExpensesGroupedFiltered(String.valueOf(expensesList.getMonth()), String.valueOf(expensesList.getYear())).observe(getViewLifecycleOwner(), tasks -> {
                                     if(tasks!=null) {

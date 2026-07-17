@@ -99,8 +99,8 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
                 color = ContextCompat.getColor(mContext, R.color.income);
                 holder.amount.setText(symbol + String.valueOf(personExp.getAmount()));
             }
-            holder.view.setBackgroundTintList(ColorStateList.valueOf(color));
-            holder.view.setVisibility(View.VISIBLE);
+            if(holder.view!=null)
+                holder.view.setBackgroundColor(color);
             holder.amount.setTextColor(color);
             holder.name.setText(personExp.getName());
             if (type == 1) {
@@ -115,6 +115,13 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
                 } else {
                     holder.date.setVisibility(View.VISIBLE);
 //                holder.date.getDrawable().setTint(color);
+                }
+
+                if (personExp.getNote() != null && !personExp.getNote().isEmpty()) {
+                    holder.note.setText(personExp.getNote());
+                    holder.note.setVisibility(View.VISIBLE);
+                } else {
+                    holder.note.setVisibility(View.GONE);
                 }
             }
         }
@@ -139,7 +146,7 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
 
     public List<PersonExp> getNewList(List<PersonExp> list) {
         List<PersonExp> ret = new ArrayList<>();
-        PersonExp test = new PersonExp(list.get(0).getDateCreated(), (Boolean) false, "_*_*_", "_*_*_","_*_*_", false, (LocalDate) null,0D);
+        PersonExp test = new PersonExp(list.get(0).getDateCreated(), (Boolean) false, "_*_*_", "_*_*_","_*_*_", false, (LocalDate) null,0D,"");
         ret.add(0, test);
         ret.add(1, list.get(0));
         Log.d("Recycle Date 2",PersonExp.toTxtFormat(test));
@@ -151,7 +158,7 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
                 ret.add(temp);
                 Log.d("Recycle Date 2",PersonExp.toTxtFormat(temp));
             } else {
-                test = new PersonExp(temp.getDateCreated(), (Boolean)false, "_*_*_", "_*_*_","_*_*_", false, (LocalDate)null,0D);
+                test = new PersonExp(temp.getDateCreated(), (Boolean)false, "_*_*_", "_*_*_","_*_*_", false, (LocalDate)null,0D,"");
                 Log.d("Recycle Date 2",PersonExp.toTxtFormat(test));
                 Log.d("Recycle Date 2",PersonExp.toTxtFormat(temp));
                 ret.add(test);
@@ -169,6 +176,7 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
         public TextView date2;
         public View view;
         public TextView mode;
+        public TextView note;
         public Fragment2ClickListner clickListner;
         public ViewHolder(@NonNull View itemView,int type) {
             super(itemView);
@@ -179,6 +187,7 @@ public class Frag2RcvAdapter extends RecyclerView.Adapter<Frag2RcvAdapter.ViewHo
                 date = itemView.findViewById(R.id.frag2date);
                 view = itemView.findViewById(R.id.frag2line);
                 mode = itemView.findViewById(R.id.frag2Mode);
+                note = itemView.findViewById(R.id.frag2note);
                 clickListner = fragment2ClickListner;
                 date.setOnClickListener(this);
                 itemView.getRootView().setOnLongClickListener(this);

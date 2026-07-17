@@ -69,4 +69,12 @@
 
     <color name="colorTextPrimary">#E7EBF4</color>
     <color name="colorTextSecondary">#A3AECB</color>
+
+    <!-- ===== Names introduced on v3, dark variants in the Trust Blue palette ===== -->
+    <color name="colorSurface">#151E33</color>
+    <color name="colorSurfaceVariant">#212C4B</color>
+    <color name="colorBackground">#0B1120</color>
+    <color name="colorCardBackground">#151E33</color>
+    <color name="colorDivider">#2A3554</color>
+    <color name="colorTextHint">#7C89AD</color>
 </resources>

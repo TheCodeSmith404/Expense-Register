@@ -20,10 +20,12 @@ public interface PersonExpDao {
     void deleteAll();
     @Query("SELECT * FROM person_expenses ORDER BY id DESC")
     LiveData<List<PersonExp>> getExpenses();
+    @SuppressWarnings(androidx.room.RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT id,name,sum(amount) as amount,type FROM person_expenses GROUP BY name,type ORDER BY name")
     LiveData<List<PersonExp>> getExpensesGrouped();
     @Query("SELECT * FROM person_expenses WHERE SUBSTR(date_created, 6, 2)=:month AND SUBSTR(date_created, 1, 4)=:year ORDER BY id DESC")
     LiveData<List<PersonExp>> getExpensesFiltered(String month,String year);
+    @SuppressWarnings(androidx.room.RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT id,name,sum(amount) as amount,type FROM person_expenses WHERE SUBSTR(date_created, 6, 2)=:month AND SUBSTR(date_created, 1, 4)=:year GROUP BY name,type ORDER BY name")
     LiveData<List<PersonExp>> getExpensesFilteredGrouped(String month,String year);
     @Query("SELECT * FROM person_expenses WHERE person_expenses.id=:id")

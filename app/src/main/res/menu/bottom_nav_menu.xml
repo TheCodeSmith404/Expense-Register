@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_categories"
+        android:icon="@drawable/baseline_pie_chart_24"
+        android:title="Categories" />
+    <item
+        android:id="@+id/nav_p2p"
+        android:icon="@drawable/baseline_people_24"
+        android:title="Peer 2 Peer" />
+    <item
+        android:id="@+id/nav_summary"
+        android:icon="@drawable/baseline_bar_chart_24"
+        android:title="Summary" />
+    <item
+        android:id="@+id/nav_all"
+        android:icon="@drawable/baseline_list_alt_24"
+        android:title="All Entries" />
+</menu>

@@ -8,26 +8,27 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.Group;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.tcssol.expensetracker.Adapters.EditAdapterCategory;
 import com.tcssol.expensetracker.Adapters.EditAdapterMedium;
 import com.tcssol.expensetracker.Adapters.EditAdapterSubCategory;
 import com.tcssol.expensetracker.Adapters.OnEditItemClickListner;
 import com.tcssol.expensetracker.Adapters.OnEditMediumItemClickListner;
 import com.tcssol.expensetracker.Adapters.OnEditSubItemClickListner;
-import com.tcssol.expensetracker.Utils.Utils;
 import com.tcssol.expensetracker.Utils.WorkwithJSONStrings;
 
 import java.util.ArrayList;
@@ -36,7 +37,6 @@ import java.util.List;
 /*
 Class for editing the categories/subcategories and medium
  */
-
 public class EditAdapter extends AppCompatActivity implements OnEditItemClickListner, OnEditSubItemClickListner, OnEditMediumItemClickListner {
     private Context context;
     private Toolbar toolbar;
@@ -45,16 +45,6 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
     private RecyclerView recyclerViewCategories;
     private RecyclerView recyclerViewSubCategories;
     private RecyclerView recyclerViewMode;
-    private Group groupCategories;
-    private Group groupMode;
-    private Group addItem;
-    private Group addItemMedium;
-    private ImageButton buttonCategories;
-    private ImageButton buttonMode;
-    private ImageButton check;
-    private ImageButton check2;
-    private EditText editText;
-    private EditText editText2;
     private WorkwithJSONStrings jsonStrings;
     private List<String> categories;
     private List<String> subcategory;
@@ -66,16 +56,15 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
     private WorkwithJSONStrings jsonStrings1;
     private Button saveButtonCategories;
     private Button saveButtonMedium;
+    private TextView tvSubcategoriesTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
-        Setting Activity
-         */
-        context=getApplicationContext();
+        context = getApplicationContext();
         setContentView(R.layout.activity_edit_adapters);
-        toolbar=findViewById(R.id.materialToolbarEditAdapter);
+
+        toolbar = findViewById(R.id.materialToolbarEditAdapter);
         toolbar.setSubtitle("Edit Categories");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,105 +74,126 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
             drawable = DrawableCompat.wrap(drawable);
             DrawableCompat.setTint(drawable, Color.WHITE);
             toolbar.setNavigationIcon(drawable);
-
         }
-        // Easy Fix
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        /*
-        TODO Add animation to only show category or subcategory based on what user is adding
-         */
-        buttonCategories=findViewById(R.id.imageButtonEditAdaptersCategories);
-        groupCategories=findViewById(R.id.groupEditAdaptersCategories);
-        buttonCategories.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                float rotation=buttonCategories.getRotation();
-                rotation+=180.00;
-                buttonCategories.setRotation(rotation);
-                groupCategories.setVisibility(groupCategories.getVisibility()==View.GONE?View.VISIBLE:View.GONE);
-            }
-        });
-        /*
-        Setting Up recycler view, onclick listners and shared preferences to persist the updates!
-         */
-        addItemMedium=findViewById(R.id.groupAddItemMedium);
-        check2=findViewById(R.id.imageButtonMediumDone);
-        editText2=findViewById(R.id.createMediumEditText);
+        toolbar.setNavigationOnClickListener(v -> finish());
 
-        addItem=findViewById(R.id.groupAddItem);
-        check=findViewById(R.id.imageButtonDone);
-        editText=findViewById(R.id.createCategoryEditText);
-        buttonMode=findViewById(R.id.imageButtonEditAdaptersMode);
-        groupMode=findViewById(R.id.groupEditAdaptersMode);
-        buttonMode.setOnClickListener(new View.OnClickListener() {
+        // Bind TabLayout and Containers
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        final View layoutCategories = findViewById(R.id.layoutCategoriesContainer);
+        final View layoutModes = findViewById(R.id.layoutModesContainer);
+        tvSubcategoriesTitle = findViewById(R.id.tvSubcategoriesTitle);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View v) {
-                //Rotating the based on visisbility of view
-                float rotation=buttonMode.getRotation();
-                rotation+=180.00;
-                buttonMode.setRotation(rotation);
-                groupMode.setVisibility(groupMode.getVisibility()==View.GONE?View.VISIBLE:View.GONE);
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) {
+                    layoutCategories.setVisibility(View.VISIBLE);
+                    layoutModes.setVisibility(View.GONE);
+                } else {
+                    layoutCategories.setVisibility(View.GONE);
+                    layoutModes.setVisibility(View.VISIBLE);
+                }
             }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
-        recyclerViewCategories=findViewById(R.id.recyclerViewEditAdaptersCategories);
+
+        recyclerViewCategories = findViewById(R.id.recyclerViewEditAdaptersCategories);
         recyclerViewCategories.setHasFixedSize(true);
         recyclerViewCategories.setLayoutManager(new LinearLayoutManager(context));
-        recyclerViewSubCategories=findViewById(R.id.recyclerViewEditAdaptersSubCategories);
+
+        recyclerViewSubCategories = findViewById(R.id.recyclerViewEditAdaptersSubCategories);
         recyclerViewSubCategories.setHasFixedSize(true);
         recyclerViewSubCategories.setLayoutManager(new LinearLayoutManager(context));
-        recyclerViewMode=findViewById(R.id.recyclerViewEdiAdaptersMode);
+
+        recyclerViewMode = findViewById(R.id.recyclerViewEdiAdaptersMode);
         recyclerViewMode.setHasFixedSize(true);
         recyclerViewMode.setLayoutManager(new LinearLayoutManager(context));
-        sharedPreferences=getSharedPreferences("com.tcs.expensetracker.stored_categories",MODE_PRIVATE);
-        String storedCategories = sharedPreferences.getString("STORED_CATEGORIES",getResources().getString(R.string.category_subcategory));
-        Log.d("EditAdapter","Stored categories"+storedCategories);
-        String storedMode=sharedPreferences.getString("STORED_MEDIUM",getResources().getString(R.string.transfer_medium));
-        Log.d("EditAdapter","Stored Medium"+storedMode);
-        editor=sharedPreferences.edit();
 
-        jsonStrings=new WorkwithJSONStrings(storedCategories);
-        jsonStrings1=new WorkwithJSONStrings(storedMode);
-        medium=jsonStrings1.getList("_list_medium");
-        Log.d("EditAdapter","Stored Medium list"+medium.toString());
-        categories=jsonStrings.getList("_elementlist");
-        Log.d("EditAdapter","Stored Categories"+categories.toString());
-        adapter=new EditAdapterCategory(context,categories,this);
-        adapter2=new EditAdapterMedium(context,medium,this);
+        sharedPreferences = getSharedPreferences("com.tcs.expensetracker.stored_categories", MODE_PRIVATE);
+        String storedCategories = sharedPreferences.getString("STORED_CATEGORIES", getResources().getString(R.string.category_subcategory));
+        String storedMode = sharedPreferences.getString("STORED_MEDIUM", getResources().getString(R.string.transfer_medium));
+        editor = sharedPreferences.edit();
+
+        jsonStrings = new WorkwithJSONStrings(storedCategories);
+        jsonStrings1 = new WorkwithJSONStrings(storedMode);
+
+        medium = jsonStrings1.getList("_list_medium");
+        categories = jsonStrings.getList("_elementlist");
+
+        adapter = new EditAdapterCategory(context, categories, this);
+        adapter2 = new EditAdapterMedium(context, medium, this);
+
         recyclerViewCategories.setAdapter(adapter);
         recyclerViewMode.setAdapter(adapter2);
-        saveButtonCategories=findViewById(R.id.buttonEditAdaptersCategoriesSave);
-        saveButtonCategories.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String temp=jsonStrings.getJSONString();
-                editor.putString("STORED_CATEGORIES",temp);
-                editor.commit();
-                Snackbar.make(v,"Changes Successfull",Snackbar.LENGTH_SHORT).show();
-            }
-        });
-        saveButtonMedium=findViewById(R.id.buttonEditAdaptersModeSave);
-        saveButtonMedium.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String temp=jsonStrings1.getJSONString();
-                editor.putString("STORED_MEDIUM",temp);
-                editor.commit();
-                Snackbar.make(v,"Changes Successfull",Snackbar.LENGTH_SHORT).show();
-            }
+
+        // Pre-select first category if available to avoid blank list
+        if (!categories.isEmpty()) {
+            onEditTextViewClick(categories.get(0));
+        }
+
+        saveButtonCategories = findViewById(R.id.buttonEditAdaptersCategoriesSave);
+        saveButtonCategories.setOnClickListener(v -> {
+            String temp = jsonStrings.getJSONString();
+            editor.putString("STORED_CATEGORIES", temp);
+            editor.commit();
+            Snackbar.make(v, "Changes Successful", Snackbar.LENGTH_SHORT).show();
         });
 
+        saveButtonMedium = findViewById(R.id.buttonEditAdaptersModeSave);
+        saveButtonMedium.setOnClickListener(v -> {
+            String temp = jsonStrings1.getJSONString();
+            editor.putString("STORED_MEDIUM", temp);
+            editor.commit();
+            Snackbar.make(v, "Changes Successful", Snackbar.LENGTH_SHORT).show();
+        });
+    }
+
+    private void showAddDialog(String title, String hint, OnAddTextListener listener) {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle(title);
+
+        final EditText input = new EditText(this);
+        input.setHint(hint);
+        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT);
+
+        int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
+        FrameLayout container = new FrameLayout(this);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = paddingPx;
+        params.rightMargin = paddingPx;
+        input.setLayoutParams(params);
+        container.addView(input);
+
+        builder.setView(container);
+
+        builder.setPositiveButton("Add", (dialog, which) -> {
+            String text = input.getText().toString().trim();
+            if (!text.isEmpty()) {
+                listener.onTextAdded(text);
+            }
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    private interface OnAddTextListener {
+        void onTextAdded(String text);
     }
 
     @Override
     public void onEditTextViewClick(String category) {
-        currentCategoryHelper=category;
-        subcategory=jsonStrings.getList(category);
-        adapter3=new EditAdapterSubCategory(context,subcategory,this);
+        currentCategoryHelper = category;
+        if (tvSubcategoriesTitle != null) {
+            tvSubcategoriesTitle.setText("Sub-Categories of " + category);
+        }
+        subcategory = jsonStrings.getList(category);
+        adapter3 = new EditAdapterSubCategory(context, subcategory, this);
         recyclerViewSubCategories.setAdapter(adapter3);
     }
 
@@ -191,85 +201,80 @@ public class EditAdapter extends AppCompatActivity implements OnEditItemClickLis
     public void onEditCrossViewClick(String item) {
         categories.remove(item);
         jsonStrings.removeKey(item);
-        jsonStrings.updateElementList("_elementlist",categories);
+        jsonStrings.updateElementList("_elementlist", categories);
         adapter.notifyDataSetChanged();
-        Log.d("JSOS",jsonStrings.getJSONString());
-
+        
+        // If the currently displayed subcategories belonged to the deleted category, clear or re-select
+        if (item.equals(currentCategoryHelper)) {
+            if (!categories.isEmpty()) {
+                onEditTextViewClick(categories.get(0));
+            } else {
+                currentCategoryHelper = "";
+                if (tvSubcategoriesTitle != null) {
+                    tvSubcategoriesTitle.setText("Sub-Categories");
+                }
+                if (subcategory != null) {
+                    subcategory.clear();
+                    if (adapter3 != null) {
+                        adapter3.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void addItem() {
-        addItem.setVisibility(View.VISIBLE);
-        check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!(editText.getText().toString().trim().isEmpty())){
-                    String temp=editText.getText().toString().trim();
-                    categories.add(temp);
-                    adapter.notifyDataSetChanged();
-                    jsonStrings.updateElementList("_elementlist",categories);
-                    List<String> element=new ArrayList<>();
-                    element.add("Filler");
-                    editText.getText().clear();
-                    jsonStrings.updateElementList(temp,element);
-                    Log.d("JSOS",jsonStrings.getJSONString());
-                }
-            }
+        showAddDialog("Add New Category", "Category Name", text -> {
+            categories.add(text);
+            adapter.notifyDataSetChanged();
+            jsonStrings.updateElementList("_elementlist", categories);
+            List<String> element = new ArrayList<>();
+            element.add("Filler");
+            jsonStrings.updateElementList(text, element);
+            
+            // Auto-select the newly added category
+            onEditTextViewClick(text);
         });
-
-
     }
-
 
     @Override
     public void onEditSubCrossViewClick(String item) {
         subcategory.remove(item);
-        jsonStrings.updateElementList(currentCategoryHelper,subcategory);
-        adapter3.notifyDataSetChanged();
-        Log.d("JSOS",jsonStrings.getJSONString());
+        jsonStrings.updateElementList(currentCategoryHelper, subcategory);
+        if (adapter3 != null) {
+            adapter3.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void addSubItem() {
-        addItem.setVisibility(View.VISIBLE);
-        check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!(editText.getText().toString().trim().isEmpty())){
-                    String temp=editText.getText().toString().trim();
-                    subcategory.add(temp);
-                    adapter3.notifyDataSetChanged();
-                    jsonStrings.updateElementList(currentCategoryHelper,subcategory);
-                    editText.getText().clear();
-                    Log.d("JSOS",jsonStrings.getJSONString());
-                }
+        if (currentCategoryHelper == null || currentCategoryHelper.isEmpty()) {
+            Snackbar.make(findViewById(android.R.id.content), "Please select a Category first", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        showAddDialog("Add Sub-Category for " + currentCategoryHelper, "Sub-Category Name", text -> {
+            subcategory.add(text);
+            if (adapter3 != null) {
+                adapter3.notifyDataSetChanged();
             }
+            jsonStrings.updateElementList(currentCategoryHelper, subcategory);
         });
     }
 
     @Override
     public void onEditMediumCrossViewClick(String item) {
         medium.remove(item);
-        jsonStrings1.updateElementList("_list_medium",medium);
+        jsonStrings1.updateElementList("_list_medium", medium);
         adapter2.notifyDataSetChanged();
     }
 
     @Override
     public void addMediumItem() {
-        addItemMedium.setVisibility(View.VISIBLE);
-        check2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!(editText2.getText().toString().trim().isEmpty())){
-                    String temp=editText2.getText().toString().trim();
-                    medium.add(temp);
-                    adapter2.notifyDataSetChanged();
-                    editText2.getText().clear();
-                    jsonStrings1.updateElementList("_list_medium",medium);
-                    Log.d("JSOS",jsonStrings1.getJSONString());
-                }
-            }
+        showAddDialog("Add Payment Mode", "Mode Name", text -> {
+            medium.add(text);
+            adapter2.notifyDataSetChanged();
+            jsonStrings1.updateElementList("_list_medium", medium);
         });
-
     }
 }

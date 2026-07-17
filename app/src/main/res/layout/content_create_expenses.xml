@@ -366,6 +366,31 @@
                 app:layout_constraintTop_toTopOf="@+id/selectMedium"
                 app:srcCompat="@drawable/baseline_arrow_drop_down_24" />
 
+            <!-- Optional note -->
+            <TextView
+                android:id="@+id/noteLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Note (optional)"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectMedium" />
+
+            <EditText
+                android:id="@+id/editTextNote"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/optional"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                style="@style/Widget.ExpenseRegister.Input"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/noteLabel" />
+
             <!-- Save -->
             <Button
                 android:id="@+id/button"
@@ -375,7 +400,7 @@
                 android:text="@string/save_expense"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selectMedium" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextNote" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
