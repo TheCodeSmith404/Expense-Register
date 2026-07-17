@@ -27,6 +27,25 @@
     <string name="spending_by_category">Spending by Category</string>
     <string name="no_spending_data">No spending recorded for this period</string>
     <string name="chart_other">Other</string>
+    <string name="chart_bars">Bars</string>
+    <string name="chart_pie">Pie</string>
+    <string name="chart_total">Total</string>
+
+    <!-- SMS observations -->
+    <string name="observations">Observations</string>
+    <string name="sms_permission_title">Detect transactions automatically</string>
+    <string name="sms_permission_rationale">Allow SMS access so the app can spot bank debit/credit messages and list them here for you to categorize. Messages are processed on your device only and nothing is sent anywhere.</string>
+    <string name="allow_sms_access">Allow SMS access</string>
+    <string name="scan_inbox">Scan inbox (last 30 days)</string>
+    <string name="no_observations">No transactions detected yet.\nNew bank SMS will appear here automatically.</string>
+    <string name="add_as_expense">Add as expense</string>
+    <string name="dismiss_observation">Dismiss</string>
+    <string name="credited">Credited</string>
+    <string name="debited">Debited</string>
+    <string name="scan_result">Scan complete — %1$d new transaction(s) found</string>
+    <string name="notif_credit_title">%1$s credited</string>
+    <string name="notif_debit_title">%1$s spent</string>
+    <string name="notif_tap_to_categorize">Tap to review and save it as an expense</string>
     <string name="transaction_type">Transaction type</string>
     <string name="amount_hint">0</string>
     <string name="category">Category</string>

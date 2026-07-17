@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.materialswitch.MaterialSwitch;
+import com.tcssol.expensetracker.Data.ObservationDatabase;
 import com.google.android.material.snackbar.Snackbar;
 import com.tcssol.expensetracker.Data.ExpensesRepository;
 import com.tcssol.expensetracker.Model.ExpenseViewModel;
@@ -86,6 +87,7 @@ public class CreateExpenses extends AppCompatActivity {
     private Group sendMsgGrp;
     private MaterialSwitch aSwitch;
     private MaterialSwitch sendMsgSwitch;
+    private long observationId = -1;
     private CalendarView calendarView;
     private CheckBox received;
     private CheckBox given;
@@ -385,6 +387,7 @@ public class CreateExpenses extends AppCompatActivity {
                     Double amount= Double.valueOf(String.valueOf(editAmount.getText()));
                     Expenses expense=new Expenses(LocalDate.now(),categoryString,subCategoryString,mediumText,amount,exptype);
                     ExpenseViewModel.insert(expense,getApplicationContext());
+                    consumeObservation();
                     finish();
                 } else if(type==2&&!(editAmount.getText().toString().trim().isEmpty())&&!(name.getText().toString().trim().isEmpty())){
                     Log.d("1234","Inside else if");
@@ -398,6 +401,7 @@ public class CreateExpenses extends AppCompatActivity {
                         Expenses expense=new Expenses(localDate,category,getName,mediumText,amount,exptype);
                         PersonExpViewModel.insert(personExp);
                         ExpenseViewModel.insert(expense,getApplicationContext());
+                        consumeObservation();
                         finish();
                     }else{
                         /*Setting One Time reminders for tasks if user wants using Alarm service
@@ -420,6 +424,7 @@ public class CreateExpenses extends AppCompatActivity {
                             }else {
                                 scheduleNotification(personExp,false,"");
                             }
+                            consumeObservation();
                             finish();
                         }else{
                             showSnackbar(findViewById(android.R.id.content), String.valueOf(R.string.invalid_date),Snackbar.LENGTH_SHORT);
@@ -513,6 +518,35 @@ public class CreateExpenses extends AppCompatActivity {
                 name.setText(intent2.getStringExtra("Name"));
                 showMedium.setText(intent2.getStringExtra("Medium"));
             }
+        }else if(typeOf==5){
+            /*
+            Opened from an SMS observation: pre-fill amount and direction,
+            the user only picks category/medium and saves.
+             */
+            boolean typeExp=intent2.getBooleanExtra("TypeExpense",false);
+            if (typeExp) {
+                radioGroup.check(R.id.radioButtonEarned);
+            } else {
+                radioGroup.check(R.id.radioButtonSpend);
+            }
+            String amountReceived=intent2.getStringExtra("Amount");
+            if(amountReceived!=null){
+                editAmount.setText(amountReceived);
+            }
+            observationId=intent2.getLongExtra("ObservationId",-1);
+        }
+    }
+
+    /*
+    Removes the source SMS observation once it has been saved as a real expense
+     */
+    private void consumeObservation(){
+        if(observationId>=0){
+            final long id=observationId;
+            observationId=-1;
+            ObservationDatabase.databaseWriterExecutor.execute(()->
+                    ObservationDatabase.getDatabase(getApplicationContext())
+                            .observationDao().deleteById(id));
         }
     }
 

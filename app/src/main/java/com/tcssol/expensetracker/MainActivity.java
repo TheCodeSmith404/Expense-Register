@@ -263,6 +263,9 @@ private PersonExpViewModel personExpViewModel;
                         intent.putExtra("selected_tab",tabLayout.getSelectedTabPosition());
                         intent.putExtra("selected_tab_pager",viewPager.getCurrentItem());
                         someActivityResultLauncher.launch(intent);
+                    }else if(id==R.id.menu_observations){
+                        Intent intent=new Intent(getApplicationContext(), ObservationsActivity.class);
+                        someActivityResultLauncher.launch(intent);
                     }else if(id==R.id.menu_About){
                         Intent intent = new Intent(getApplicationContext(), AboutActivity.class);
                         someActivityResultLauncher.launch(intent);

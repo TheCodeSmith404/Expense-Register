@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:allowBackup="true"
@@ -45,8 +47,19 @@
         </activity>
         <activity android:name=".CreateExpenses" />
         <activity android:name=".EditAdapter" />
+        <activity
+            android:name=".ObservationsActivity"
+            android:exported="false" />
 
         <receiver android:name=".AlarmReceiver" />
+        <receiver
+            android:name=".TransactionSmsReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

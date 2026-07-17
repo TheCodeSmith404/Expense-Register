@@ -88,7 +88,7 @@
                 android:layout_marginTop="8dp"
                 android:hint="@string/amount_hint"
                 android:importantForAutofill="no"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 style="@style/Widget.ExpenseRegister.Input"

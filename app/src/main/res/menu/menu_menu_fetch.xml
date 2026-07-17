@@ -8,6 +8,9 @@
         android:id="@+id/menu_manage_categories"
         android:title="Manage Categories" />
     <item
+        android:id="@+id/menu_observations"
+        android:title="@string/observations" />
+    <item
         android:id="@+id/menu_settings"
         android:title="Settings" />
     <item

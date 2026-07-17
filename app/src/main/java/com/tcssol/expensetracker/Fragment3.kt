@@ -37,6 +37,7 @@ class Fragment3 : Fragment() {
     private var _binding:Fragment3Binding?=null
     private val binding get()= _binding!!
     private var chartSource: LiveData<List<Expenses>>? = null
+    private var chartEmpty = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,6 +73,21 @@ class Fragment3 : Fragment() {
 //            ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create<SharedExpenseViewModel>(
 //                SharedExpenseViewModel::class.java
 //            )
+        val prefs = requireContext().getSharedPreferences("ui_prefs", 0)
+        binding.chartToggleGroup.check(
+            if (prefs.getString(PREF_CHART_TYPE, "bars") == "pie") R.id.buttonChartPie
+            else R.id.buttonChartBars
+        )
+        binding.chartToggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                prefs.edit().putString(
+                    PREF_CHART_TYPE,
+                    if (checkedId == R.id.buttonChartPie) "pie" else "bars"
+                ).apply()
+                applyChartVisibility()
+            }
+        }
+
         setChartSource(expenseViewModel.allExpensesGrouped)
 
         sharedExpenseViewModel!!.getObject().observe(
@@ -132,7 +148,7 @@ class Fragment3 : Fragment() {
 
     /**
      * Grouped rows -> spend-only category totals, largest first.
-     * Categories beyond the top 6 are folded into "Other".
+     * Categories beyond the top [MAX_CHART_ROWS] are folded into "Other".
      */
     private fun bindCategoryChart(list: List<Expenses>?) {
         val symbol = Currency.getInstance(Locale.getDefault()).symbol
@@ -148,11 +164,23 @@ class Fragment3 : Fragment() {
         }
 
         binding.categoryChart.setData(items, symbol)
-        binding.categoryChart.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
-        binding.chartEmptyText.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+        binding.categoryPieChart.setData(items, symbol)
+        chartEmpty = items.isEmpty()
+        applyChartVisibility()
+    }
+
+    private fun applyChartVisibility() {
+        val pieSelected = binding.chartToggleGroup.checkedButtonId == R.id.buttonChartPie
+        binding.chartEmptyText.visibility = if (chartEmpty) View.VISIBLE else View.GONE
+        binding.categoryChart.visibility =
+            if (!chartEmpty && !pieSelected) View.VISIBLE else View.GONE
+        binding.categoryPieChart.visibility =
+            if (!chartEmpty && pieSelected) View.VISIBLE else View.GONE
     }
 
     companion object {
-        private const val MAX_CHART_ROWS = 6
+        // 5 real categories + "Other" keeps the pie readable (≤6 slices)
+        private const val MAX_CHART_ROWS = 5
+        private const val PREF_CHART_TYPE = "dashboard_chart_type"
     }
 }

@@ -49,6 +49,14 @@
     <color name="app_bar_content">#FFFFFF</color>
     <color name="app_bar_content_muted">#BFCBFA</color>
 
+    <!-- Categorical chart palette (validated: lightness band, chroma, CVD, contrast) -->
+    <color name="chart_cat_1">#2563EB</color>
+    <color name="chart_cat_2">#059669</color>
+    <color name="chart_cat_3">#D97706</color>
+    <color name="chart_cat_4">#7C3AED</color>
+    <color name="chart_cat_5">#0891B2</color>
+    <color name="chart_cat_6">#DB2777</color>
+
     <!-- Splash -->
     <color name="splash_gradient_start">#0F2167</color>
     <color name="splash_gradient_center">#1E40AF</color>
