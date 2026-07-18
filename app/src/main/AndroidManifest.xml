@@ -47,6 +47,7 @@
         </activity>
         <activity android:name=".CreateExpenses" />
         <activity android:name=".EditAdapter" />
+        <activity android:name=".SetBudgetActivity" android:exported="false" />
 
 
         <receiver android:name=".AlarmReceiver" />

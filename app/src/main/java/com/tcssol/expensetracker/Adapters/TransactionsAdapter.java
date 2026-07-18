@@ -1,17 +1,13 @@
 package com.tcssol.expensetracker.Adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tcssol.expensetracker.Data.ExpenseDao;
@@ -38,6 +34,8 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
         this.expensesList = expensesList;
         if (expensesList != null && !expensesList.isEmpty()) {
             this.expensesListNew = getNewList(expensesList);
+        } else {
+            this.expensesListNew = new ArrayList<>();
         }
         this.clickListener = clickListener;
     }
@@ -61,33 +59,58 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
         int color;
         Expenses expenses = expensesListNew.get(position);
         String symbol = Currency.getInstance(Locale.getDefault()).getSymbol();
-        if (expenses.getCategory().equals("_*_")) {
-            LocalDate date = expenses.getDateCreated();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
-            holder.date.setText(date.format(formatter));
-            holder.showAmount.setVisibility(View.VISIBLE);
-            holder.amount.setText("-" + symbol + String.format(Locale.getDefault(), "%,.2f", expenses.getAmount()));
-            color = ContextCompat.getColor(mContext, R.color.expense);
-            holder.amount.setTextColor(color);
-        } else {
-            if (expenses.isType()) {
-                holder.amount.setText(symbol + String.format(Locale.getDefault(), "%,.2f", expenses.getAmount()));
-                color = ContextCompat.getColor(mContext, R.color.income);
+        if (com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode()) {
+            if (expenses.getCategory().equals("_*_")) {
+                LocalDate date = expenses.getDateCreated();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+                holder.date.setText(date.format(formatter));
+                holder.amount.setText(com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(-expenses.getAmount(), false));
             } else {
-                holder.amount.setText("-" + symbol + String.format(Locale.getDefault(), "%,.2f", expenses.getAmount()));
-                color = ContextCompat.getColor(mContext, R.color.expense);
+                if (expenses.isType()) {
+                    holder.amount.setText(com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(expenses.getAmount(), true));
+                    color = ContextCompat.getColor(mContext, R.color.income);
+                } else {
+                    holder.amount.setText(com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(-expenses.getAmount(), false));
+                    color = ContextCompat.getColor(mContext, R.color.expense);
+                }
+                holder.mode.setText(expenses.getMode());
+                holder.amount.setTextColor(color);
+                holder.category.setText(expenses.getCategory());
+                holder.subCategory.setText(expenses.getSubCategory());
+
+                if (expenses.getNote() != null && !expenses.getNote().isEmpty()) {
+                    holder.note.setText(expenses.getNote());
+                    holder.note.setVisibility(View.VISIBLE);
+                } else {
+                    holder.note.setVisibility(View.GONE);
+                }
             }
-            holder.mode.setText(expenses.getMode());
-            holder.amount.setTextColor(color);
-            holder.category.setText(expenses.getCategory());
-            holder.subCategory.setText(expenses.getSubCategory());
-
-            if (expenses.getNote() != null && !expenses.getNote().isEmpty()) {
-                holder.note.setText(expenses.getNote());
-                holder.note.setVisibility(View.VISIBLE);
+        } else {
+            if (expenses.getCategory().equals("_*_")) {
+                LocalDate date = expenses.getDateCreated();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+                holder.date.setText(date.format(formatter));
+                holder.amount.setText("-" + symbol + String.format(Locale.getDefault(), "%,.2f", expenses.getAmount()));
             } else {
-                holder.note.setVisibility(View.GONE);
+                if (expenses.isType()) {
+                    holder.amount.setText(symbol + String.format(Locale.getDefault(), "%,.2f", expenses.getAmount()));
+                    color = ContextCompat.getColor(mContext, R.color.income);
+                } else {
+                    holder.amount.setText("-" + symbol + String.format(Locale.getDefault(), "%,.2f", expenses.getAmount()));
+                    color = ContextCompat.getColor(mContext, R.color.expense);
+                }
+                holder.mode.setText(expenses.getMode());
+                holder.amount.setTextColor(color);
+                holder.category.setText(expenses.getCategory());
+                holder.subCategory.setText(expenses.getSubCategory());
+
+                if (expenses.getNote() != null && !expenses.getNote().isEmpty()) {
+                    holder.note.setText(expenses.getNote());
+                    holder.note.setVisibility(View.VISIBLE);
+                } else {
+                    holder.note.setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -107,55 +130,47 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
     }
 
     public List<Expenses> getNewList(List<Expenses> list) {
+        if (list == null || list.isEmpty()) return new ArrayList<>();
         List<Expenses> ret = new ArrayList<>();
-        double sum = 0;
-        Expenses test = new Expenses(list.get(0).getDateCreated(), "_*_", null, null, 0, false);
-        ret.add(0, test);
-        if (!list.get(0).isType()) {
-            sum = list.get(0).getAmount();
-        }
-        ret.add(1, list.get(0));
-        for (int i = 1; i < list.size(); i++) {
-            Expenses temp = list.get(i);
-            Expenses temp2 = list.get(i - 1);
-            if (temp.getDateCreated().isEqual(temp2.getDateCreated())) {
-                ret.add(temp);
-                if (!temp.isType()) {
-                    sum += temp.getAmount();
+        
+        LocalDate currentGroupDate = null;
+        int currentHeaderIndex = -1;
+        double currentGroupSpendSum = 0;
+        
+        for (Expenses expense : list) {
+            LocalDate date = expense.getDateCreated();
+            if (currentGroupDate == null || !date.isEqual(currentGroupDate)) {
+                if (currentHeaderIndex != -1) {
+                    ret.get(currentHeaderIndex).setAmount(currentGroupSpendSum);
                 }
-            } else {
-                test = new Expenses(temp.getDateCreated(), "_*_", null, null, 0, false);
-                test.setAmount(sum);
-                ret.add(test);
-                sum = 0;
-                if (!temp.isType()) {
-                    sum += temp.getAmount();
-                }
-                ret.add(temp);
+                
+                currentGroupDate = date;
+                currentHeaderIndex = ret.size();
+                Expenses header = new Expenses(date, "_*_", null, null, 0, false);
+                ret.add(header);
+                currentGroupSpendSum = 0;
+            }
+            
+            ret.add(expense);
+            if (!expense.isType()) {
+                currentGroupSpendSum += expense.getAmount();
             }
         }
-        return modifiedList(ret);
-    }
-
-    public List<Expenses> modifiedList(List<Expenses> list) {
-        int pos = 0;
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i).getCategory().equals("_*_")) {
-                list.get(pos).setAmount(list.get(i).getAmount());
-                pos = i;
-            }
+        
+        if (currentHeaderIndex != -1) {
+            ret.get(currentHeaderIndex).setAmount(currentGroupSpendSum);
         }
-        return list;
+        
+        return ret;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView category;
         public TextView subCategory;
         public TextView amount;
         public TextView mode;
         public TextView note;
         public TextView date;
-        public ImageButton showAmount;
 
         public ViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
@@ -165,43 +180,18 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
                 amount = itemView.findViewById(R.id.frag4amount_txt);
                 mode = itemView.findViewById(R.id.frag4Mode);
                 note = itemView.findViewById(R.id.frag4note_txt);
-                itemView.setOnLongClickListener(this);
                 itemView.setOnClickListener(this);
             } else {
                 amount = itemView.findViewById(R.id.amount_txt);
                 date = itemView.findViewById(R.id.textViewDate);
-                showAmount = itemView.findViewById(R.id.imageButton);
-                showAmount.setOnClickListener(this);
             }
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            if (getAdapterPosition() != RecyclerView.NO_POSITION) {
-                Expenses data = expensesListNew.get(getAdapterPosition());
-                clickListener.onTransactionLongClick(data, getAdapterPosition());
-                return true;
-            }
-            return false;
         }
 
         @Override
         public void onClick(View v) {
             if (getAdapterPosition() != RecyclerView.NO_POSITION) {
-                int id = v.getId();
-                Resources res = mContext.getResources();
-                if (id == R.id.imageButton) {
-                    if (amount.getVisibility() == View.GONE) {
-                        amount.setVisibility(View.VISIBLE);
-                        showAmount.setImageDrawable(ResourcesCompat.getDrawable(res, R.drawable.shrink_amount, null));
-                    } else {
-                        amount.setVisibility(View.GONE);
-                        showAmount.setImageDrawable(ResourcesCompat.getDrawable(res, R.drawable.expand_text, null));
-                    }
-                } else {
-                    Expenses data = expensesListNew.get(getAdapterPosition());
-                    clickListener.onTransactionClick(data);
-                }
+                Expenses data = expensesListNew.get(getAdapterPosition());
+                clickListener.onTransactionClick(data);
             }
         }
     }

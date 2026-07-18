@@ -9,6 +9,7 @@ import androidx.room.Update;
 
 import com.tcssol.expensetracker.Model.DailySum;
 import com.tcssol.expensetracker.Model.Expenses;
+import com.tcssol.expensetracker.Model.MonthlySum;
 import com.tcssol.expensetracker.Utils.ModeWrapper;
 
 import java.util.List;
@@ -114,4 +115,10 @@ public interface ExpenseDao {
            "WHERE SUBSTR(date_created,6,2)=:month AND SUBSTR(date_created,1,4)=:year " +
            "GROUP BY date_created ORDER BY date_created ASC")
     LiveData<List<DailySum>> getDailySums(String month, String year);
+
+    @Query("SELECT SUBSTR(date_created,1,7) AS month_year, SUM(amount) AS total " +
+           "FROM expenses_table " +
+           "WHERE category = :category AND type = 0 " +
+           "GROUP BY month_year ORDER BY month_year ASC")
+    LiveData<List<MonthlySum>> getMonthlySumForCategory(String category);
 }

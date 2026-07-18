@@ -1,81 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- ===== Design system: "Trust Blue" fintech palette (light) ===== -->
+    <!-- ===== Design system: "Growth Green" personal finance palette (light) ===== -->
 
-    <!-- Primary -->
-    <color name="md_primary">#1E40AF</color>
+    <!-- Primary — Forest Green -->
+    <color name="md_primary">#166534</color>
     <color name="md_on_primary">#FFFFFF</color>
-    <color name="md_primary_container">#DDE3FF</color>
-    <color name="md_on_primary_container">#06184F</color>
+    <color name="md_primary_container">#DCFCE7</color>
+    <color name="md_on_primary_container">#052E16</color>
 
-    <!-- Secondary -->
-    <color name="md_secondary">#3B82F6</color>
+    <!-- Secondary — Amber Gold -->
+    <color name="md_secondary">#B45309</color>
     <color name="md_on_secondary">#FFFFFF</color>
-    <color name="md_secondary_container">#DBEAFE</color>
-    <color name="md_on_secondary_container">#0C2D6B</color>
+    <color name="md_secondary_container">#FEF3C7</color>
+    <color name="md_on_secondary_container">#451A03</color>
 
-    <!-- Tertiary (growth green) -->
-    <color name="md_tertiary">#059669</color>
+    <!-- Tertiary — Teal (chart accent / misc) -->
+    <color name="md_tertiary">#0F766E</color>
     <color name="md_on_tertiary">#FFFFFF</color>
-    <color name="md_tertiary_container">#D1FAE5</color>
-    <color name="md_on_tertiary_container">#064E3B</color>
+    <color name="md_tertiary_container">#CCFBF1</color>
+    <color name="md_on_tertiary_container">#134E4A</color>
 
-    <!-- Error -->
+    <!-- Error — unchanged -->
     <color name="md_error">#DC2626</color>
     <color name="md_on_error">#FFFFFF</color>
     <color name="md_error_container">#FEE2E2</color>
     <color name="md_on_error_container">#7F1D1D</color>
 
-    <!-- Neutrals -->
-    <color name="md_background">#F4F6FB</color>
+    <!-- Neutrals — slightly green-tinted for warmth -->
+    <color name="md_background">#F0FDF4</color>
     <color name="md_on_background">#0F172A</color>
     <color name="md_surface">#FFFFFF</color>
     <color name="md_on_surface">#0F172A</color>
-    <color name="md_surface_variant">#E8EBF5</color>
-    <color name="md_on_surface_variant">#4B5569</color>
-    <color name="md_outline">#99A3BC</color>
-    <color name="md_outline_variant">#E1E5F0</color>
+    <color name="md_surface_variant">#E8F5EE</color>
+    <color name="md_on_surface_variant">#3F5944</color>
+    <color name="md_outline">#7EA68A</color>
+    <color name="md_outline_variant">#D1E8D8</color>
 
-    <!-- Semantic money colors -->
-    <color name="income">#059669</color>
-    <color name="income_container">#D7F5E7</color>
-    <color name="on_income_container">#065F46</color>
+    <!-- Semantic money colors — green now aligns with primary brand -->
+    <color name="income">#15803D</color>
+    <color name="income_container">#DCFCE7</color>
+    <color name="on_income_container">#052E16</color>
     <color name="expense">#DC2626</color>
     <color name="expense_container">#FDE3E3</color>
     <color name="on_expense_container">#991B1B</color>
 
-    <!-- App bar (branded in light mode, dark surface at night) -->
-    <color name="app_bar_background">#1E40AF</color>
+    <!-- App bar — deep forest green -->
+    <color name="app_bar_background">#14532D</color>
     <color name="app_bar_content">#FFFFFF</color>
-    <color name="app_bar_content_muted">#BFCBFA</color>
+    <color name="app_bar_content_muted">#86EFAC</color>
 
     <!-- Splash -->
-    <color name="splash_gradient_start">#0F2167</color>
-    <color name="splash_gradient_center">#1E40AF</color>
-    <color name="splash_gradient_end">#3B82F6</color>
+    <color name="splash_gradient_start">#052E16</color>
+    <color name="splash_gradient_center">#14532D</color>
+    <color name="splash_gradient_end">#16A34A</color>
 
-    <!-- ===== Legacy names kept for code/back-compat, remapped to the new palette ===== -->
+    <!-- ===== Legacy names kept for code/back-compat, remapped to new palette ===== -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#DC2626</color>
-    <color name="green">#059669</color>
-    <color name="launcherBackground">#1E40AF</color>
-    <color name="colorPrimary">#1E40AF</color>
-    <color name="colorPrimaryNeutral">#1E40AF</color>
-    <color name="colorPrimaryVariant">#3B82F6</color>
+    <color name="green">#15803D</color>
+    <color name="launcherBackground">#166534</color>
+    <color name="colorPrimary">#166534</color>
+    <color name="colorPrimaryNeutral">#166534</color>
+    <color name="colorPrimaryVariant">#16A34A</color>
     <color name="lightBlack">#64748B</color>
-    <color name="newColor">#1E40AF</color>
-    <color name="newColorVariant">#DDE3FF</color>
+    <color name="newColor">#166534</color>
+    <color name="newColorVariant">#DCFCE7</color>
 
-    <color name="colorSecondary">#3B82F6</color>
-    <color name="colorSecondaryVariant">#1E40AF</color>
+    <color name="colorSecondary">#B45309</color>
+    <color name="colorSecondaryVariant">#92400E</color>
 
-    <color name="colorPrimaryDark">#16308A</color>
+    <color name="colorPrimaryDark">#052E16</color>
 
     <color name="colorTextPrimary">#0F172A</color>
-    <color name="colorTextSecondary">#4B5569</color>
+    <color name="colorTextSecondary">#3F5944</color>
 
-    <color name="colorControlNormal">#1E40AF</color>
-    <color name="colorControlActivated">#3B82F6</color>
-    <color name="colorControlHighlight">#331E40AF</color>
+    <color name="colorControlNormal">#166534</color>
+    <color name="colorControlActivated">#16A34A</color>
+    <color name="colorControlHighlight">#33166534</color>
 </resources>

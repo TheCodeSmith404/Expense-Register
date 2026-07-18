@@ -64,6 +64,33 @@ public class TransactionsFragment extends Fragment implements TransactionsClickL
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
+        androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback swipeCallback = new androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback(0, androidx.recyclerview.widget.ItemTouchHelper.LEFT | androidx.recyclerview.widget.ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public int getSwipeDirs(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                if (viewHolder.getItemViewType() == 0) return 0;
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && adapter != null && adapter.expensesListNew != null) {
+                    Expenses expenses = adapter.expensesListNew.get(position);
+                    ExpenseViewModel.delete(expenses);
+                    View rootView = requireActivity().getWindow().getDecorView().getRootView();
+                    com.google.android.material.snackbar.Snackbar.make(rootView, "Entry deleted", com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+                            .setAction("UNDO", v -> ExpenseViewModel.insert(expenses, context))
+                            .show();
+                }
+            }
+        };
+        new androidx.recyclerview.widget.ItemTouchHelper(swipeCallback).attachToRecyclerView(recyclerView);
+
         expenseViewModel = new ViewModelProvider(this).get(ExpenseViewModel.class);
         expenseDao = expenseViewModel.getExpenseDao();
 
@@ -122,10 +149,6 @@ public class TransactionsFragment extends Fragment implements TransactionsClickL
 
     @Override
     public void onTransactionLongClick(Expenses expenses, int position) {
-        ExpenseViewModel.delete(expenses);
-        View rootView = requireActivity().getWindow().getDecorView().getRootView();
-        com.google.android.material.snackbar.Snackbar.make(rootView, "Entry deleted", com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
-                .setAction("UNDO", v -> ExpenseViewModel.insert(expenses, context))
-                .show();
+        // Disabled in favor of swipe-to-delete.
     }
 }

@@ -51,6 +51,18 @@ public class ExpenseViewModel extends AndroidViewModel {
         repository.insertCategoryConfig(config);
     }
 
+    public LiveData<List<EarningsHistory>> getAllEarningsHistory() {
+        return repository.getAllEarningsHistory();
+    }
+
+    public void insertEarningsHistory(EarningsHistory history) {
+        repository.insertEarningsHistory(history);
+    }
+
+    public CategoryConfig getCategoryConfigSync(String name) {
+        return repository.getCategoryConfigSync(name);
+    }
+
     /**
      * Returns sub-category breakdown. Must be called from a background thread.
      * Callers in Fragment1 already consumed this via a PopupWindow, which we now
@@ -137,5 +149,17 @@ public class ExpenseViewModel extends AndroidViewModel {
 
     public interface MonthSpendCallback {
         void onResult(double totalSpend);
+    }
+
+    public LiveData<List<MonthlySum>> getMonthlySumForCategory(String category) {
+        return repository.getMonthlySumForCategory(category);
+    }
+
+    public List<CategoryConfig> getAllCategoryConfigsSync() {
+        return repository.getAllCategoryConfigsSync();
+    }
+
+    public List<EarningsHistory> getAllEarningsHistorySync() {
+        return repository.getAllEarningsHistorySync();
     }
 }

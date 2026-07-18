@@ -13,6 +13,8 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -22,11 +24,11 @@ import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.tcssol.expensetracker.Model.DailySum
 import com.tcssol.expensetracker.Model.ExpenseViewModel
 import com.tcssol.expensetracker.Model.Expenses
 import com.tcssol.expensetracker.Model.SharedExpenseViewModel
-import com.tcssol.expensetracker.Utils.ModeWrapper
 import com.tcssol.expensetracker.Utils.Wrapped
 import com.tcssol.expensetracker.databinding.FragmentDashboardBinding
 import java.time.LocalDate
@@ -69,8 +71,13 @@ class DashboardFragment : Fragment() {
 
         // Active Lifetime Balance
         expenseViewModel.totalNetBalance.observe(viewLifecycleOwner) { balance ->
-            binding.tvTotalBalance.text = symbol + String.format(Locale.getDefault(), "%,.2f", balance ?: 0.0)
-            val balanceColor = if ((balance ?: 0.0) < 0) R.color.expense else R.color.income
+            val balVal = balance ?: 0.0
+            if (com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode()) {
+                binding.tvTotalBalance.text = com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(balVal, false)
+            } else {
+                binding.tvTotalBalance.text = symbol + String.format(Locale.getDefault(), "%,.2f", balVal)
+            }
+            val balanceColor = if (balVal < 0) R.color.expense else R.color.income
             binding.tvTotalBalance.setTextColor(ContextCompat.getColor(requireContext(), balanceColor))
         }
 
@@ -82,10 +89,22 @@ class DashboardFragment : Fragment() {
                 expenseViewModel.frag3Data
             }
             dataLive.observe(viewLifecycleOwner) { list ->
-                binding.frag3SetAmtEarned.text = symbol + String.format(Locale.getDefault(), "%,d", list?.getOrNull(0) ?: 0)
-                binding.frag3SetAmtSpend.text = "-" + symbol + String.format(Locale.getDefault(), "%,d", list?.getOrNull(1) ?: 0)
-                binding.frag3SetAmtReceived.text = symbol + String.format(Locale.getDefault(), "%,d", list?.getOrNull(2) ?: 0)
-                binding.frag3SetAmtGiven.text = "-" + symbol + String.format(Locale.getDefault(), "%,d", list?.getOrNull(3) ?: 0)
+                val earned = (list?.getOrNull(0) ?: 0).toDouble()
+                val spend = (list?.getOrNull(1) ?: 0).toDouble()
+                val received = (list?.getOrNull(2) ?: 0).toDouble()
+                val given = (list?.getOrNull(3) ?: 0).toDouble()
+
+                if (com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode()) {
+                    binding.frag3SetAmtEarned.text = com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(earned, false)
+                    binding.frag3SetAmtSpend.text = com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(-spend, false)
+                    binding.frag3SetAmtReceived.text = com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(received, false)
+                    binding.frag3SetAmtGiven.text = com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(-given, false)
+                } else {
+                    binding.frag3SetAmtEarned.text = symbol + String.format(Locale.getDefault(), "%,.0f", earned)
+                    binding.frag3SetAmtSpend.text = "-" + symbol + String.format(Locale.getDefault(), "%,.0f", spend)
+                    binding.frag3SetAmtReceived.text = symbol + String.format(Locale.getDefault(), "%,.0f", received)
+                    binding.frag3SetAmtGiven.text = "-" + symbol + String.format(Locale.getDefault(), "%,.0f", given)
+                }
             }
 
             // Bind Category Custom Chart Data Source
@@ -101,6 +120,8 @@ class DashboardFragment : Fragment() {
             } else {
                 LocalDate.now()
             }
+            selectedMonth = selectedDate.monthValue
+            selectedYear = selectedDate.year
             observeMonthlyExpensesForBreakdown(selectedDate)
         }
 
@@ -114,6 +135,13 @@ class DashboardFragment : Fragment() {
                 categoryConfigMap[config.categoryName] = config.isFixed
             }
             calculateFixedVariableBreakdown()
+        }
+
+        // Tap on breakdown card opens category-wise distribution dialog
+        binding.breakdownCard.isClickable = true
+        binding.breakdownCard.isFocusable = true
+        binding.breakdownCard.setOnClickListener {
+            (activity as? MainActivity)?.showOverlayFragment(FixedVariableFragment())
         }
 
         // Setup switch listener for segmented daily/monthly toggle
@@ -156,11 +184,6 @@ class DashboardFragment : Fragment() {
                 }
             }
         }
-
-        // Handle Payment Medium Distribution as simple text listing
-        expenseViewModel.getModeDist().observe(viewLifecycleOwner) { data ->
-            updatePaymentMediumList(data)
-        }
     }
 
     private fun observeMonthlyExpensesForBreakdown(date: LocalDate) {
@@ -199,9 +222,34 @@ class DashboardFragment : Fragment() {
         }
 
         val symbol = Currency.getInstance(Locale.getDefault()).symbol
-        binding.tvFixedSpend.text = symbol + String.format(Locale.getDefault(), "%,.2f", fixedTotal)
-        binding.tvVariableSpend.text = symbol + String.format(Locale.getDefault(), "%,.2f", variableTotal)
+        if (com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode()) {
+            binding.tvFixedSpend.text = com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(fixedTotal, false)
+            binding.tvVariableSpend.text = com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(variableTotal, false)
+        } else {
+            binding.tvFixedSpend.text = symbol + String.format(Locale.getDefault(), "%,.2f", fixedTotal)
+            binding.tvVariableSpend.text = symbol + String.format(Locale.getDefault(), "%,.2f", variableTotal)
+        }
+
+        val totalSpend = fixedTotal + variableTotal
+        val daysInMonth = if (selectedYear == LocalDate.now().year && selectedMonth == LocalDate.now().monthValue) {
+            LocalDate.now().dayOfMonth
+        } else {
+            java.time.YearMonth.of(selectedYear, selectedMonth).lengthOfMonth()
+        }
+
+        val avgDaily = if (daysInMonth > 0) totalSpend / daysInMonth else 0.0
+        if (totalSpend > 0) {
+            if (com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode()) {
+                binding.tvAvgDailySpend.text = "Avg. daily spend this month: " + com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(avgDaily, false)
+            } else {
+                binding.tvAvgDailySpend.text = "Avg. daily spend this month: " + symbol + String.format(Locale.getDefault(), "%,.0f", avgDaily)
+            }
+            binding.tvAvgDailySpend.visibility = View.VISIBLE
+        } else {
+            binding.tvAvgDailySpend.visibility = View.GONE
+        }
     }
+
 
     private fun setChartSource(source: LiveData<List<Expenses>>) {
         chartSource?.removeObservers(viewLifecycleOwner)
@@ -263,12 +311,12 @@ class DashboardFragment : Fragment() {
         val entries = chartItems.map { PieEntry(it.second.toFloat(), it.first) }
         
         val colorsList = arrayListOf(
-            Color.parseColor("#3B82F6"), // Blue (Personal)
-            Color.parseColor("#10B981"), // Green (Rent)
-            Color.parseColor("#F59E0B"), // Orange (Food)
-            Color.parseColor("#8B5CF6"), // Purple (Clothing)
-            Color.parseColor("#06B6D4"), // Cyan (Utilities)
-            Color.parseColor("#EC4899")  // Pink (Other)
+            Color.parseColor("#16A34A"), // Green (primary brand)
+            Color.parseColor("#F59E0B"), // Amber (secondary brand)
+            Color.parseColor("#8B5CF6"), // Purple
+            Color.parseColor("#0F766E"), // Teal
+            Color.parseColor("#EC4899"), // Pink
+            Color.parseColor("#F97316")  // Orange
         )
 
         val dataSet = PieDataSet(entries, "").apply {
@@ -281,14 +329,17 @@ class DashboardFragment : Fragment() {
         
         // Spannable Center Text: "Total Spending" on top, amount in bold below
         val symbol = Currency.getInstance(Locale.getDefault()).symbol
-        val totalFormatted = String.format(Locale.getDefault(), "%,d", totalSpent.toInt())
-        val centerTextString = "Total Spending\n$symbol$totalFormatted"
+        val centerTextString = if (com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode()) {
+            val totalHoursStr = com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(totalSpent, false)
+            "Total Spending\n$totalHoursStr"
+        } else {
+            val totalFormatted = String.format(Locale.getDefault(), "%,d", totalSpent.toInt())
+            "Total Spending\n$symbol$totalFormatted"
+        }
         val spannable = SpannableString(centerTextString).apply {
-            // "Total Spending" is first 14 chars
             setSpan(RelativeSizeSpan(0.80f), 0, 14, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             setSpan(ForegroundColorSpan(getSecondaryTextColor()), 0, 14, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             
-            // Amount is from char 15 to the end
             setSpan(RelativeSizeSpan(1.8f), 15, centerTextString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             setSpan(StyleSpan(android.graphics.Typeface.BOLD), 15, centerTextString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             setSpan(ForegroundColorSpan(getThemeColor(com.google.android.material.R.attr.colorOnSurface)), 15, centerTextString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -307,35 +358,19 @@ class DashboardFragment : Fragment() {
             val tvCategoryName = rowView.findViewById<android.widget.TextView>(R.id.tvCategoryName)
             val tvCategoryValue = rowView.findViewById<android.widget.TextView>(R.id.tvCategoryValue)
 
-            // Color circle background
             val color = colorsList[index % colorsList.size]
             val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.circle)?.mutate() as? GradientDrawable
             drawable?.setColor(color)
             viewColorIndicator.background = drawable
 
             tvCategoryName.text = pair.first
-            tvCategoryValue.text = "$symbol${String.format(Locale.getDefault(), "%,d", pair.second.toInt())} ($percentage%)"
+            if (com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode()) {
+                tvCategoryValue.text = "${com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(pair.second, false)} ($percentage%)"
+            } else {
+                tvCategoryValue.text = "$symbol${String.format(Locale.getDefault(), "%,d", pair.second.toInt())} ($percentage%)"
+            }
             
             binding.llCategoryLegend.addView(rowView)
-        }
-    }
-
-    private fun updatePaymentMediumList(data: List<ModeWrapper?>?) {
-        binding.llPaymentMedium.removeAllViews()
-        if (data.isNullOrEmpty()) return
-
-        val inflater = LayoutInflater.from(requireContext())
-        data.filterNotNull().forEach { item ->
-            val percentage = item.perentage ?: 0.0
-            val rowView = inflater.inflate(R.layout.dashboard_payment_medium_item, binding.llPaymentMedium, false)
-            
-            val tvMediumName = rowView.findViewById<android.widget.TextView>(R.id.tvMediumName)
-            val tvMediumPercentage = rowView.findViewById<android.widget.TextView>(R.id.tvMediumPercentage)
-
-            tvMediumName.text = item.name
-            tvMediumPercentage.text = String.format(Locale.getDefault(), "%.1f%%", percentage)
-
-            binding.llPaymentMedium.addView(rowView)
         }
     }
 
@@ -376,6 +411,16 @@ class DashboardFragment : Fragment() {
             axisLineColor = getThemeColor(com.google.android.material.R.attr.colorOnSurface) and 0x55FFFFFF
             setDrawGridLines(true)
             gridColor = getThemeColor(com.google.android.material.R.attr.colorOnSurface) and 0x22FFFFFF
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    if (com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode()) {
+                        return String.format(Locale.getDefault(), "%.0fh", value)
+                    } else {
+                        val symbol = Currency.getInstance(Locale.getDefault()).symbol
+                        return symbol + String.format(Locale.getDefault(), "%,.0f", value)
+                    }
+                }
+            }
         }
         
         lineChart.axisRight.isEnabled = false
@@ -428,7 +473,7 @@ class DashboardFragment : Fragment() {
         }
 
         val prevDataSet = LineDataSet(prevEntries, "Previous Month").apply {
-            color = Color.parseColor("#66A1A8BD")
+            color = Color.parseColor("#80B45309") // muted amber dashed line
             setDrawCircles(false)
             lineWidth = 2f
             enableDashedLine(10f, 10f, 0f)
@@ -473,7 +518,7 @@ class DashboardFragment : Fragment() {
         }
 
         val prevDataSet = LineDataSet(prevEntries, "Previous Year").apply {
-            color = Color.parseColor("#66A1A8BD")
+            color = Color.parseColor("#80B45309") // muted amber dashed line
             setDrawCircles(false)
             lineWidth = 2f
             enableDashedLine(10f, 10f, 0f)
@@ -509,9 +554,13 @@ class DashboardFragment : Fragment() {
         }
         val sumMap = dailySums.associate { it.date.dayOfMonth to it.totalSpent }
         
+        val rate = com.tcssol.expensetracker.Utils.TimeViewManager.getHourlyRate()
+        val isTime = com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode() && rate > 0
+
         return (1..limitDay).map { day ->
             val total = sumMap[day] ?: 0.0
-            Entry(day.toFloat(), total.toFloat())
+            val graphVal = if (isTime) total / rate else total
+            Entry(day.toFloat(), graphVal.toFloat())
         }
     }
 
@@ -535,9 +584,13 @@ class DashboardFragment : Fragment() {
         val sumMap = filtered.groupBy { it.dateCreated.monthValue }
             .mapValues { (_, items) -> items.sumOf { it.amount } }
 
+        val rate = com.tcssol.expensetracker.Utils.TimeViewManager.getHourlyRate()
+        val isTime = com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode() && rate > 0
+
         return (1..limitMonth).map { month ->
             val total = sumMap[month] ?: 0.0
-            Entry(month.toFloat(), total.toFloat())
+            val graphVal = if (isTime) total / rate else total
+            Entry(month.toFloat(), graphVal.toFloat())
         }
       }
 
@@ -582,7 +635,14 @@ class DashboardFragment : Fragment() {
                 } else {
                     tvDate.text = if (xVal in 1..12) monthsAbbr[xVal] else "Month $xVal"
                 }
-                tvAmount.text = "₹${e.y.toInt()}"
+                val isTime = com.tcssol.expensetracker.Utils.TimeViewManager.isTimeViewMode()
+                if (isTime) {
+                    val rate = com.tcssol.expensetracker.Utils.TimeViewManager.getHourlyRate()
+                    val originalCurrency = e.y.toDouble() * rate
+                    tvAmount.text = com.tcssol.expensetracker.Utils.TimeViewManager.formatAmount(originalCurrency, false)
+                } else {
+                    tvAmount.text = "₹${String.format(java.util.Locale.getDefault(), "%,d", e.y.toInt())}"
+                }
             }
             super.refreshContent(e, highlight)
         }

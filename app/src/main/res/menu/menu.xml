@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_toggle_view_mode"
+        android:iconTint="@color/white"
+        android:icon="@drawable/baseline_access_time_24_white"
+        android:title="Toggle View Mode"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_calculator"
+        android:icon="@drawable/baseline_calculate_24"
+        android:title="Calculator"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/menu_overflow"
         android:icon="@drawable/baseline_more_vert_24"
         android:title="Options"
-        app:showAsAction="always">
-    </item>
+        app:showAsAction="always" />
 
 </menu>

@@ -53,4 +53,12 @@
         android:contentDescription="@string/add_expense"
         android:src="@drawable/baseline_add_24" />
 
+    <!-- Full-screen overlay container for detail fragments (e.g. FixedVariableFragment) -->
+    <FrameLayout
+        android:id="@+id/fragmentOverlayContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="?android:attr/colorBackground" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

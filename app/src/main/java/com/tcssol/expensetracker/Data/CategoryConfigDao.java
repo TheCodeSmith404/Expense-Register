@@ -19,9 +19,15 @@ public interface CategoryConfigDao {
     @Query("SELECT * FROM category_config_table")
     LiveData<List<CategoryConfig>> getAllCategoryConfigs();
 
+    @Query("SELECT * FROM category_config_table")
+    List<CategoryConfig> getAllCategoryConfigsSync();
+
     @Query("SELECT * FROM category_config_table WHERE category_name = :name LIMIT 1")
     CategoryConfig getCategoryConfigSync(String name);
 
     @Query("SELECT * FROM category_config_table WHERE category_name = :name LIMIT 1")
     LiveData<CategoryConfig> getCategoryConfig(String name);
+
+    @Query("DELETE FROM category_config_table")
+    void deleteAll();
 }

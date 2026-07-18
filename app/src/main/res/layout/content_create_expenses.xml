@@ -96,41 +96,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
-            <!-- Transaction Date -->
-            <TextView
-                android:id="@+id/labelTransactionDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Date"
-                style="@style/Widget.ExpenseRegister.FieldLabel"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/noteInputLayout" />
-
-            <TextView
-                android:id="@+id/selectDate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Today"
-                style="@style/Widget.ExpenseRegister.SelectorField"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/labelTransactionDate" />
-
-            <ImageView
-                android:id="@+id/imgViewCalendar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="12dp"
-                android:clickable="false"
-                android:importantForAccessibility="no"
-                app:layout_constraintBottom_toBottomOf="@+id/selectDate"
-                app:layout_constraintEnd_toEndOf="@+id/selectDate"
-                app:layout_constraintTop_toTopOf="@+id/selectDate"
-                app:srcCompat="@drawable/baseline_access_time_24" />
-
-            <!-- Category (earned/spend group) -->
+            <!-- Category (earned/spend group) — now directly after Amount -->
             <TextView
                 android:id="@+id/select_category"
                 android:layout_width="wrap_content"
@@ -139,7 +105,7 @@
                 android:text="@string/category"
                 style="@style/Widget.ExpenseRegister.FieldLabel"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selectDate" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_text_number" />
 
             <TextView
                 android:id="@+id/selectCategory"
@@ -207,17 +173,84 @@
                 android:visibility="visible"
                 app:constraint_referenced_ids="select_category,select_sub_category,selectSubCategory,selectCategory,imgView1,imgView2" />
 
-            <!-- Note / optional memo field -->
+            <!-- Payment medium — moved to after Subcategory -->
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/payment_medium"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectSubCategory" />
+
+            <TextView
+                android:id="@+id/selectMedium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Cash"
+                style="@style/Widget.ExpenseRegister.SelectorField"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
+                android:clickable="false"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="@+id/selectMedium"
+                app:layout_constraintEnd_toEndOf="@+id/selectMedium"
+                app:layout_constraintTop_toTopOf="@+id/selectMedium"
+                app:srcCompat="@drawable/baseline_arrow_drop_down_24" />
+
+            <!-- Transaction Date — moved to after Medium -->
+            <TextView
+                android:id="@+id/labelTransactionDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Date"
+                style="@style/Widget.ExpenseRegister.FieldLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectMedium" />
+
+            <TextView
+                android:id="@+id/selectDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Today"
+                style="@style/Widget.ExpenseRegister.SelectorField"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelTransactionDate" />
+
+            <ImageView
+                android:id="@+id/imgViewCalendar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
+                android:clickable="false"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="@+id/selectDate"
+                app:layout_constraintEnd_toEndOf="@+id/selectDate"
+                app:layout_constraintTop_toTopOf="@+id/selectDate"
+                app:srcCompat="@drawable/baseline_access_time_24" />
+
+            <!-- Note / optional memo field — now at the end of the primary fields -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/noteInputLayout"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:hint="Note (optional)"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_number">
+                app:layout_constraintTop_toBottomOf="@+id/selectDate">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextNote"
@@ -226,6 +259,8 @@
                     android:inputType="textMultiLine"
                     android:maxLines="3" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Lend/Receive section — remains below the primary fields, hidden by default -->
             <CheckBox
                 android:id="@+id/checkBoxRecieved"
                 android:layout_width="0dp"
@@ -385,39 +420,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/switchOnMessage" />
 
-            <!-- Payment medium -->
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/payment_medium"
-                style="@style/Widget.ExpenseRegister.FieldLabel"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextMsg" />
-
-            <TextView
-                android:id="@+id/selectMedium"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Cash"
-                style="@style/Widget.ExpenseRegister.SelectorField"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="12dp"
-                android:clickable="false"
-                android:importantForAccessibility="no"
-                app:layout_constraintBottom_toBottomOf="@+id/selectMedium"
-                app:layout_constraintEnd_toEndOf="@+id/selectMedium"
-                app:layout_constraintTop_toTopOf="@+id/selectMedium"
-                app:srcCompat="@drawable/baseline_arrow_drop_down_24" />
-
             <!-- Save -->
             <Button
                 android:id="@+id/button"
@@ -427,7 +429,7 @@
                 android:text="@string/save_expense"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selectMedium" />
+                app:layout_constraintTop_toBottomOf="@+id/noteInputLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

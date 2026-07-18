@@ -15,9 +15,13 @@ public class CategoryConfig {
     @ColumnInfo(name = "is_fixed")
     private boolean isFixed;
 
+    @ColumnInfo(name = "budget")
+    private double budget;
+
     public CategoryConfig(@NonNull String categoryName, boolean isFixed) {
         this.categoryName = categoryName;
         this.isFixed = isFixed;
+        this.budget = 0.0;
     }
 
     @NonNull
@@ -35,5 +39,13 @@ public class CategoryConfig {
 
     public void setFixed(boolean fixed) {
         isFixed = fixed;
+    }
+
+    public double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(double budget) {
+        this.budget = budget;
     }
 }

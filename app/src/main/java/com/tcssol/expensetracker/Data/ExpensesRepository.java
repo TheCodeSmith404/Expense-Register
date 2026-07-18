@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.tcssol.expensetracker.Model.DailySum;
 import com.tcssol.expensetracker.Model.Expenses;
+import com.tcssol.expensetracker.Model.MonthlySum;
+import com.tcssol.expensetracker.Model.EarningsHistory;
 import com.tcssol.expensetracker.Utils.ModeWrapper;
 
 import java.time.LocalDate;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ExpensesRepository {
     private final ExpenseDao expenseDao;
     private final CategoryConfigDao categoryConfigDao;
+    private final EarningsHistoryDao earningsHistoryDao;
     private final LiveData<List<Expenses>> allExpenses;
     private final LiveData<List<Expenses>> groupedExpenses;
     private final LiveData<List<ModeWrapper>> modeDist;
@@ -25,9 +28,18 @@ public class ExpensesRepository {
         ExpensesDatabase database = ExpensesDatabase.getDatabase(application);
         this.expenseDao = database.expenseDao();
         this.categoryConfigDao = database.categoryConfigDao();
+        this.earningsHistoryDao = database.earningsHistoryDao();
         this.allExpenses = expenseDao.getExpenses();
         this.groupedExpenses = expenseDao.getGroupedItems();
         this.modeDist = expenseDao.getModeDist();
+    }
+
+    public LiveData<List<EarningsHistory>> getAllEarningsHistory() {
+        return earningsHistoryDao.getAllEarningsHistory();
+    }
+
+    public void insertEarningsHistory(EarningsHistory history) {
+        ExpensesDatabase.databaseWriterExecutor.execute(() -> earningsHistoryDao.insertEarningsHistory(history));
     }
 
     public LiveData<List<com.tcssol.expensetracker.Model.CategoryConfig>> getAllCategoryConfigs() {
@@ -40,6 +52,14 @@ public class ExpensesRepository {
 
     public com.tcssol.expensetracker.Model.CategoryConfig getCategoryConfigSync(String name) {
         return categoryConfigDao.getCategoryConfigSync(name);
+    }
+
+    public List<com.tcssol.expensetracker.Model.CategoryConfig> getAllCategoryConfigsSync() {
+        return categoryConfigDao.getAllCategoryConfigsSync();
+    }
+
+    public List<EarningsHistory> getAllEarningsHistorySync() {
+        return earningsHistoryDao.getAllEarningsHistorySync();
     }
 
     /** Returns all expenses synchronously for export – call from a background Executor only. */
@@ -163,5 +183,9 @@ public class ExpensesRepository {
     /** Returns monthly spend total – call from a background Executor only. */
     public double getMonthSpend(String month, String year) {
         return expenseDao.getMonthSpend(month, year);
+    }
+
+    public LiveData<List<MonthlySum>> getMonthlySumForCategory(String category) {
+        return expenseDao.getMonthlySumForCategory(category);
     }
 }

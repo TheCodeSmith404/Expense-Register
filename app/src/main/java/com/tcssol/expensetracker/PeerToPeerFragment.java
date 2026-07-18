@@ -60,6 +60,23 @@ public class PeerToPeerFragment extends Fragment implements PeerToPeerClickListe
                 result -> { }
         );
 
+        com.google.android.material.appbar.MaterialToolbar toolbar = view.findViewById(R.id.toolbarP2P);
+        if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
+            android.graphics.drawable.Drawable drawable = toolbar.getNavigationIcon();
+            if (drawable != null) {
+                drawable = androidx.core.graphics.drawable.DrawableCompat.wrap(drawable);
+                androidx.core.graphics.drawable.DrawableCompat.setTint(drawable, android.graphics.Color.WHITE);
+                toolbar.setNavigationIcon(drawable);
+            }
+            toolbar.setNavigationOnClickListener(v -> {
+                getParentFragmentManager().beginTransaction().remove(this).commit();
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).hideOverlayContainer();
+                }
+            });
+        }
+
         sharedExpenseViewModel = new ViewModelProvider(requireActivity()).get(SharedExpenseViewModel.class);
 
         recyclerView.setHasFixedSize(true);

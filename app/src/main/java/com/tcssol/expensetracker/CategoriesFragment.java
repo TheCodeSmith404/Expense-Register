@@ -28,11 +28,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.textfield.TextInputEditText;
 import com.tcssol.expensetracker.Adapters.CategoriesAdapter;
 import com.tcssol.expensetracker.Adapters.CategoriesClickListener;
+import com.tcssol.expensetracker.Adapters.SubcategorySheetAdapter;
 import com.tcssol.expensetracker.Adapters.PopUpRecycleViewAdapter;
 import com.tcssol.expensetracker.Data.ExpenseDao;
 import com.tcssol.expensetracker.Model.CategoryConfig;
+import android.widget.Toast;
 import com.tcssol.expensetracker.Model.ExpenseViewModel;
 import com.tcssol.expensetracker.Model.Expenses;
 import com.tcssol.expensetracker.Model.SharedExpenseViewModel;
@@ -64,6 +67,8 @@ public class CategoriesFragment extends Fragment implements CategoriesClickListe
     private TextView tvBudgetInfo;
 
     private final Set<String> fixedCategoriesSet = new HashSet<>();
+    private final java.util.Map<String, Boolean> configFixedMap = new java.util.HashMap<>();
+    private final java.util.Map<String, Double> categoryBudgetsMap = new java.util.HashMap<>();
 
     @Nullable
     @Override
@@ -100,17 +105,22 @@ public class CategoriesFragment extends Fragment implements CategoriesClickListe
         adapter = new CategoriesAdapter(new java.util.ArrayList<>(), context, expenseDao, this);
         recyclerView.setAdapter(adapter);
 
-        // Observe CategoryConfig to update fixed categories set
+        // Observe CategoryConfig to update fixed categories set and budget map
         expenseViewModel.getAllCategoryConfigs().observe(getViewLifecycleOwner(), configs -> {
             fixedCategoriesSet.clear();
+            configFixedMap.clear();
+            categoryBudgetsMap.clear();
             if (configs != null) {
                 for (CategoryConfig config : configs) {
+                    configFixedMap.put(config.getCategoryName(), config.isFixed());
+                    categoryBudgetsMap.put(config.getCategoryName(), config.getBudget());
                     if (config.isFixed()) {
                         fixedCategoriesSet.add(config.getCategoryName());
                     }
                 }
             }
             adapter.setFixedCategories(fixedCategoriesSet);
+            adapter.setCategoryBudgets(categoryBudgetsMap);
         });
 
         // Load grouped expenses
@@ -207,42 +217,65 @@ public class CategoriesFragment extends Fragment implements CategoriesClickListe
 
     @Override
     public void onCategoryClick(Expenses expenses) {
-        PopupWindow popupWindow = new PopupWindow(context);
-        View popupView = LayoutInflater.from(context).inflate(R.layout.fragment_popup, null);
-        popupWindow.setContentView(popupView);
-        popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setBackgroundDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.rectangle_shape, null));
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
+        String categoryName = expenses.getCategory();
+        com.google.android.material.bottomsheet.BottomSheetDialog bottomSheet = new com.google.android.material.bottomsheet.BottomSheetDialog(context);
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.dialog_subcategory_breakdown, null);
+        bottomSheet.setContentView(sheetView);
 
-        RecyclerView subcategoryRecyclerView = popupView.findViewById(R.id.popUpRecycleView);
-        subcategoryRecyclerView.setHasFixedSize(true);
-        subcategoryRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-        TextView textView = popupView.findViewById(R.id.popUpCategoryName);
-        textView.setText(expenses.getCategory());
-        textView.setTextColor(expenses.isType()
+        TextView tvTitle = sheetView.findViewById(R.id.tvSheetCategoryName);
+        tvTitle.setText(categoryName + " Details");
+        tvTitle.setTextColor(expenses.isType()
                 ? ContextCompat.getColor(context, R.color.green)
                 : ContextCompat.getColor(context, R.color.red));
 
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-        ViewGroup root = (ViewGroup) requireActivity().getWindow().getDecorView().getRootView();
-        Drawable dim = new ColorDrawable(Color.LTGRAY);
-        dim.setBounds(0, 0, root.getWidth(), root.getHeight());
-        dim.setAlpha(100);
-        root.getOverlay().add(dim);
+        TextInputEditText etBudget = sheetView.findViewById(R.id.etSheetCategoryBudget);
+        Double parentBudgetObj = categoryBudgetsMap.get(categoryName);
+        double parentBudget = parentBudgetObj != null ? parentBudgetObj : 0.0;
+        if (parentBudget > 0) {
+            etBudget.setText(String.format(Locale.getDefault(), "%.0f", parentBudget));
+        }
+
+        sheetView.findViewById(R.id.btnSaveCategoryBudget).setOnClickListener(v -> {
+            String text = etBudget.getText() != null ? etBudget.getText().toString().trim() : "";
+            double newBudget = 0.0;
+            if (!text.isEmpty()) {
+                try {
+                    newBudget = Double.parseDouble(text);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(context, "Invalid amount", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+            boolean isFixed = fixedCategoriesSet.contains(categoryName);
+            CategoryConfig config = new CategoryConfig(categoryName, isFixed);
+            config.setBudget(newBudget);
+            expenseViewModel.insertCategoryConfig(config);
+            Toast.makeText(context, "Category budget updated", Toast.LENGTH_SHORT).show();
+            bottomSheet.dismiss();
+        });
+
+        RecyclerView rvSubcategories = sheetView.findViewById(R.id.rvSubcategories);
+        rvSubcategories.setHasFixedSize(true);
+        rvSubcategories.setLayoutManager(new LinearLayoutManager(context));
 
         com.tcssol.expensetracker.Data.ExpensesDatabase.databaseWriterExecutor.execute(() -> {
-            List<Expenses> subCats = expenseViewModel.getSubCatsF(month, year, expenses.getCategory(), expenses.isType());
+            List<Expenses> subCats = expenseViewModel.getSubCatsF(month, year, categoryName, expenses.isType());
             requireActivity().runOnUiThread(() -> {
-                PopUpRecycleViewAdapter recycleViewAdapterPop = new PopUpRecycleViewAdapter(subCats, context);
-                subcategoryRecyclerView.setAdapter(recycleViewAdapterPop);
+                SubcategorySheetAdapter sheetAdapter = new SubcategorySheetAdapter(
+                        subCats, context, categoryBudgetsMap, (subKey, newBudget) -> {
+                            boolean subFixed = configFixedMap.containsKey(subKey) && configFixedMap.get(subKey);
+                            CategoryConfig config = new CategoryConfig(subKey, subFixed);
+                            config.setBudget(newBudget);
+                            expenseViewModel.insertCategoryConfig(config);
+                            Toast.makeText(context, "Subcategory budget updated", Toast.LENGTH_SHORT).show();
+                            bottomSheet.dismiss();
+                        }
+                );
+                rvSubcategories.setAdapter(sheetAdapter);
             });
         });
 
-        popupWindow.setOnDismissListener(() -> root.getOverlay().clear());
-        popupView.setOnClickListener(v -> popupWindow.dismiss());
+        bottomSheet.show();
     }
 
     @Override
