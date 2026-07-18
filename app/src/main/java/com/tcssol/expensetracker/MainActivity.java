@@ -61,6 +61,7 @@ import com.tcssol.expensetracker.Model.PersonExp;
 import com.tcssol.expensetracker.Model.PersonExpViewModel;
 import com.tcssol.expensetracker.Model.SharedExpenseViewModel;
 import com.tcssol.expensetracker.Utils.DataBaseExporter;
+import com.tcssol.expensetracker.Utils.ThemeManager;
 import com.tcssol.expensetracker.Utils.Wrapped;
 
 import java.time.LocalDate;
@@ -245,12 +246,20 @@ private PersonExpViewModel personExpViewModel;
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu,menu);
+        MenuItem themeItem = menu.findItem(R.id.menu_theme);
+        boolean dark = ThemeManager.isDark(this);
+        themeItem.setIcon(dark ? R.drawable.ic_light_mode_24 : R.drawable.ic_dark_mode_24);
+        themeItem.setTitle(dark ? R.string.switch_to_light : R.string.switch_to_dark);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
+        if(id==R.id.menu_theme){
+            ThemeManager.toggle(this);
+            return true;
+        }
         if(id==R.id.menu_overflow){
             PopupMenu popupMenu = new PopupMenu((Context) MainActivity.this,toolbar, Gravity.RIGHT);
             popupMenu.getMenuInflater().inflate(R.menu.menu_menu_fetch, popupMenu.getMenu());

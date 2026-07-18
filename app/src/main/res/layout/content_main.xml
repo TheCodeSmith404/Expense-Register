@@ -16,12 +16,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabGravity="fill"
         app:tabIndicator="@drawable/tab_indicator"
-        app:tabIndicatorColor="@color/app_bar_content"
+        app:tabIndicatorColor="?attr/colorPrimary"
         app:tabIndicatorFullWidth="false"
-        app:tabIndicatorHeight="3dp"
+        app:tabIndicatorHeight="4dp"
         app:tabMode="auto"
-        app:tabRippleColor="@color/app_bar_content_muted"
-        app:tabSelectedTextColor="@color/app_bar_content"
+        app:tabRippleColor="?attr/colorControlHighlight"
+        app:tabSelectedTextColor="?attr/colorPrimary"
         app:tabTextAppearance="?attr/textAppearanceTitleSmall"
         app:tabTextColor="@color/app_bar_content_muted">
 

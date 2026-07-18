@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Inflated clay capsule CTA. The body is a vector whose outline actually
+     bulges (center taller than corners) — see clay_button_body.xml. Behind it,
+     four low-opacity steps fake a wide blurred shadow falling bottom-right.
+     Press compression comes from the clay_press state-list animator. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+    <item>
+        <layer-list>
+            <item android:left="1dp" android:top="2dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="28dp" />
+                    <solid android:color="@color/clay_shadow_1" />
+                </shape>
+            </item>
+            <item android:left="2dp" android:top="4dp" android:right="1dp" android:bottom="1dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="27dp" />
+                    <solid android:color="@color/clay_shadow_2" />
+                </shape>
+            </item>
+            <item android:left="4dp" android:top="5dp" android:right="2dp" android:bottom="2dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="26dp" />
+                    <solid android:color="@color/clay_shadow_3" />
+                </shape>
+            </item>
+            <item android:left="5dp" android:top="7dp" android:right="3dp" android:bottom="3dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="26dp" />
+                    <solid android:color="@color/clay_shadow_4" />
+                </shape>
+            </item>
+            <!-- Bulged capsule body with baked-in clay lighting -->
+            <item
+                android:right="7dp"
+                android:bottom="9dp"
+                android:drawable="@drawable/clay_button_body" />
+        </layer-list>
+    </item>
+    <item
+        android:id="@android:id/mask"
+        android:right="7dp"
+        android:bottom="9dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="26dp" />
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+</ripple>

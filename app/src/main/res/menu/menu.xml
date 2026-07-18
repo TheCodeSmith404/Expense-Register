@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_theme"
+        android:icon="@drawable/ic_dark_mode_24"
+        android:title="@string/switch_to_dark"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_overflow"
         android:icon="@drawable/baseline_more_vert_24"
         android:title="Options"

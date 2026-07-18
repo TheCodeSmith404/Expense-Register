@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Claymorphic card: soft inflated clay lit from the top-left.
+
+     Anatomy, outside in:
+       1. Four low-opacity stacked slabs fake a wide blurred outer shadow,
+          offset diagonally (+X/+Y) so it falls bottom-right and fades naturally.
+       2. Opaque fill.
+       3. Near-imperceptible body gradient: top-left slightly brighter,
+          bottom-right slightly darker.
+       4. Center dome: faint radial rise peaking at 50%/50%.
+       5. Primary highlight: large soft bloom around 20%/20%.
+       6. Secondary highlight: faint band along the upper edge.
+       7. Inner shadow: darkening past ~75% toward the bottom-right,
+          showing the surface curving away from the light.
+     Matte on purpose: no rim strokes, no sharp highlights. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:left="2dp" android:top="4dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="34dp" />
+            <solid android:color="@color/clay_shadow_1" />
+        </shape>
+    </item>
+    <item android:left="5dp" android:top="7dp" android:right="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="33dp" />
+            <solid android:color="@color/clay_shadow_2" />
+        </shape>
+    </item>
+    <item android:left="8dp" android:top="10dp" android:right="4dp" android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="32dp" />
+            <solid android:color="@color/clay_shadow_3" />
+        </shape>
+    </item>
+    <item android:left="11dp" android:top="13dp" android:right="6dp" android:bottom="6dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="31dp" />
+            <solid android:color="@color/clay_shadow_4" />
+        </shape>
+    </item>
+    <!-- Fill -->
+    <item android:right="12dp" android:bottom="14dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp" />
+            <solid android:color="@color/card_tint_peach" />
+        </shape>
+    </item>
+    <!-- Body gradient: 4-8% brighter top-left, 4-8% darker bottom-right -->
+    <item android:right="12dp" android:bottom="14dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp" />
+            <gradient
+                android:angle="315"
+                android:startColor="@color/clay_grad_light"
+                android:endColor="@color/clay_grad_dark" />
+        </shape>
+    </item>
+    <!-- Center dome: highest point at 50%/50% -->
+    <item android:right="12dp" android:bottom="14dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp" />
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:gradientRadius="90%"
+                android:startColor="@color/clay_dome"
+                android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+    <!-- Primary highlight: large soft ellipse near 20%/20% -->
+    <item android:right="12dp" android:bottom="14dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp" />
+            <gradient
+                android:type="radial"
+                android:centerX="0.22"
+                android:centerY="0.2"
+                android:gradientRadius="65%"
+                android:startColor="@color/clay_inner_light"
+                android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+    <!-- Secondary highlight: faint band along the upper edge -->
+    <item
+        android:left="12dp"
+        android:top="4dp"
+        android:right="26dp"
+        android:height="10dp"
+        android:gravity="top">
+        <shape android:shape="rectangle">
+            <corners android:radius="6dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="@color/clay_edge_light"
+                android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+    <!-- Inner shadow: curvature away from the light past ~75% -->
+    <item android:right="12dp" android:bottom="14dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp" />
+            <gradient
+                android:angle="315"
+                android:startColor="#00000000"
+                android:centerColor="#00000000"
+                android:endColor="@color/clay_inner_dark" />
+        </shape>
+    </item>
+</layer-list>

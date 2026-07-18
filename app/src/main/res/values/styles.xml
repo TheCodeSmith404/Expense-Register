@@ -1,7 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- ===== App bar ===== -->
+    <!-- ===== Clay typography (Nunito) ===== -->
+    <style name="TextAppearance.ExpenseRegister.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textFontWeight">800</item>
+    </style>
+
+    <style name="TextAppearance.ExpenseRegister.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textFontWeight">800</item>
+    </style>
+
+    <style name="TextAppearance.ExpenseRegister.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+    <style name="TextAppearance.ExpenseRegister.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+    <style name="TextAppearance.ExpenseRegister.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+
+    <style name="TextAppearance.ExpenseRegister.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+
+    <style name="TextAppearance.ExpenseRegister.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+
+    <style name="TextAppearance.ExpenseRegister.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+    <style name="TextAppearance.ExpenseRegister.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+    <style name="TextAppearance.ExpenseRegister.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+    <!-- ===== App bar (floats on the cream background) ===== -->
     <style name="Widget.ExpenseRegister.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="android:background">@color/app_bar_background</item>
         <item name="titleTextColor">@color/app_bar_content</item>
@@ -11,12 +69,11 @@
         <item name="android:theme">@style/ThemeOverlay.ExpenseRegister.Toolbar</item>
     </style>
 
-    <style name="TextAppearance.ExpenseRegister.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+    <style name="TextAppearance.ExpenseRegister.ToolbarTitle" parent="TextAppearance.ExpenseRegister.TitleLarge">
         <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- Forces light icons (nav, overflow, menu text) on the branded app bar -->
+    <!-- Toolbar icons (nav, overflow, menu text) match the app-bar ink color -->
     <style name="ThemeOverlay.ExpenseRegister.Toolbar" parent="ThemeOverlay.Material3.Toolbar.Surface">
         <item name="colorControlNormal">@color/app_bar_content</item>
         <item name="colorOnSurface">@color/app_bar_content</item>
@@ -24,65 +81,83 @@
         <item name="actionMenuTextColor">@color/app_bar_content</item>
     </style>
 
-    <!-- ===== Cards ===== -->
+    <!-- ===== Cards: puffy clay slabs (big radius, light rim, soft tinted shadow) ===== -->
     <style name="Widget.ExpenseRegister.Card" parent="Widget.Material3.CardView.Elevated">
         <item name="cardBackgroundColor">?attr/colorSurface</item>
-        <item name="cardCornerRadius">16dp</item>
-        <item name="cardElevation">1dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="cardCornerRadius">32dp</item>
+        <item name="cardElevation">6dp</item>
+        <item name="strokeWidth">0dp</item>
         <item name="rippleColor">?attr/colorControlHighlight</item>
+        <item name="android:outlineSpotShadowColor">@color/clay_shadow</item>
+        <item name="android:outlineAmbientShadowColor">@color/clay_shadow</item>
     </style>
 
     <!-- Legacy androidx.cardview.widget.CardView used by list items -->
     <style name="Widget.ExpenseRegister.CardViewLegacy" parent="CardView">
         <item name="cardBackgroundColor">?attr/colorSurface</item>
-        <item name="cardCornerRadius">16dp</item>
-        <item name="cardElevation">1dp</item>
+        <item name="cardCornerRadius">28dp</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
-    <!-- ===== Chips (period filter) ===== -->
+    <!-- ===== Chips (period filter): chunky pill beans ===== -->
     <style name="Widget.ExpenseRegister.Chip" parent="Widget.Material3.Chip.Assist">
         <item name="chipBackgroundColor">@color/chip_background_color</item>
         <item name="chipStrokeColor">@color/chip_stroke_color</item>
-        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeWidth">2dp</item>
         <item name="android:textColor">@color/chip_text_color</item>
-        <item name="chipCornerRadius">18dp</item>
-        <item name="chipMinHeight">36dp</item>
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipMinHeight">40dp</item>
         <item name="chipMinTouchTargetSize">44dp</item>
         <item name="checkedIconVisible">false</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLarge</item>
     </style>
 
-    <!-- ===== Buttons ===== -->
+    <!-- ===== Buttons: inflated clay pills ===== -->
+    <!-- Primary CTAs use a custom clay background (diagonal slab shadow + dome),
+         so MaterialButton's own shape/tint handling is switched off. Paddings
+         compensate for the shadow zone so the label centers on the pill body. -->
     <style name="Widget.ExpenseRegister.Button" parent="Widget.Material3.Button">
-        <item name="android:minHeight">52dp</item>
-        <item name="cornerRadius">14dp</item>
+        <item name="android:background">@drawable/clay_button</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:stateListAnimator">@animator/clay_press</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">64dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">31dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="cornerRadius">28dp</item>
         <item name="android:textAppearance">?attr/textAppearanceTitleSmall</item>
         <item name="android:letterSpacing">0.01</item>
     </style>
 
     <style name="Widget.ExpenseRegister.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
-        <item name="android:minHeight">52dp</item>
-        <item name="cornerRadius">14dp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="cornerRadius">28dp</item>
         <item name="android:textAppearance">?attr/textAppearanceTitleSmall</item>
     </style>
 
     <style name="Widget.ExpenseRegister.Button.Text" parent="Widget.Material3.Button.TextButton">
         <item name="android:minHeight">48dp</item>
-        <item name="cornerRadius">14dp</item>
+        <item name="cornerRadius">24dp</item>
     </style>
 
-    <!-- ===== FAB ===== -->
+    <!-- ===== FAB: soft floating clay bubble (perfect circle, deep soft shadow) ===== -->
     <style name="Widget.ExpenseRegister.Fab" parent="Widget.Material3.FloatingActionButton.Primary">
         <item name="backgroundTint">?attr/colorPrimaryContainer</item>
         <item name="tint">?attr/colorOnPrimaryContainer</item>
+        <item name="borderWidth">0dp</item>
+        <item name="elevation">12dp</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.ExpenseRegister.Fab</item>
+        <item name="android:outlineSpotShadowColor">@color/clay_shadow</item>
+        <item name="android:outlineAmbientShadowColor">@color/clay_shadow</item>
     </style>
 
     <style name="ShapeAppearance.ExpenseRegister.Fab" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">18dp</item>
+        <item name="cornerSize">50%</item>
     </style>
 
     <!-- ===== Form fields ===== -->
@@ -93,11 +168,11 @@
 
     <style name="Widget.ExpenseRegister.Input" parent="">
         <item name="android:background">@drawable/bg_input</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="android:minHeight">52dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:minHeight">56dp</item>
         <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
@@ -105,9 +180,9 @@
 
     <style name="Widget.ExpenseRegister.SelectorField" parent="">
         <item name="android:background">@drawable/bg_selector_field</item>
-        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingStart">18dp</item>
         <item name="android:paddingEnd">44dp</item>
-        <item name="android:minHeight">52dp</item>
+        <item name="android:minHeight">56dp</item>
         <item name="android:gravity">center_vertical|start</item>
         <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
@@ -117,9 +192,10 @@
     <style name="Widget.ExpenseRegister.Segment" parent="">
         <item name="android:button">@null</item>
         <item name="android:background">@drawable/bg_segment</item>
+        <item name="android:stateListAnimator">@animator/clay_press</item>
         <item name="android:textColor">@color/segment_text_color</item>
         <item name="android:gravity">center</item>
-        <item name="android:minHeight">44dp</item>
+        <item name="android:minHeight">48dp</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingEnd">12dp</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLarge</item>

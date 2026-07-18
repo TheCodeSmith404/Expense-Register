@@ -1,80 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- ===== Design system: "Trust Blue" fintech palette (dark / OLED-friendly) ===== -->
+    <!-- ===== Design system: "Clay Pastels" claymorphism palette (dark / soft plum night) ===== -->
 
-    <!-- Primary -->
-    <color name="md_primary">#9DB4FF</color>
-    <color name="md_on_primary">#0B2472</color>
-    <color name="md_primary_container">#24408F</color>
-    <color name="md_on_primary_container">#DDE3FF</color>
+    <!-- Primary (pastel lilac on plum) -->
+    <color name="md_primary">#C4B7F4</color>
+    <color name="md_on_primary">#322868</color>
+    <color name="md_primary_container">#4C3F94</color>
+    <color name="md_on_primary_container">#E7E0F9</color>
 
-    <!-- Secondary -->
-    <color name="md_secondary">#93C5FD</color>
-    <color name="md_on_secondary">#082A56</color>
-    <color name="md_secondary_container">#1E3A6E</color>
-    <color name="md_on_secondary_container">#DBEAFE</color>
+    <!-- Secondary (baby blue) -->
+    <color name="md_secondary">#A3C9F2</color>
+    <color name="md_on_secondary">#14395E</color>
+    <color name="md_secondary_container">#2C517D</color>
+    <color name="md_on_secondary_container">#D9EAFB</color>
 
-    <!-- Tertiary (growth green) -->
-    <color name="md_tertiary">#34D399</color>
-    <color name="md_on_tertiary">#053B2C</color>
-    <color name="md_tertiary_container">#065F46</color>
-    <color name="md_on_tertiary_container">#D1FAE5</color>
+    <!-- Tertiary (mint) -->
+    <color name="md_tertiary">#82DBB1</color>
+    <color name="md_on_tertiary">#0B4A33</color>
+    <color name="md_tertiary_container">#156045</color>
+    <color name="md_on_tertiary_container">#D7F4E3</color>
 
-    <!-- Error -->
-    <color name="md_error">#F87171</color>
-    <color name="md_on_error">#450A0A</color>
-    <color name="md_error_container">#7F1D1D</color>
-    <color name="md_on_error_container">#FEE2E2</color>
+    <!-- Error (peach) -->
+    <color name="md_error">#F5A08F</color>
+    <color name="md_on_error">#5A1D10</color>
+    <color name="md_error_container">#7A3123</color>
+    <color name="md_on_error_container">#FFE2D8</color>
 
-    <!-- Neutrals -->
-    <color name="md_background">#0B1120</color>
-    <color name="md_on_background">#E2E8F0</color>
-    <color name="md_surface">#151E33</color>
-    <color name="md_on_surface">#E7EBF4</color>
-    <color name="md_surface_variant">#212C4B</color>
-    <color name="md_on_surface_variant">#A3AECB</color>
-    <color name="md_outline">#4C5878</color>
-    <color name="md_outline_variant">#2A3554</color>
+    <!-- Neutrals (soft plum) -->
+    <color name="md_background">#1F1B2A</color>
+    <color name="md_on_background">#EDE7F4</color>
+    <color name="md_surface">#2A2438</color>
+    <color name="md_on_surface">#EFE9F6</color>
+    <color name="md_surface_variant">#363048</color>
+    <color name="md_on_surface_variant">#B7ADC9</color>
+    <color name="md_outline">#6B6182</color>
+    <color name="md_outline_variant">#443C5A</color>
+
+    <!-- Clay effect helpers: rim is a touch lighter than the surface at night -->
+    <color name="clay_stroke">#453C5C</color>
+    <color name="clay_shadow">#000000</color>
+
+    <!-- Per-section pastel card tints (hue-shifted plum surfaces at night) -->
+    <color name="card_tint_lilac">#2F2843</color>
+    <color name="card_tint_blue">#272E41</color>
+    <color name="card_tint_peach">#352B34</color>
+
+    <!-- Clay lighting system, night: dimmer highlights, deeper shade on plum -->
+    <color name="clay_inner_light">#26FFFFFF</color>
+    <color name="clay_edge_light">#12FFFFFF</color>
+    <color name="clay_dome">#0FFFFFFF</color>
+    <color name="clay_grad_light">#0DFFFFFF</color>
+    <color name="clay_grad_dark">#1A000000</color>
+    <color name="clay_inner_dark">#38000000</color>
+
+    <!-- Diagonal (X+Y) outer shadow, black steps for the plum background -->
+    <color name="clay_shadow_1">#14000000</color>
+    <color name="clay_shadow_2">#1A000000</color>
+    <color name="clay_shadow_3">#1F000000</color>
+    <color name="clay_shadow_4">#24000000</color>
 
     <!-- Semantic money colors -->
-    <color name="income">#34D399</color>
-    <color name="income_container">#0E3B2E</color>
-    <color name="on_income_container">#A7F3D0</color>
-    <color name="expense">#F87171</color>
-    <color name="expense_container">#3F1D1D</color>
-    <color name="on_expense_container">#FECACA</color>
+    <color name="income">#82DBB1</color>
+    <color name="income_container">#1D4A38</color>
+    <color name="on_income_container">#CFF2E0</color>
+    <color name="expense">#F5A08F</color>
+    <color name="expense_container">#542E24</color>
+    <color name="on_expense_container">#FFDCD1</color>
 
     <!-- App bar -->
-    <color name="app_bar_background">#131C31</color>
-    <color name="app_bar_content">#E8EDFB</color>
-    <color name="app_bar_content_muted">#7C89AD</color>
+    <color name="app_bar_background">#1F1B2A</color>
+    <color name="app_bar_content">#EDE7F4</color>
+    <color name="app_bar_content_muted">#9C91B2</color>
 
-    <!-- Categorical chart palette (validated against the dark surface) -->
-    <color name="chart_cat_1">#3B82F6</color>
-    <color name="chart_cat_2">#059669</color>
-    <color name="chart_cat_3">#D97706</color>
-    <color name="chart_cat_4">#8B5CF6</color>
-    <color name="chart_cat_5">#0891B2</color>
-    <color name="chart_cat_6">#EC4899</color>
+    <!-- Categorical chart palette (lighter pastels for the plum surface) -->
+    <color name="chart_cat_1">#8AA6EE</color>
+    <color name="chart_cat_2">#64C69A</color>
+    <color name="chart_cat_3">#E8A967</color>
+    <color name="chart_cat_4">#B894E8</color>
+    <color name="chart_cat_5">#6BC0DC</color>
+    <color name="chart_cat_6">#EE93BB</color>
 
-    <!-- Splash -->
-    <color name="splash_gradient_start">#0B1120</color>
-    <color name="splash_gradient_center">#16308A</color>
-    <color name="splash_gradient_end">#1E40AF</color>
+    <!-- Splash (dusk clay gradient) -->
+    <color name="splash_gradient_start">#241F35</color>
+    <color name="splash_gradient_center">#4C3F94</color>
+    <color name="splash_gradient_end">#6C5BC4</color>
+    <color name="splash_text">#EFE9F6</color>
 
     <!-- ===== Legacy names, dark variants ===== -->
-    <color name="red">#F87171</color>
-    <color name="green">#34D399</color>
-    <color name="lightBlack">#94A3B8</color>
+    <color name="red">#F5A08F</color>
+    <color name="green">#82DBB1</color>
+    <color name="lightBlack">#A79DBE</color>
 
-    <color name="colorTextPrimary">#E7EBF4</color>
-    <color name="colorTextSecondary">#A3AECB</color>
+    <color name="colorTextPrimary">#EFE9F6</color>
+    <color name="colorTextSecondary">#B7ADC9</color>
 
-    <!-- ===== Names introduced on v3, dark variants in the Trust Blue palette ===== -->
-    <color name="colorSurface">#151E33</color>
-    <color name="colorSurfaceVariant">#212C4B</color>
-    <color name="colorBackground">#0B1120</color>
-    <color name="colorCardBackground">#151E33</color>
-    <color name="colorDivider">#2A3554</color>
-    <color name="colorTextHint">#7C89AD</color>
+    <!-- ===== Names introduced on v3, dark variants in the clay palette ===== -->
+    <color name="colorSurface">#2A2438</color>
+    <color name="colorSurfaceVariant">#363048</color>
+    <color name="colorBackground">#1F1B2A</color>
+    <color name="colorCardBackground">#2A2438</color>
+    <color name="colorDivider">#443C5A</color>
+    <color name="colorTextHint">#8C82A6</color>
 </resources>

@@ -1,100 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- ===== Design system: "Trust Blue" fintech palette (light) ===== -->
+    <!-- ===== Design system: "Clay Pastels" claymorphism palette (light) =====
+         Multicolor pastels on a warm cream base: lilac primary, baby-blue
+         secondary, mint tertiary/income, peach error/expense. -->
 
-    <!-- Primary -->
-    <color name="md_primary">#1E40AF</color>
+    <!-- Primary (lilac clay) -->
+    <color name="md_primary">#6C5BC4</color>
     <color name="md_on_primary">#FFFFFF</color>
-    <color name="md_primary_container">#DDE3FF</color>
-    <color name="md_on_primary_container">#06184F</color>
+    <color name="md_primary_container">#E7E0F9</color>
+    <color name="md_on_primary_container">#33296B</color>
 
-    <!-- Secondary -->
-    <color name="md_secondary">#3B82F6</color>
+    <!-- Secondary (baby blue) -->
+    <color name="md_secondary">#3D6FA8</color>
     <color name="md_on_secondary">#FFFFFF</color>
-    <color name="md_secondary_container">#DBEAFE</color>
-    <color name="md_on_secondary_container">#0C2D6B</color>
+    <color name="md_secondary_container">#D9EAFB</color>
+    <color name="md_on_secondary_container">#17395E</color>
 
-    <!-- Tertiary (growth green) -->
-    <color name="md_tertiary">#059669</color>
+    <!-- Tertiary (mint) -->
+    <color name="md_tertiary">#147A55</color>
     <color name="md_on_tertiary">#FFFFFF</color>
-    <color name="md_tertiary_container">#D1FAE5</color>
-    <color name="md_on_tertiary_container">#064E3B</color>
+    <color name="md_tertiary_container">#D7F4E3</color>
+    <color name="md_on_tertiary_container">#0B4A33</color>
 
-    <!-- Error -->
-    <color name="md_error">#DC2626</color>
+    <!-- Error (clay coral) -->
+    <color name="md_error">#B8422F</color>
     <color name="md_on_error">#FFFFFF</color>
-    <color name="md_error_container">#FEE2E2</color>
-    <color name="md_on_error_container">#7F1D1D</color>
+    <color name="md_error_container">#FFE2D8</color>
+    <color name="md_on_error_container">#7E2A1B</color>
 
-    <!-- Neutrals -->
-    <color name="md_background">#F4F6FB</color>
-    <color name="md_on_background">#0F172A</color>
-    <color name="md_surface">#FFFFFF</color>
-    <color name="md_on_surface">#0F172A</color>
-    <color name="md_surface_variant">#E8EBF5</color>
-    <color name="md_on_surface_variant">#4B5569</color>
-    <color name="md_outline">#99A3BC</color>
-    <color name="md_outline_variant">#E1E5F0</color>
+    <!-- Neutrals (warm cream + plum ink) -->
+    <color name="md_background">#FAF3EA</color>
+    <color name="md_on_background">#3A3244</color>
+    <color name="md_surface">#FFFDF9</color>
+    <color name="md_on_surface">#3A3244</color>
+    <color name="md_surface_variant">#F1EAF7</color>
+    <color name="md_on_surface_variant">#6F6580</color>
+    <color name="md_outline">#A69BB4</color>
+    <color name="md_outline_variant">#E5DCEA</color>
 
-    <!-- Semantic money colors -->
-    <color name="income">#059669</color>
-    <color name="income_container">#D7F5E7</color>
-    <color name="on_income_container">#065F46</color>
-    <color name="expense">#DC2626</color>
-    <color name="expense_container">#FDE3E3</color>
-    <color name="on_expense_container">#991B1B</color>
+    <!-- Clay effect helpers: puffy rim highlight + tinted soft shadow -->
+    <color name="clay_stroke">#FFFFFF</color>
+    <color name="clay_shadow">#8A6FB8</color>
 
-    <!-- App bar (branded in light mode, dark surface at night) -->
-    <color name="app_bar_background">#1E40AF</color>
-    <color name="app_bar_content">#FFFFFF</color>
-    <color name="app_bar_content_muted">#BFCBFA</color>
+    <!-- Per-section pastel card tints (multicolor clay) -->
+    <color name="card_tint_lilac">#F1ECFC</color>
+    <color name="card_tint_blue">#E9F2FD</color>
+    <color name="card_tint_peach">#FDEFE5</color>
 
-    <!-- Categorical chart palette (validated: lightness band, chroma, CVD, contrast) -->
-    <color name="chart_cat_1">#2563EB</color>
-    <color name="chart_cat_2">#059669</color>
-    <color name="chart_cat_3">#D97706</color>
-    <color name="chart_cat_4">#7C3AED</color>
-    <color name="chart_cat_5">#0891B2</color>
-    <color name="chart_cat_6">#DB2777</color>
+    <!-- Clay lighting system: single top-left light source.
+         Primary highlight ellipse (~25%), secondary top-edge sheen (~10%),
+         center dome (~9%), near-imperceptible body gradient (~7%/6%),
+         soft inner shadow past 75% toward bottom-right (~12%). -->
+    <color name="clay_inner_light">#40FFFFFF</color>
+    <color name="clay_edge_light">#1AFFFFFF</color>
+    <color name="clay_dome">#17FFFFFF</color>
+    <color name="clay_grad_light">#12FFFFFF</color>
+    <color name="clay_grad_dark">#10000000</color>
+    <color name="clay_inner_dark">#1F46325A</color>
 
-    <!-- Splash -->
-    <color name="splash_gradient_start">#0F2167</color>
-    <color name="splash_gradient_center">#1E40AF</color>
-    <color name="splash_gradient_end">#3B82F6</color>
+    <!-- Diagonal (X+Y) outer shadow, four stacked steps faking a 24-48dp blur;
+         kept low-opacity so the shadow fades naturally instead of hugging -->
+    <color name="clay_shadow_1">#0A8A6FB8</color>
+    <color name="clay_shadow_2">#0D8A6FB8</color>
+    <color name="clay_shadow_3">#108A6FB8</color>
+    <color name="clay_shadow_4">#148A6FB8</color>
 
-    <!-- ===== Legacy names kept for code/back-compat, remapped to the new palette ===== -->
+    <!-- Semantic money colors (mint / peach clay) -->
+    <color name="income">#147A55</color>
+    <color name="income_container">#D7F4E3</color>
+    <color name="on_income_container">#0B4A33</color>
+    <color name="expense">#B8422F</color>
+    <color name="expense_container">#FFE2D8</color>
+    <color name="on_expense_container">#7E2A1B</color>
+
+    <!-- App bar (floats on the cream background) -->
+    <color name="app_bar_background">#FAF3EA</color>
+    <color name="app_bar_content">#3A3244</color>
+    <color name="app_bar_content_muted">#746A85</color>
+
+    <!-- Categorical chart palette (medium pastels, >=3:1 on the warm surface) -->
+    <color name="chart_cat_1">#5B7FD4</color>
+    <color name="chart_cat_2">#2E9E72</color>
+    <color name="chart_cat_3">#D9822B</color>
+    <color name="chart_cat_4">#9A6BD0</color>
+    <color name="chart_cat_5">#2E9BB8</color>
+    <color name="chart_cat_6">#D65E93</color>
+
+    <!-- Splash (candy clay gradient) -->
+    <color name="splash_gradient_start">#C6B8F0</color>
+    <color name="splash_gradient_center">#F6CDB4</color>
+    <color name="splash_gradient_end">#B4E7CD</color>
+    <color name="splash_text">#3A3244</color>
+
+    <!-- ===== Legacy names kept for code/back-compat, remapped to the clay palette ===== -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="red">#DC2626</color>
-    <color name="green">#059669</color>
-    <color name="launcherBackground">#1E40AF</color>
-    <color name="colorPrimary">#1E40AF</color>
-    <color name="colorPrimaryNeutral">#1E40AF</color>
-    <color name="colorPrimaryVariant">#3B82F6</color>
-    <color name="lightBlack">#64748B</color>
-    <color name="newColor">#1E40AF</color>
-    <color name="newColorVariant">#DDE3FF</color>
+    <color name="red">#B8422F</color>
+    <color name="green">#147A55</color>
+    <color name="launcherBackground">#6C5BC4</color>
+    <color name="colorPrimary">#6C5BC4</color>
+    <color name="colorPrimaryNeutral">#6C5BC4</color>
+    <color name="colorPrimaryVariant">#8B7CD8</color>
+    <color name="lightBlack">#7A7089</color>
+    <color name="newColor">#6C5BC4</color>
+    <color name="newColorVariant">#E7E0F9</color>
 
-    <color name="colorSecondary">#3B82F6</color>
-    <color name="colorSecondaryVariant">#1E40AF</color>
+    <color name="colorSecondary">#3D6FA8</color>
+    <color name="colorSecondaryVariant">#6C5BC4</color>
 
-    <color name="colorPrimaryDark">#16308A</color>
+    <color name="colorPrimaryDark">#55449F</color>
 
-    <color name="colorTextPrimary">#0F172A</color>
-    <color name="colorTextSecondary">#4B5569</color>
+    <color name="colorTextPrimary">#3A3244</color>
+    <color name="colorTextSecondary">#6F6580</color>
 
-    <color name="colorControlNormal">#1E40AF</color>
-    <color name="colorControlActivated">#3B82F6</color>
-    <color name="colorControlHighlight">#331E40AF</color>
+    <color name="colorControlNormal">#6C5BC4</color>
+    <color name="colorControlActivated">#8B7CD8</color>
+    <color name="colorControlHighlight">#336C5BC4</color>
 
-    <!-- ===== Names introduced on v3, mapped into the Trust Blue palette ===== -->
+    <!-- ===== Names introduced on v3, mapped into the clay palette ===== -->
     <color name="colorOnPrimary">#FFFFFFFF</color>
     <color name="colorOnSecondary">#FFFFFFFF</color>
-    <color name="colorSurface">#FFFFFF</color>
-    <color name="colorSurfaceVariant">#E8EBF5</color>
-    <color name="colorBackground">#F4F6FB</color>
-    <color name="colorTextHint">#99A3BC</color>
-    <color name="amber">#FFC107</color>
-    <color name="colorCardBackground">#FFFFFF</color>
-    <color name="colorDivider">#E1E5F0</color>
+    <color name="colorSurface">#FFFDF9</color>
+    <color name="colorSurfaceVariant">#F1EAF7</color>
+    <color name="colorBackground">#FAF3EA</color>
+    <color name="colorTextHint">#A69BB4</color>
+    <color name="amber">#DD9426</color>
+    <color name="colorCardBackground">#FFFDF9</color>
+    <color name="colorDivider">#E5DCEA</color>
 </resources>

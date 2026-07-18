@@ -27,10 +27,24 @@
         <item name="colorOutline">@color/md_outline</item>
         <item name="colorOutlineVariant">@color/md_outline_variant</item>
 
-        <!-- System bars -->
+        <!-- Clay typography: rounded Nunito everywhere -->
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="fontFamily">@font/nunito</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.ExpenseRegister.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.ExpenseRegister.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.ExpenseRegister.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.ExpenseRegister.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.ExpenseRegister.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.ExpenseRegister.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.ExpenseRegister.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.ExpenseRegister.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.ExpenseRegister.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.ExpenseRegister.LabelSmall</item>
+
+        <!-- System bars: cream, with dark icons -->
         <item name="android:statusBarColor">@color/app_bar_background</item>
         <item name="android:navigationBarColor">@color/md_background</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
 
         <!-- Component defaults -->
@@ -44,8 +58,9 @@
 
     <!-- Toolbar text style (used by activity_main's toolbar, from v3) -->
     <style name="ToolbarTitleStyle" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/app_bar_content</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="android:textFontWeight" tools:targetApi="p">800</item>
     </style>
 </resources>

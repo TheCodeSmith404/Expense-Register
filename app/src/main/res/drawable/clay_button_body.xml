@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bulged clay capsule: the outline itself is inflated — the top edge bows
+     upward toward the center (center taller than the shoulders/corners) and
+     the bottom edge sags, matching the clay cross-section:
+             ________
+          __/        \__
+      ___/              \___
+     Shading layers reuse the same path: body gradient, center/primary bloom,
+     and an inner shadow that darkens past ~55% toward the bottom-right. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="320dp"
+    android:height="56dp"
+    android:viewportWidth="320"
+    android:viewportHeight="56">
+
+    <!-- Body -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M2,28 C2,11 14,4 42,4 Q160,0 278,4 C306,4 318,11 318,28 C318,45 306,52 278,52 Q160,56 42,52 C14,52 2,45 2,28 Z" />
+
+    <!-- Body gradient: brighter top-left, darker bottom-right -->
+    <path android:pathData="M2,28 C2,11 14,4 42,4 Q160,0 278,4 C306,4 318,11 318,28 C318,45 306,52 278,52 Q160,56 42,52 C14,52 2,45 2,28 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="60"
+                android:startY="0"
+                android:endX="280"
+                android:endY="56"
+                android:startColor="@color/clay_grad_light"
+                android:endColor="@color/clay_grad_dark" />
+        </aapt:attr>
+    </path>
+
+    <!-- Dome + primary highlight: soft bloom left-of-center, above middle -->
+    <path android:pathData="M2,28 C2,11 14,4 42,4 Q160,0 278,4 C306,4 318,11 318,28 C318,45 306,52 278,52 Q160,56 42,52 C14,52 2,45 2,28 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="radial"
+                android:centerX="120"
+                android:centerY="16"
+                android:gradientRadius="180"
+                android:startColor="@color/clay_inner_light"
+                android:endColor="#00FFFFFF" />
+        </aapt:attr>
+    </path>
+
+    <!-- Inner shadow: curvature away from the light, bottom-right -->
+    <path android:pathData="M2,28 C2,11 14,4 42,4 Q160,0 278,4 C306,4 318,11 318,28 C318,45 306,52 278,52 Q160,56 42,52 C14,52 2,45 2,28 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="100"
+                android:startY="10"
+                android:endX="310"
+                android:endY="56">
+                <item
+                    android:color="#00000000"
+                    android:offset="0.0" />
+                <item
+                    android:color="#00000000"
+                    android:offset="0.55" />
+                <item
+                    android:color="@color/clay_inner_dark"
+                    android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

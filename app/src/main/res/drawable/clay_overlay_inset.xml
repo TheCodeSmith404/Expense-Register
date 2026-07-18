@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pressed-in clay: the inverse pair (dark top-left, light bottom-right),
+     used on input fields so they read as debossed into the surface. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="20dp" />
+    <gradient
+        android:angle="315"
+        android:startColor="@color/clay_inner_dark"
+        android:centerColor="#00FFFFFF"
+        android:endColor="@color/clay_inner_light" />
+</shape>
